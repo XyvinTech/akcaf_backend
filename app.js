@@ -6,6 +6,13 @@ const cors = require("cors");
 const volleyball = require("volleyball");
 const clc = require("cli-color");
 const responseHandler = require("./src/helpers/responseHandler");
+const adminRoute = require("./src/routes/admin");
+const collegeRoute = require("./src/routes/college");
+const {
+  swaggerUi,
+  swaggerSpec,
+  swaggerOptions,
+} = require("./src/swagger/swagger");
 
 const app = express();
 app.use(volleyball);
@@ -30,6 +37,17 @@ app.get(BASE_PATH, (req, res) => {
     "🛡️ Welcome! All endpoints are fortified. Do you possess the master 🗝️?"
   );
 });
+
+//* Swagger setup
+app.use(
+  `${BASE_PATH}/api-docs`,
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, swaggerOptions)
+);
+
+//* Configure routes for user API
+app.use(`${BASE_PATH}/admin`, adminRoute);
+app.use(`${BASE_PATH}/college`, collegeRoute);
 
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");

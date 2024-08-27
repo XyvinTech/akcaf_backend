@@ -11,3 +11,5 @@ adminRoute
   .route("/")
   .post(adminController.createAdmin)
   .get(adminController.getAdmin);
+
+module.exports = adminRoute;
