@@ -1,0 +1,34 @@
+{
+  "name": "akcaf_backend",
+  "version": "1.0.0",
+  "description": "akcaf backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XyvinTech/akcaf_backend.git"
+  },
+  "author": "hello-world-ttj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XyvinTech/akcaf_backend/issues"
+  },
+  "homepage": "https://github.com/XyvinTech/akcaf_backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cli-color": "^2.0.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.4",
+    "nodemon": "^3.1.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "volleyball": "^1.5.1"
+  }
+}
