@@ -8,10 +8,13 @@ const eventSchema = mongoose.Schema(
       enum: ["online", "offline"],
     },
     image: { type: String },
-    eventDate: { type: Date },
-    eventTime: { type: Date },
+    startDate: { type: Date },
+    startTime: { type: Date },
+    endDate: { type: Date },
+    endTime: { type: Date },
     platform: { type: String },
     link: { type: String },
+    venue: { type: String },
     speakers: [
       {
         name: { type: String },
