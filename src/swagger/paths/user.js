@@ -55,8 +55,8 @@
  *                 type: string
  *                 example: "Passionate developer with experience in full-stack development."
  *               status:
- *                 type: boolean
- *                 example: true
+ *                 type: string
+ *                 example: "active"
  *     responses:
  *       201:
  *         description: User created successfully
@@ -128,8 +128,8 @@
  *                 type: string
  *                 example: "Experienced developer specializing in full-stack development."
  *               status:
- *                 type: boolean
- *                 example: true
+ *                 type: string
+ *                 example: "inactive"
  *     responses:
  *       200:
  *         description: User updated successfully

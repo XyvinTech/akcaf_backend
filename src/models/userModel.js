@@ -21,8 +21,9 @@ const userSchema = mongoose.Schema(
     phone: { type: String },
     bio: { type: String },
     status: {
-      type: Boolean,
-      default: false,
+      type: String,
+      enum: ["active", "inactive", "rejected", "deleted"],
+      default: "inactive",
     },
     otp: { type: Number },
   },
