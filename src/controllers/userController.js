@@ -1,0 +1,143 @@
+const checkAccess = require("../helpers/checkAccess");
+const responseHandler = require("../helpers/responseHandler");
+const User = require("../models/userModel");
+const validations = require("../validations");
+
+exports.createUser = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
+    const { error } = validations.createUserSchema.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+
+    const checkExist = await User.findOne({
+      $or: [{ email: req.body.email }, { phone: req.body.phone }],
+    });
+
+    if (checkExist) {
+      return responseHandler(
+        res,
+        409,
+        `User with this email or phone already exists`
+      );
+    }
+
+    const newUser = await User.create(req.body);
+
+    if (newUser)
+      return responseHandler(
+        res,
+        201,
+        `New User created successfull..!`,
+        newUser
+      );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.editUser = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
+    const { error } = validations.editUserSchema.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    const editUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User updated successfully`, editUser);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(id);
+    if (findUser) {
+      return responseHandler(res, 200, `User found successfull..!`, findUser);
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_delete")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    const deleteUser = await User.findByIdAndDelete(id);
+    if (deleteUser) {
+      return responseHandler(res, 200, `User deleted successfully..!`);
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

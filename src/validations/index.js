@@ -53,3 +53,35 @@ exports.editCollegeSchema = Joi.object({
 exports.bulkCreateCollegeSchema = Joi.array().items(
   exports.createCollegeSchema
 );
+
+exports.createUserSchema = Joi.object({
+  name: Joi.object({
+    first: Joi.string().required(),
+    middle: Joi.string(),
+    last: Joi.string().required(),
+  }),
+  college: Joi.string().required(),
+  batch: Joi.number().required(),
+  designation: Joi.string().required(),
+  image: Joi.string(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+  bio: Joi.string(),
+  status: Joi.boolean(),
+});
+
+exports.editUserSchema = Joi.object({
+  name: Joi.object({
+    first: Joi.string(),
+    middle: Joi.string(),
+    last: Joi.string(),
+  }),
+  college: Joi.string(),
+  batch: Joi.number(),
+  designation: Joi.string(),
+  image: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+  bio: Joi.string(),
+  status: Joi.boolean(),
+});

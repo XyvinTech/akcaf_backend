@@ -11,8 +11,11 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",
     },
-    batch: { type: String },
-    designation: { type: String },
+    batch: { type: Number },
+    designation: {
+      type: String,
+      enum: ["president", "secretary", "treasurer", "rep", "member"],
+    },
     image: { type: String },
     email: { type: String },
     phone: { type: String },

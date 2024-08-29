@@ -4,7 +4,7 @@ const collegeSchema = mongoose.Schema(
   {
     collegeName: { type: String },
     startYear: { type: Number },
-    batch: [{ type: String }],
+    batch: [{ type: Number }],
     country: { type: String },
     state: { type: String },
     status: {

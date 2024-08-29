@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   - name: College
- *     description: Admin related endpoints
+ *     description: College related endpoints
  */
 
 /**
