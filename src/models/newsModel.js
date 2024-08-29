@@ -4,11 +4,16 @@ const NewsSchema = mongoose.Schema(
   {
     category: {
       type: String,
-      enum: ["latest", "business", "market", "economy"],
+      enum: ["latest", "business", "entertainment", "economy", "politics"],
     },
     title: { type: String },
     content: { type: String },
     media: { type: String },
+    status: {
+      type: String,
+      enum: ["published", "unpublished"],
+      default: "unpublished",
+    },
   },
   { timestamps: true }
 );
