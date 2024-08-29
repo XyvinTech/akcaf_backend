@@ -85,3 +85,34 @@ exports.editUserSchema = Joi.object({
   bio: Joi.string(),
   status: Joi.string(),
 });
+
+exports.createEventSchema = Joi.object({
+  eventName: Joi.string().required(),
+  type: Joi.string().required(),
+  image: Joi.string(),
+  startDate: Joi.date().required(),
+  startTime: Joi.date(),
+  endDate: Joi.date().min(Joi.ref("startDate")).required(),
+  endTime: Joi.date(),
+  platform: Joi.string(),
+  link: Joi.string(),
+  venue: Joi.string(),
+  speakers: Joi.array(),
+  // description: Joi.string(),
+  status: Joi.string(),
+});
+
+exports.editEventSchema = Joi.object({
+  eventName: Joi.string(),
+  type: Joi.string(),
+  image: Joi.string(),
+  startDate: Joi.date(),
+  startTime: Joi.date(),
+  endDate: Joi.date().min(Joi.ref("startDate")),
+  endTime: Joi.date(),
+  platform: Joi.string(),
+  link: Joi.string(),
+  venue: Joi.string(),
+  speakers: Joi.array(),
+  status: Joi.string(),
+});

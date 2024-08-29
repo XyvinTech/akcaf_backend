@@ -1,1 +1,134 @@
 // TODO : event controller
+
+const checkAccess = require("../helpers/checkAccess");
+const responseHandler = require("../helpers/responseHandler");
+const validations = require("../validations");
+const Event = require("../models/eventModel");
+
+//* Create Event
+exports.createEvent = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("eventManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { error } = validations.createEventSchema.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+    const existingEvent = await Event.findOne({
+      eventName: req.body.eventName,
+    });
+    if (existingEvent) {
+      return responseHandler(
+        res,
+        400,
+        `An event with the name "${req.body.eventName}" already exists.`
+      );
+    }
+    const newEvent = await Event.create(req.body);
+    if (newEvent)
+      return responseHandler(
+        res,
+        201,
+        `New Event created successfull..!`,
+        newEvent
+      );
+  } catch (error) {
+    console.error("Error creating event:", error);
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+//* Edit Event By Id
+exports.editEvent = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("eventManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { error } = validations.editEventSchema.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedEvent) {
+      return responseHandler(res, 404, "Event not found");
+    }
+    return responseHandler(
+      res,
+      200,
+      `Event updated successfully!`,
+      updatedEvent
+    );
+  } catch (error) {
+    console.error("Error updating event:", error);
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+//* Delete Event By Id
+exports.deleteEvent = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("eventManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+    if (!deletedEvent) {
+      return responseHandler(res, 404, "Event not found");
+    }
+    return responseHandler(res, 200, `Event deleted successfully`);
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+//* Get Single Event By Id
+exports.getSingleEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return responseHandler(res, 404, "Event not found");
+    }
+    return responseHandler(res, 200, "Event retrieved successfully", event);
+  } catch (error) {
+    console.error("Error fetching event:", error);
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+//* Get All Events
+exports.getAllEvents = async (req, res) => {
+  try {
+    const events = await Event.find();
+    if (!events || events.length === 0) {
+      return responseHandler(res, 404, "No events found");
+    }
+    return responseHandler(res, 200, "Events retrieved successfully", events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

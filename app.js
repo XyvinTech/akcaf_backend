@@ -15,6 +15,7 @@ const {
 } = require("./src/swagger/swagger");
 const roleRoute = require("./src/routes/role");
 const userRoute = require("./src/routes/user");
+const eventRoute = require("./src/routes/event");
 
 const app = express();
 app.use(volleyball);
@@ -52,6 +53,8 @@ app.use(`${BASE_PATH}/admin`, adminRoute);
 app.use(`${BASE_PATH}/college`, collegeRoute);
 app.use(`${BASE_PATH}/role`, roleRoute);
 app.use(`${BASE_PATH}/user`, userRoute);
+app.use(`${BASE_PATH}/event`, eventRoute);
+
 
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");
