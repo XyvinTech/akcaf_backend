@@ -54,6 +54,23 @@ exports.bulkCreateCollegeSchema = Joi.array().items(
   exports.createCollegeSchema
 );
 
+exports.createNewsSchema = Joi.object({
+  category: Joi.string(),
+  title: Joi.string(),
+  content: Joi.string(),
+  media : Joi.string(),
+  status: Joi.string(),
+});
+
+exports.editNewsSchema = Joi.object({
+  category: Joi.string(),
+  title: Joi.string(),
+  content: Joi.string(),
+  media : Joi.string(),
+  status: Joi.string(),
+});
+
+
 exports.createUserSchema = Joi.object({
   name: Joi.object({
     first: Joi.string().required(),

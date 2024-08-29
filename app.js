@@ -14,6 +14,7 @@ const {
   swaggerOptions,
 } = require("./src/swagger/swagger");
 const roleRoute = require("./src/routes/role");
+const newsRoute = require('./src/routes/news')
 const userRoute = require("./src/routes/user");
 
 const app = express();
@@ -52,6 +53,7 @@ app.use(`${BASE_PATH}/admin`, adminRoute);
 app.use(`${BASE_PATH}/college`, collegeRoute);
 app.use(`${BASE_PATH}/role`, roleRoute);
 app.use(`${BASE_PATH}/user`, userRoute);
+app.use(`${BASE_PATH}/news`,newsRoute)
 
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");
