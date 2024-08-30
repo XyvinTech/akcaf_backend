@@ -5,7 +5,7 @@ const promotionSchema = mongoose.Schema(
     title: { type: String },
     description: { type: String },
     type: { type: String },
-    statDate: { type: Date },
+    startDate: { type: Date },
     endDate: { type: Date },
     media: { type: String },
     link: { type: String },

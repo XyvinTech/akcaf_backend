@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { date, link } = require("joi/lib");
 
 exports.createAdminSchema = Joi.object({
   name: Joi.string().required(),
@@ -68,6 +69,26 @@ exports.editNewsSchema = Joi.object({
   content: Joi.string(),
   media : Joi.string(),
   status: Joi.string(),
+});
+
+exports.createPromotionSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  type : Joi.string(),
+  startDate : Joi.date(),
+  endDate : Joi.date(),
+  media : Joi.string(),
+  link: Joi.string()
+});
+
+exports.editPromotionSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  type : Joi.string(),
+  startDate : Joi.date(),
+  endDate : Joi.date(),
+  media : Joi.string(),
+  link: Joi.string()
 });
 
 
