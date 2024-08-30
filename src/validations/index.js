@@ -91,14 +91,22 @@ exports.createEventSchema = Joi.object({
   type: Joi.string().required(),
   image: Joi.string(),
   startDate: Joi.date().required(),
-  startTime: Joi.date(),
-  endDate: Joi.date().min(Joi.ref("startDate")).required(),
-  endTime: Joi.date(),
+  startTime: Joi.date().required(),
+  endDate: Joi.date().required(),
+  endTime: Joi.date().required(),
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),
-  speakers: Joi.array(),
-  // description: Joi.string(),
+  speakers: Joi.array()
+    .items(
+      Joi.object({
+        name: Joi.string().required(),
+        designation: Joi.string().required(),
+        role: Joi.string().required(),
+        image: Joi.string(),
+      })
+    )
+    .required(),
   status: Joi.string(),
 });
 
@@ -108,11 +116,18 @@ exports.editEventSchema = Joi.object({
   image: Joi.string(),
   startDate: Joi.date(),
   startTime: Joi.date(),
-  endDate: Joi.date().min(Joi.ref("startDate")),
+  endDate: Joi.date(),
   endTime: Joi.date(),
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),
-  speakers: Joi.array(),
+  speakers: Joi.array().items(
+    Joi.object({
+      name: Joi.string(),
+      designation: Joi.string(),
+      role: Joi.string(),
+      image: Joi.string(),
+    })
+  ),
   status: Joi.string(),
 });

@@ -1,5 +1,3 @@
-// TODO swagger
-
 /**
  * @swagger
  * tags:
@@ -29,26 +27,29 @@
  *               type:
  *                 type: string
  *                 description: The type of the event
- *                 example: "Workshop"
+ *                 example: "Online"
  *               image:
  *                 type: string
- *                 description: Upload the event image
+ *                 description: The URL of the event image
+ *                 example: "https://example.com/event-image.jpg"
  *               startDate:
- *                 type: date
+ *                 type: string
  *                 format: date
  *                 description: The start date of the event
  *                 example: "2024-08-29"
  *               startTime:
- *                 type: date
+ *                 type: string
+ *                 format: time
  *                 description: The start time of the event in HH:MM format
  *                 example: "14:30"
  *               endDate:
- *                 type: date
+ *                 type: string
  *                 format: date
  *                 description: The end date of the event
  *                 example: "2024-08-30"
  *               endTime:
- *                 type: date
+ *                 type: string
+ *                 format: time
  *                 description: The end time of the event in HH:MM format
  *                 example: "16:00"
  *               platform:
@@ -66,14 +67,30 @@
  *               speakers:
  *                 type: array
  *                 items:
- *                   type: string
- *                 description: List of speakers for the event
- *                 example: ["Joy", "Arun"]
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: The name of the speaker
+ *                       example: "Joy"
+ *                     designation:
+ *                       type: string
+ *                       description: The designation of the speaker
+ *                       example: "Professor"
+ *                     role:
+ *                       type: string
+ *                       description: The role of the speaker in the event
+ *                       example: "Keynote Speaker"
+ *                     image:
+ *                       type: string
+ *                       description: The URL of the speaker's image
+ *                       example: "https://example.com/speaker-image.jpg"
  *             required:
  *               - eventName
  *               - type
  *               - startDate
  *               - endDate
+ *               - speakers
  *     responses:
  *       201:
  *         description: New event created successfully
@@ -113,7 +130,7 @@
  * @swagger
  * /event/single/{id}:
  *   put:
- *     summary: Edit an Existing Event By Id
+ *     summary: Edit an Existing Event By ID
  *     description: Update an existing event by ID.
  *     tags:
  *       - Event
@@ -141,23 +158,26 @@
  *                 example: "Workshop"
  *               image:
  *                 type: string
- *                 description: Upload the event image
+ *                 description: The URL of the event image
+ *                 example: "https://example.com/event-image.jpg"
  *               startDate:
- *                 type: date
+ *                 type: string
  *                 format: date
  *                 description: The start date of the event
  *                 example: "2024-08-29"
  *               startTime:
- *                 type: date
+ *                 type: string
+ *                 format: time
  *                 description: The start time of the event in HH:MM format
  *                 example: "14:30"
  *               endDate:
- *                 type: date
+ *                 type: string
  *                 format: date
  *                 description: The end date of the event
  *                 example: "2024-08-30"
  *               endTime:
- *                 type: date
+ *                 type: string
+ *                 format: time
  *                 description: The end time of the event in HH:MM format
  *                 example: "16:00"
  *               platform:
@@ -175,9 +195,34 @@
  *               speakers:
  *                 type: array
  *                 items:
- *                   type: string
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: The name of the speaker
+ *                       example: "John"
+ *                     designation:
+ *                       type: string
+ *                       description: The designation of the speaker
+ *                       example: "Professor"
+ *                     role:
+ *                       type: string
+ *                       description: The role of the speaker in the event
+ *                       example: "Keynote Speaker"
+ *                     image:
+ *                       type: string
+ *                       description: The URL of the speaker's image
+ *                       example: "https://example.com/speaker-image.jpg"
  *                 description: List of speakers for the event
- *                 example: ["John", "Alex"]
+ *                 example:
+ *                   - name: "John"
+ *                     designation: "Professor"
+ *                     role: "Keynote Speaker"
+ *                     image: "https://example.com/speaker-image.jpg"
+ *                   - name: "Alex"
+ *                     designation: "Lecturer"
+ *                     role: "Guest Speaker"
+ *                     image: "https://example.com/speaker2-image.jpg"
  *     responses:
  *       200:
  *         description: Event updated successfully
@@ -215,7 +260,7 @@
 
 /**
  * @swagger
- * /event:
+ * /event/list:
  *   get:
  *     summary: Get all events
  *     description: Retrieve all events from the database.

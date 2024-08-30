@@ -1,11 +1,8 @@
-// TODO : event controller
-
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const validations = require("../validations");
 const Event = require("../models/eventModel");
 
-//* Create Event
 exports.createEvent = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");
@@ -41,12 +38,10 @@ exports.createEvent = async (req, res) => {
         newEvent
       );
   } catch (error) {
-    console.error("Error creating event:", error);
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
 
-//* Edit Event By Id
 exports.editEvent = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");
@@ -83,7 +78,6 @@ exports.editEvent = async (req, res) => {
   }
 };
 
-//* Delete Event By Id
 exports.deleteEvent = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");
@@ -100,12 +94,10 @@ exports.deleteEvent = async (req, res) => {
     }
     return responseHandler(res, 200, `Event deleted successfully`);
   } catch (error) {
-    console.error("Error deleting event:", error);
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
 
-//* Get Single Event By Id
 exports.getSingleEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -114,12 +106,10 @@ exports.getSingleEvent = async (req, res) => {
     }
     return responseHandler(res, 200, "Event retrieved successfully", event);
   } catch (error) {
-    console.error("Error fetching event:", error);
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
 
-//* Get All Events
 exports.getAllEvents = async (req, res) => {
   try {
     const events = await Event.find();
@@ -128,7 +118,6 @@ exports.getAllEvents = async (req, res) => {
     }
     return responseHandler(res, 200, "Events retrieved successfully", events);
   } catch (error) {
-    console.error("Error fetching events:", error);
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
