@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { date, link } = require("joi/lib");
 
 exports.createAdminSchema = Joi.object({
   name: Joi.string().required(),
@@ -53,6 +54,42 @@ exports.editCollegeSchema = Joi.object({
 exports.bulkCreateCollegeSchema = Joi.array().items(
   exports.createCollegeSchema
 );
+
+exports.createNewsSchema = Joi.object({
+  category: Joi.string().required(),
+  title: Joi.string().required(),
+  content: Joi.string().required(),
+  media: Joi.string().required(),
+  status: Joi.string(),
+});
+
+exports.editNewsSchema = Joi.object({
+  category: Joi.string(),
+  title: Joi.string(),
+  content: Joi.string(),
+  media: Joi.string(),
+  status: Joi.string(),
+});
+
+exports.createPromotionSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  type: Joi.string().required(),
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
+  media: Joi.string().required(),
+  link: Joi.string(),
+});
+
+exports.editPromotionSchema = Joi.object({
+  title: Joi.string(),
+  description: Joi.string(),
+  type: Joi.string(),
+  startDate: Joi.date(),
+  endDate: Joi.date(),
+  media: Joi.string(),
+  link: Joi.string(),
+});
 
 exports.createUserSchema = Joi.object({
   name: Joi.object({
