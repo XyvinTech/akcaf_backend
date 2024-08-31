@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema(
+const linkSchema = new mongoose.Schema(
+  {
+    name: { type: String },
+    link: { type: String },
+  },
+  { _id: false }
+);
+
+const userSchema = new mongoose.Schema(
   {
     name: {
       first: { type: String },
@@ -12,8 +20,8 @@ const userSchema = mongoose.Schema(
       ref: "College",
     },
     batch: { type: Number },
-    designation: {
-      type: String,
+    role: {
+      type: { type: String },
       enum: ["president", "secretary", "treasurer", "rep", "member"],
     },
     image: { type: String },
@@ -26,10 +34,26 @@ const userSchema = mongoose.Schema(
       default: "inactive",
     },
     otp: { type: Number },
+    address: { type: String },
+    company: {
+      name: { type: String },
+      designation: { type: String },
+      phone: { type: String },
+      address: { type: String },
+    },
+    social: [linkSchema],
+    websites: [linkSchema],
+    awards: [
+      {
+        image: { type: String },
+        name: { type: String },
+        authority: { type: String },
+      },
+    ],
+    videos: [linkSchema],
+    certificates: [linkSchema],
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);

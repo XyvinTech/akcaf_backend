@@ -1,7 +1,51 @@
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const User = require("../models/userModel");
+const { generateOTP } = require("../utils/generateOTP");
+const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
+
+exports.sendOtp = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return responseHandler(res, 400, "Phone number is required");
+    }
+    // TODO: Send OTP with firebase function call after success otp send -> create user
+    const otp = generateOTP(5);
+    req.body.otp = otp;
+    const user = await User.create(req.body);
+    if (user) return responseHandler(res, 200, "OTP sent successfully", otp);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.verifyUser = async (req, res) => {
+  try {
+    const { otp, phone } = req.body;
+    if (!otp) {
+      return responseHandler(res, 400, "OTP is required");
+    }
+    if (!phone) {
+      return responseHandler(res, 400, "Phone number is required");
+    }
+    const user = await User.findOne({ phone });
+    if (!user) {
+      return responseHandler(res, 404, "User not found");
+    }
+    if (user.otp !== otp) {
+      return responseHandler(res, 400, "Invalid OTP");
+    }
+    user.otp = null;
+    await user.save();
+    const token = generateToken(user._id);
+
+    return responseHandler(res, 200, "User verified successfully", token);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
 
 exports.createUser = async (req, res) => {
   try {
@@ -137,6 +181,37 @@ exports.deleteUser = async (req, res) => {
     if (deleteUser) {
       return responseHandler(res, 200, `User deleted successfully..!`);
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { error } = validations.updateUserSchema.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    const editUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User updated successfully`, editUser);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

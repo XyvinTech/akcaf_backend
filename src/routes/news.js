@@ -1,6 +1,9 @@
 const express = require("express");
 const newsController = require("../controllers/newsController");
+const authVerify = require("../middlewares/authVerify");
 const newsRoute = express.Router();
+
+newsRoute.use(authVerify);
 
 newsRoute.post("/", newsController.createNews);
 

@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { date, link } = require("joi/lib");
 
 exports.createAdminSchema = Joi.object({
   name: Joi.string().required(),
@@ -99,7 +98,7 @@ exports.createUserSchema = Joi.object({
   }),
   college: Joi.string().required(),
   batch: Joi.number().required(),
-  designation: Joi.string().required(),
+  role: Joi.string().required(),
   image: Joi.string(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
@@ -115,12 +114,61 @@ exports.editUserSchema = Joi.object({
   }),
   college: Joi.string(),
   batch: Joi.number(),
-  designation: Joi.string(),
+  role: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
   phone: Joi.string(),
   bio: Joi.string(),
   status: Joi.string(),
+});
+
+exports.updateUserSchema = Joi.object({
+  name: Joi.object({
+    first: Joi.string(),
+    middle: Joi.string(),
+    last: Joi.string(),
+  }),
+  image: Joi.string(),
+  email: Joi.string(),
+  address: Joi.string(),
+  bio: Joi.string(),
+  company: Joi.object({
+    name: Joi.string(),
+    designation: Joi.string(),
+    phone: Joi.string(),
+    address: Joi.string(),
+  }),
+  social: Joi.array().items(
+    Joi.object({
+      name: Joi.string(),
+      link: Joi.string(),
+    })
+  ),
+  websites: Joi.array().items(
+    Joi.object({
+      name: Joi.string(),
+      link: Joi.string(),
+    })
+  ),
+  awards: Joi.array().items(
+    Joi.object({
+      image: Joi.string(),
+      name: Joi.string(),
+      authority: Joi.string(),
+    })
+  ),
+  videos: Joi.array().items(
+    Joi.object({
+      name: Joi.string(),
+      link: Joi.string(),
+    })
+  ),
+  certificates: Joi.array().items(
+    Joi.object({
+      name: Joi.string(),
+      link: Joi.string(),
+    })
+  ),
 });
 
 exports.createEventSchema = Joi.object({
@@ -167,4 +215,11 @@ exports.editEventSchema = Joi.object({
     })
   ),
   status: Joi.string(),
+});
+
+exports.createFeedsSchema = Joi.object({
+  type: Joi.string().required(),
+  media: Joi.string().required(),
+  link: Joi.string(),
+  content: Joi.string().required(),
 });

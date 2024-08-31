@@ -1,6 +1,9 @@
 const express = require("express");
 const roleController = require("../controllers/roleController");
+const authVerify = require("../middlewares/authVerify");
 const roleRoute = express.Router();
+
+roleRoute.use(authVerify);
 
 roleRoute.post("/", roleController.createRole);
 

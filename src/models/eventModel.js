@@ -25,7 +25,7 @@ const eventSchema = mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["pending", "live", "completed"],
+      enum: ["pending", "live", "completed", "cancelled"],
       default: "pending",
     },
     rsvp: [

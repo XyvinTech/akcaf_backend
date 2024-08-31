@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 
 exports.generateToken = (userId, roleId) => {
   const payload = {
-    roleId,
     userId,
+    ...(roleId && { roleId }),
   };
-  return jwt.sign({ payload }, process.env.JWT_SECRET, {});
+
+  return jwt.sign(payload, process.env.JWT_SECRET, {});
 };
