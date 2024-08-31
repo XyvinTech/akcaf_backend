@@ -19,8 +19,8 @@ const userRoute = require("./src/routes/user");
 const eventRoute = require("./src/routes/event");
 const promotionRoute = require("./src/routes/promotion");
 const feedsRoute = require("./src/routes/feeds");
+const { app, server } = require("./src/socket");
 
-const app = express();
 app.use(volleyball);
 
 //* Define the PORT & API version based on environment variable
@@ -66,7 +66,7 @@ app.all("*", (req, res) => {
 });
 
 //! Start the server and listen on the specified port from environment variable
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   const portMessage = clc.redBright(`✓ App is running on port: ${PORT}`);
   const envMessage = clc.yellowBright(
     `✓ Environment: ${NODE_ENV || "development"}`
