@@ -274,3 +274,29 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /event/single/{id}/rsvp:
+ *   patch:
+ *     summary: Add an RSVP to an event
+ *     description: Adds the current user's ID to the RSVP list of a specified event.
+ *     tags:
+ *       - Event
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the event to which the RSVP is being added
+ *     responses:
+ *       200:
+ *         description: RSVP added successfully
+ *       400:
+ *         description: Bad Request - Event ID is required
+ *       404:
+ *         description: Event not found
+ *       500:
+ *         description: Internal Server Error
+ */

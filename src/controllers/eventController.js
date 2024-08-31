@@ -121,3 +121,19 @@ exports.getAllEvents = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.addRSVP = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return responseHandler(res, 400, "Event Id is required");
+    const findEvent = await Event.findById(id);
+    if (!findEvent) {
+      return responseHandler(res, 404, "Event not found");
+    }
+    findEvent.rsvp.push(req.userId);
+    await findEvent.save();
+    return responseHandler(res, 200, "RSVP added successfully");
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

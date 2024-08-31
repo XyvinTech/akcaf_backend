@@ -13,6 +13,7 @@ eventRoute
   .route("/single/:id")
   .put(eventController.editEvent)
   .get(eventController.getSingleEvent)
-  .delete(eventController.deleteEvent);
+  .delete(eventController.deleteEvent)
+  .patch(eventController.addRSVP);
 
 module.exports = eventRoute;
