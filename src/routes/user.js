@@ -8,6 +8,8 @@ userRoute.post("/verify", userController.verifyUser);
 
 userRoute.use(authVerify);
 
+userRoute.get("/", userController.fetchUser)
+
 userRoute.patch("/update", userController.updateUser);
 
 userRoute.post("/admin", userController.createUser);

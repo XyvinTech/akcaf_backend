@@ -425,3 +425,24 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     summary: Get a user
+ *     description: Retrieves a user's details
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: User found successfully
+ *       400:
+ *         description: User ID is missing
+ *       403:
+ *         description: Forbidden, user lacks permissions
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
