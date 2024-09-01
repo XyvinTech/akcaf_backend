@@ -27,7 +27,7 @@ exports.createFeeds = async (req, res) => {
       res,
       201,
       `New Feeds created successfull..!`,
-      newNews
+      newFeeds
     );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);

@@ -4,7 +4,7 @@ const feedsSchema = mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["information", "job", "funding", "requirement"],
+      enum: ["Information", "Job", "Funding", "Requirement"],
     },
     media: { type: String },
     link: { type: String },
