@@ -145,7 +145,7 @@
 
 /**
  * @swagger
- * /users/admin/single/{id}:
+ * /user/admin/single/{id}:
  *   get:
  *     summary: Get a user by ID
  *     description: Retrieves a user's details based on the provided user ID. Access is restricted based on permissions.
@@ -174,7 +174,7 @@
 
 /**
  * @swagger
- * /users/admin/single/{id}:
+ * /user/admin/single/{id}:
  *   delete:
  *     summary: Delete a user by ID
  *     description: Deletes a user based on the provided user ID. Access is restricted based on permissions.
@@ -264,19 +264,12 @@
 
 /**
  * @swagger
- * /users/{id}:
+ * /user/update:
  *   patch:
- *     summary: Update user by ID
+ *     summary: Update user
  *     description: Updates a specific user's details by their ID.
  *     tags:
  *       - User
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the user to update
  *     requestBody:
  *       required: true
  *       content:

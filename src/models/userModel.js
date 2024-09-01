@@ -21,8 +21,9 @@ const userSchema = new mongoose.Schema(
     },
     batch: { type: Number },
     role: {
-      type: { type: String },
+      type: String,
       enum: ["president", "secretary", "treasurer", "rep", "member"],
+      default: "member",
     },
     image: { type: String },
     email: { type: String },

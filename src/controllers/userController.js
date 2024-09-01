@@ -14,6 +14,8 @@ exports.sendOtp = async (req, res) => {
     const checkExist = await User.findOne({ phone });
     const otp = generateOTP(5);
     if (checkExist) {
+      checkExist.otp = otp;
+      checkExist.save();
       return responseHandler(res, 200, "OTP sent successfully", otp);
     }
     // TODO: Send OTP with firebase function call after success otp send -> create user
@@ -199,7 +201,7 @@ exports.updateUser = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { id } = req.params;
+    const id = req.userId;
     if (!id) {
       return responseHandler(res, 400, "User ID is required");
     }

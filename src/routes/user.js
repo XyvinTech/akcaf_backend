@@ -8,7 +8,7 @@ userRoute.post("/verify", userController.verifyUser);
 
 userRoute.use(authVerify);
 
-userRoute.patch("/update/:id", userController.updateUser);
+userRoute.patch("/update", userController.updateUser);
 
 userRoute.post("/admin", userController.createUser);
 
