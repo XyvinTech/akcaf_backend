@@ -13,6 +13,9 @@ const swaggerDefinition = {
     {
       url: `http://localhost:${PORT}/api/${API_VERSION}`,
     },
+    {
+      url: `https://3.108.205.101:${PORT}/api/${API_VERSION}`,
+    }
   ],
   components: {
     securitySchemes: {
