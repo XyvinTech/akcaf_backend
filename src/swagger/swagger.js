@@ -11,10 +11,10 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://localhost:${PORT}/api/${API_VERSION}`,
+      url: `http://3.108.205.101:${PORT}/api/${API_VERSION}`,
     },
     {
-      url: `https://3.108.205.101:${PORT}/api/${API_VERSION}`,
+      url: `http://localhost:${PORT}/api/${API_VERSION}`,
     }
   ],
   components: {
