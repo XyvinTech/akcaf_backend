@@ -222,3 +222,35 @@ exports.updateUser = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { pageNo = 1, status, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {};
+    const totalCount = await User.countDocuments(filter);
+    const data = await User.find(filter)
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return responseHandler(
+      res,
+      200,
+      `Users found successfull..!`,
+      data,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

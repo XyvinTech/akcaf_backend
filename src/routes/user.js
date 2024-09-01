@@ -18,4 +18,6 @@ userRoute
   .get(userController.getUser)
   .delete(userController.deleteUser);
 
+userRoute.get("/admin/list", userController.getAllUsers);
+
 module.exports = userRoute;

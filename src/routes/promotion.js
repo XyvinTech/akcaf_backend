@@ -13,4 +13,6 @@ promotionRoute
   .put(promotionController.updatePromotion)
   .delete(promotionController.deletePromotion);
 
+promotionRoute.get("/list", promotionController.getAllPromotion);
+
 module.exports = promotionRoute;
