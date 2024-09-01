@@ -9,7 +9,7 @@ const collegeSchema = mongoose.Schema(
     state: { type: String },
     status: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   { timestamps: true }

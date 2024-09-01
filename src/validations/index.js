@@ -223,3 +223,7 @@ exports.createFeedsSchema = Joi.object({
   link: Joi.string(),
   content: Joi.string().required(),
 });
+
+exports.createCourseSchema = Joi.object({
+  courseName: Joi.string().required(),
+});
