@@ -51,6 +51,9 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          API_VERSION: ${{ secrets.API_VERSION }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
@@ -83,4 +86,8 @@ jobs:
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               -e AWS_REGION=${{ secrets.AWS_REGION }} \
               -e ENVIRONMENT=development \
+              -e API_VERSION=${{ env.API_VERSION }} \
+              -e MONGO_URL=${{ env.MONGO_URL }} \
+              -e JWT_SECRET=${{ env.JWT_SECRET }} \
+              -e PORT=${{ env.PORT }} \
                 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}

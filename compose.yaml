@@ -11,8 +11,6 @@ services:
   server:
     build:
       context: .
-    env_file:
-      - /home/ec2-user/.env
     environment:
       NODE_ENV: development
     ports:
