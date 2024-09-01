@@ -11,8 +11,12 @@ exports.sendOtp = async (req, res) => {
     if (!phone) {
       return responseHandler(res, 400, "Phone number is required");
     }
-    // TODO: Send OTP with firebase function call after success otp send -> create user
+    const checkExist = await User.findOne({ phone });
     const otp = generateOTP(5);
+    if (checkExist) {
+      return responseHandler(res, 200, "OTP sent successfully", otp);
+    }
+    // TODO: Send OTP with firebase function call after success otp send -> create user
     req.body.otp = otp;
     const user = await User.create(req.body);
     if (user) return responseHandler(res, 200, "OTP sent successfully", otp);
