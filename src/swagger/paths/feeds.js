@@ -66,3 +66,36 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /feeds/list:
+ *   get:
+ *     summary: Get a list of feeds
+ *     description: Retrieves a paginated list of feeds with optional filtering by status.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter feeds by status
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of feeds per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of feeds
+ *       500:
+ *         description: Internal Server Error
+ */

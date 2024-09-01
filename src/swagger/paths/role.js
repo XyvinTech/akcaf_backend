@@ -120,3 +120,36 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /role/list:
+ *   get:
+ *     summary: Get a list of roles
+ *     description: Retrieves a paginated list of roles with optional filtering by status.
+ *     tags:
+ *       - Role
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter roles by status
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of roles per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of roles
+ *       500:
+ *         description: Internal Server Error
+ */

@@ -13,4 +13,6 @@ feedsRoute
 //   .put(feedsController.updateFeeds)
 //   .delete(feedsController.deletefeeds);
 
+feedsRoute.get("/list", feedsController.getAllFeeds)
+
 module.exports = feedsRoute;

@@ -13,4 +13,6 @@ roleRoute
   .put(roleController.editRole)
   .delete(roleController.deleteRole);
 
+roleRoute.get("/list", roleController.getAllRoles)
+
 module.exports = roleRoute;

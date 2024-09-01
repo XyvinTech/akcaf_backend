@@ -191,3 +191,36 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /college/list:
+ *   get:
+ *     summary: Get a list of colleges
+ *     description: Retrieves a paginated list of colleges with optional filtering by status.
+ *     tags:
+ *       - College
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter colleges by status
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of colleges per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of colleges
+ *       500:
+ *         description: Internal Server Error
+ */

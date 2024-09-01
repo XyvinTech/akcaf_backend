@@ -89,3 +89,36 @@
  *       404:
  *         description: Admin not found
  */
+
+/**
+ * @swagger
+ * /admin/list:
+ *   get:
+ *     summary: Get a list of admins
+ *     description: Retrieves a paginated list of admins with optional filtering by status.
+ *     tags:
+ *       - Admin
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter admins by status
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of admins per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of admins
+ *       500:
+ *         description: Internal Server Error
+ */

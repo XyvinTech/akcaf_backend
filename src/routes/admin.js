@@ -12,4 +12,6 @@ adminRoute
   .post(adminController.createAdmin)
   .get(adminController.getAdmin);
 
+adminRoute.get("/list", adminController.getAllAdmins);
+
 module.exports = adminRoute;

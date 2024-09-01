@@ -13,5 +13,6 @@ collegeRoute
   .delete(collegeController.deleteCollege);
 
 collegeRoute.post("/bulk", collegeController.bulkCreateCollege);
+collegeRoute.get("/list", collegeController.getAllColleges)
 
 module.exports = collegeRoute;

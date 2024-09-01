@@ -150,3 +150,27 @@ exports.deleteRole = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getAllRoles = async (req, res) => {
+  try {
+    const { pageNo = 1, status, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {};
+    const totalCount = await Role.countDocuments(filter);
+    const data = await Role.find(filter)
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return responseHandler(
+      res,
+      200,
+      `Roles found successfull..!`,
+      data,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
