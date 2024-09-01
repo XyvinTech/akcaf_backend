@@ -12,9 +12,9 @@ services:
     build:
       context: .
     env_file:
-      - /home/ec2-user/.env
+      - .env
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
     ports:
       - 3000:3000
 
