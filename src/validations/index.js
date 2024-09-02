@@ -2,7 +2,6 @@ const Joi = require("joi");
 
 exports.createAdminSchema = Joi.object({
   name: Joi.string().required(),
-  designation: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
   college: Joi.string().required(),
@@ -13,7 +12,6 @@ exports.createAdminSchema = Joi.object({
 
 exports.editAdminSchema = Joi.object({
   name: Joi.string(),
-  designation: Joi.string(),
   email: Joi.string(),
   phone: Joi.string(),
   college: Joi.string(),

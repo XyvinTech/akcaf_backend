@@ -5,7 +5,6 @@ const adminSchema = mongoose.Schema(
     name: { type: String },
     phone: { type: String },
     email: { type: String },
-    designation: { type: String },
     college: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",

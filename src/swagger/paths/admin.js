@@ -53,9 +53,6 @@
  *               name:
  *                 type: string
  *                 example: "John Doe"
- *               designation:
- *                 type: string
- *                 example: "Administrator"
  *               college:
  *                 type: string
  *                 example: "666c1a3895a6b176b7f2bcf7"
