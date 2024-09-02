@@ -52,7 +52,7 @@ exports.createAdmin = async (req, res) => {
     }
 
     const findAdmin = await Admin.findOne({
-      $or: [{ email: req.body.email }, { mobile: req.body.mobile }],
+      $or: [{ email: req.body.email }, { phone: req.body.phone }],
     });
     if (findAdmin)
       return responseHandler(
