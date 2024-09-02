@@ -296,10 +296,8 @@
  *                 type: string
  *               college:
  *                 type: string
- *                 example: "66cef851d3cbe59728a7d474"
  *               course:
  *                 type: string
- *                 example: "66cef851d3cbe59728a7d474"
  *               email:
  *                 type: string
  *               address:
@@ -371,6 +369,8 @@
  *                 last: "Doe"
  *               image: "https://example.com/image.jpg"
  *               email: "johndoe@example.com"
+ *               college: "66cef851d3cbe59728a7d474"
+ *               course: "66cef851d3cbe59728a7d474"
  *               address: "123 Main St, Anytown, USA"
  *               bio: "Software Developer with 10 years of experience."
  *               company:
