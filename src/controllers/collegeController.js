@@ -5,6 +5,15 @@ const validations = require("../validations");
 
 exports.createCollege = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { error } = validations.createCollegeSchema.validate(req.body, {
       abortEarly: true,
     });
@@ -51,6 +60,15 @@ exports.createCollege = async (req, res) => {
 
 exports.editCollege = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { id } = req.params;
 
     if (!id) {
@@ -83,6 +101,15 @@ exports.editCollege = async (req, res) => {
 
 exports.getCollege = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { id } = req.params;
 
     if (!id) {
@@ -105,6 +132,15 @@ exports.getCollege = async (req, res) => {
 
 exports.deleteCollege = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { id } = req.params;
 
     if (!id) {
@@ -122,6 +158,15 @@ exports.deleteCollege = async (req, res) => {
 
 exports.bulkCreateCollege = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { error } = validations.bulkCreateCollegeSchema.validate(req.body, {
       abortEarly: true,
     });
@@ -178,6 +223,14 @@ exports.bulkCreateCollege = async (req, res) => {
 
 exports.getAllColleges = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("collegeManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};

@@ -195,3 +195,18 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /promotion/user:
+ *   get:
+ *     summary: Get a user list of promotions
+ *     description: Retrieves a  user list of promotions.
+ *     tags:
+ *       - Promotion
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of promotions
+ *       500:
+ *         description: Internal Server Error
+ */

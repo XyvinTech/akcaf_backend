@@ -122,3 +122,32 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /admin/single/{id}:
+ *   get:
+ *     summary: Get a Admin by ID
+ *     description: Retrieves a admin's details based on the provided admin ID. Access is restricted based on permissions.
+ *     tags:
+ *       - Admin
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the admin to retrieve
+ *         schema:
+ *           type: string
+ *           example: "6123abc456def7890ghi1234"
+ *     responses:
+ *       200:
+ *         description: Admin found successfully
+ *       400:
+ *         description: Admin ID is missing
+ *       403:
+ *         description: Forbidden, admin lacks permissions
+ *       404:
+ *         description: Admin not found
+ *       500:
+ *         description: Internal Server Error
+ */

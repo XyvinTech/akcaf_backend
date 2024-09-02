@@ -5,6 +5,14 @@ const validations = require("../validations");
 
 exports.createPromotion = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("promotionManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const createPromotionValidator = validations.createPromotionSchema.validate(
       req.body,
       {
@@ -37,6 +45,14 @@ exports.createPromotion = async (req, res) => {
 
 exports.getPromotion = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("promotionManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -59,6 +75,14 @@ exports.getPromotion = async (req, res) => {
 
 exports.updatePromotion = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("promotionManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -91,6 +115,14 @@ exports.updatePromotion = async (req, res) => {
 
 exports.deletePromotion = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("promotionManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -108,6 +140,14 @@ exports.deletePromotion = async (req, res) => {
 
 exports.getAllPromotion = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("promotionManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
@@ -125,6 +165,17 @@ exports.getAllPromotion = async (req, res) => {
       data,
       totalCount
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getUserPromotion = async (req, res) => {
+  try {
+    const filter = {};
+    const data = await Promotion.find(filter).sort({ createdAt: -1 }).lean();
+
+    return responseHandler(res, 200, `Promotions found successfull..!`, data);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

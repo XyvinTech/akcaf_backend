@@ -5,6 +5,15 @@ const validations = require("../validations");
 
 exports.createNews = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("newsManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const createNewsValidator = validations.createNewsSchema.validate(
       req.body,
       {
@@ -37,6 +46,14 @@ exports.createNews = async (req, res) => {
 
 exports.getNews = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("newsManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -54,6 +71,14 @@ exports.getNews = async (req, res) => {
 
 exports.updateNews = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("newsManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -86,6 +111,14 @@ exports.updateNews = async (req, res) => {
 
 exports.deleteNews = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("newsManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { id } = req.params;
 
     if (!id) {
@@ -103,6 +136,14 @@ exports.deleteNews = async (req, res) => {
 
 exports.getAllNews = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("newsManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};

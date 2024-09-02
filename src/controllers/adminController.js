@@ -34,6 +34,14 @@ exports.loginAdmin = async (req, res) => {
 
 exports.createAdmin = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("adminManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { error } = validations.createAdminSchema.validate(req.body, {
       abortEarly: true,
     });
@@ -97,6 +105,14 @@ exports.getAdmin = async (req, res) => {
 
 exports.getAllAdmins = async (req, res) => {
   try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("adminManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
@@ -114,6 +130,37 @@ exports.getAllAdmins = async (req, res) => {
       data,
       totalCount
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.fetchAdmin = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("adminManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Admin ID is required");
+    }
+    const findAdmin = await Admin.findById(id)
+      .select("-password")
+      .populate("role", "permissions")
+      .lean();
+    const mappedData = {
+      ...findAdmin,
+      createdAt: moment(findAdmin.createdAt).format("MMM DD YYYY"),
+    };
+    if (!findAdmin) {
+      return responseHandler(res, 404, "Admin not found");
+    }
+    return responseHandler(res, 200, "Admin found", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
