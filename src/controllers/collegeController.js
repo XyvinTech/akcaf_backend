@@ -199,3 +199,14 @@ exports.getAllColleges = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getCollegeDropdown = async (req, res) => {
+  try {
+    const colleges = await College.find().populate("course");
+    if (colleges) {
+      return responseHandler(res, 200, `Colleges`, colleges);
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

@@ -7,6 +7,12 @@ const collegeSchema = mongoose.Schema(
     batch: [{ type: Number }],
     country: { type: String },
     state: { type: String },
+    course: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
+    ],
     status: {
       type: Boolean,
       default: true,

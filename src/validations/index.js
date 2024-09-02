@@ -37,6 +37,7 @@ exports.editRoleSchema = Joi.object({
 
 exports.createCollegeSchema = Joi.object({
   collegeName: Joi.string().required(),
+  course: Joi.array().required(),
   startYear: Joi.number().required(),
   country: Joi.string().required(),
   state: Joi.string().required(),
@@ -44,6 +45,8 @@ exports.createCollegeSchema = Joi.object({
 
 exports.editCollegeSchema = Joi.object({
   collegeName: Joi.string(),
+  course: Joi.array(),
+  startYear: Joi.number(),
   batch: Joi.array(),
   country: Joi.string(),
   state: Joi.string(),
@@ -97,6 +100,7 @@ exports.createUserSchema = Joi.object({
     last: Joi.string().required(),
   }),
   college: Joi.string().required(),
+  course: Joi.string().required(),
   batch: Joi.number().required(),
   role: Joi.string().required(),
   image: Joi.string(),
@@ -113,6 +117,7 @@ exports.editUserSchema = Joi.object({
     last: Joi.string(),
   }),
   college: Joi.string(),
+  course: Joi.string(),
   batch: Joi.number(),
   role: Joi.string(),
   image: Joi.string(),
@@ -131,6 +136,9 @@ exports.updateUserSchema = Joi.object({
   image: Joi.string(),
   email: Joi.string(),
   address: Joi.string(),
+  college: Joi.string(),
+  course: Joi.string(),
+  batch: Joi.number(),
   bio: Joi.string(),
   company: Joi.object({
     name: Joi.string(),

@@ -14,5 +14,6 @@ collegeRoute
 
 collegeRoute.post("/bulk", collegeController.bulkCreateCollege);
 collegeRoute.get("/list", collegeController.getAllColleges)
+collegeRoute.get("/dropdown", collegeController.getCollegeDropdown)
 
 module.exports = collegeRoute;

@@ -24,6 +24,12 @@
  *                 type: string
  *                 description: The name of the college
  *                 example: "ABC University"
+ *               course:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: The courses offered by the college
+ *                 example: ['66cef851d3cbe59728a7d474', '66cef851d3cbe59728a7d474']
  *               startYear:
  *                 type: number
  *                 description: The year the college started
@@ -78,6 +84,12 @@
  *                 type: string
  *                 description: The name of the college
  *                 example: "ABC College"
+ *               course:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: The courses offered by the college
+ *                 example: ['66cef851d3cbe59728a7d474', '66cef851d3cbe59728a7d474']
  *               batch:
  *                 type: array
  *                 items:
@@ -218,6 +230,21 @@
  *           type: integer
  *           default: 10
  *         description: The number of colleges per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of colleges
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /college/dropdown:
+ *   get:
+ *     summary: Get a dropdown of colleges
+ *     description: Retrieves a dropdown of colleges.
+ *     tags:
+ *       - College
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of colleges
