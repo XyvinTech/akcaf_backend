@@ -36,6 +36,9 @@
  *               college:
  *                 type: string
  *                 example: "66cef851d3cbe59728a7d474"
+ *               course:
+ *                 type: string
+ *                 example: "66cef851d3cbe59728a7d474"
  *               batch:
  *                 type: number
  *                 example: 2022
@@ -108,7 +111,10 @@
  *                     example: "Doe"
  *               college:
  *                 type: string
- *                 example: "XYZ University"
+ *                 example: "66cef851d3cbe59728a7d474"
+ *               course:
+ *                 type: string
+ *                 example: "66cef851d3cbe59728a7d474"
  *               batch:
  *                 type: number
  *                 example: 2022
@@ -288,6 +294,12 @@
  *                     type: string
  *               image:
  *                 type: string
+ *               college:
+ *                 type: string
+ *                 example: "66cef851d3cbe59728a7d474"
+ *               course:
+ *                 type: string
+ *                 example: "66cef851d3cbe59728a7d474"
  *               email:
  *                 type: string
  *               address:
