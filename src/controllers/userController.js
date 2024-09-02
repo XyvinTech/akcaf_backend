@@ -262,11 +262,56 @@ exports.fetchUser = async (req, res) => {
       return responseHandler(res, 400, "User ID is required");
     }
 
-    const findUser = await User.findById(id);
+    const findUser = await User.findById(id).populate("college course").lean();
+
     if (findUser) {
-      return responseHandler(res, 200, `User found successfull..!`, findUser);
+      // Fields to consider for profile completion
+      const fieldsToCheck = [
+        findUser.name?.first,
+        findUser.name?.middle,
+        findUser.name?.last,
+        findUser.college,
+        findUser.course,
+        findUser.batch,
+        findUser.role,
+        findUser.image,
+        findUser.email,
+        findUser.phone,
+        findUser.bio,
+        findUser.address,
+        findUser.company?.name,
+        findUser.company?.designation,
+        findUser.company?.phone,
+        findUser.company?.address,
+        ...(findUser.social?.map((link) => link.name) || []),
+        ...(findUser.social?.map((link) => link.link) || []),
+        ...(findUser.websites?.map((link) => link.name) || []),
+        ...(findUser.websites?.map((link) => link.link) || []),
+        ...(findUser.awards?.map((award) => award.name) || []),
+        ...(findUser.awards?.map((award) => award.image) || []),
+        ...(findUser.awards?.map((award) => award.authority) || []),
+        ...(findUser.videos?.map((video) => video.name) || []),
+        ...(findUser.videos?.map((video) => video.link) || []),
+        ...(findUser.certificates?.map((cert) => cert.name) || []),
+        ...(findUser.certificates?.map((cert) => cert.link) || []),
+      ];
+
+      // Calculate the number of non-empty fields
+      const filledFields = fieldsToCheck.filter((field) => field).length;
+
+      // Calculate the profile completion percentage
+      const totalFields = fieldsToCheck.length;
+      const profileCompletionPercentage = Math.round(
+        (filledFields / totalFields) * 100
+      );
+
+      findUser.profileCompletion = `${profileCompletionPercentage}%`;
+
+      return responseHandler(res, 200, "User found successfully..!", findUser);
+    } else {
+      return responseHandler(res, 404, "User not found");
     }
   } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
