@@ -1,3 +1,4 @@
+const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const Admin = require("../models/adminModel");
 const { comparePasswords, hashPassword } = require("../utils/bcrypt");

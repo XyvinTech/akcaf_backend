@@ -2,6 +2,7 @@ const moment = require("moment-timezone");
 const responseHandler = require("../helpers/responseHandler");
 const News = require("../models/newsModel");
 const validations = require("../validations");
+const checkAccess = require("../helpers/checkAccess");
 
 exports.createNews = async (req, res) => {
   try {

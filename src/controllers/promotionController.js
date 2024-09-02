@@ -2,6 +2,7 @@ const moment = require("moment-timezone");
 const responseHandler = require("../helpers/responseHandler");
 const Promotion = require("../models/promotionModel");
 const validations = require("../validations");
+const checkAccess = require("../helpers/checkAccess");
 
 exports.createPromotion = async (req, res) => {
   try {
