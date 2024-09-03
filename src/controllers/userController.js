@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const { generateOTP } = require("../utils/generateOTP");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
+const Setting = require("../models/settingsModel");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -368,8 +369,15 @@ exports.loginUser = async (req, res) => {
 
 exports.getVersion = async (req, res) => {
   try {
-    
+    const settings = await Setting.findOne();
+
+    return responseHandler(
+      res,
+      200,
+      "App version fetched successfully",
+      settings
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
-}
+};

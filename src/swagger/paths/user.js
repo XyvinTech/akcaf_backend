@@ -486,3 +486,18 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/app-version:
+ *   get:
+ *     summary: Get the app version
+ *     description: Fetches the current app version from the settings.
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: App version fetched successfully
+ *       500:
+ *         description: Internal Server Error
+ */
