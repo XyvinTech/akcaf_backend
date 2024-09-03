@@ -12,6 +12,10 @@ const notificationSchema = mongoose.Schema(
     content: { type: String },
     media: { type: String },
     link: { type: String },
+    type: {
+      type: String,
+      enum: ["email", "in-app"],
+    },
   },
   { timestamps: true }
 );

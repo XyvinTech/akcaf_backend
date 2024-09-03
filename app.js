@@ -21,6 +21,7 @@ const promotionRoute = require("./src/routes/promotion");
 const feedsRoute = require("./src/routes/feeds");
 const { app, server } = require("./src/socket");
 const courseRoute = require("./src/routes/course");
+const notificationRoute = require("./src/routes/notification");
 
 app.use(volleyball);
 
@@ -68,6 +69,7 @@ app.use(`${BASE_PATH}/news`, newsRoute);
 app.use(`${BASE_PATH}/promotion`, promotionRoute);
 app.use(`${BASE_PATH}/feeds`, feedsRoute);
 app.use(`${BASE_PATH}/course`, courseRoute);
+app.use(`${BASE_PATH}/notification`, notificationRoute);
 
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");
