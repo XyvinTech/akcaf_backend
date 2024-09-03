@@ -149,9 +149,12 @@ exports.getAllPromotion = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status, type, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
+    if (type) {
+      filter.type = type;
+    }
     const totalCount = await Promotion.countDocuments(filter);
     const data = await Promotion.find(filter)
       .skip(skipCount)
@@ -174,9 +177,6 @@ exports.getAllPromotion = async (req, res) => {
 exports.getUserPromotion = async (req, res) => {
   try {
     const filter = {};
-    if (req.query.type) {
-      filter.type = req.query.type;
-    }
     const data = await Promotion.find(filter).sort({ createdAt: -1 }).lean();
 
     return responseHandler(res, 200, `Promotions found successfull..!`, data);
