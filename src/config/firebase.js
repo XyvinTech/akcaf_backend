@@ -10,7 +10,7 @@ const {
   FIRE_PRIVATE_KEY_ID,
   FIRE_PRIVATE_KEY,
 } = process.env;
-export const serviceAccount = {
+exports.serviceAccount = {
   type: "service_account",
   project_id: FIRE_PROJECT_ID,
   private_key_id: FIRE_PRIVATE_KEY_ID,

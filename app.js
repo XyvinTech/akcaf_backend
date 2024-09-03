@@ -4,7 +4,7 @@ const cors = require("cors");
 const volleyball = require("volleyball");
 const clc = require("cli-color");
 const admin = require("firebase-admin");
-import { serviceAccount } from "./src/config/firebase";
+const { serviceAccount } = require("./src/config/firebase");
 const responseHandler = require("./src/helpers/responseHandler");
 const adminRoute = require("./src/routes/admin");
 const collegeRoute = require("./src/routes/college");
