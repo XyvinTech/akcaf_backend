@@ -4,12 +4,7 @@ const messageModel = mongoose.Schema(
   {
     sender: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: "senderType",
-    },
-    senderType: {
-      type: String,
-      enum: ["User", "Admin"],
-      required: true,
+      ref: "User",
     },
     content: {
       type: String,

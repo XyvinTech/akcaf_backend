@@ -12,20 +12,13 @@ const chatModel = mongoose.Schema(
     },
     users: [
       {
-        userId: {
-          type: mongoose.Schema.Types.ObjectId,
-          refPath: "users.userType",
-        },
-        userType: {
-          type: String,
-          enum: ["User", "Admin"],
-          required: true,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
     groupAdmin: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin",
+      ref: "User",
     },
     unreadCount: { type: Map, of: Number, default: {} },
   },
