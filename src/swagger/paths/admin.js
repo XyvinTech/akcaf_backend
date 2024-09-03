@@ -218,3 +218,20 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /admin/dropdown:
+ *   get:
+ *     summary: Get dropdown list of active users
+ *     description: Returns a list of active users with their IDs and email addresses. Requires proper permissions.
+ *     tags:
+ *       - Admin
+ *     responses:
+ *       200:
+ *         description: Dropdown found successfully
+ *       403:
+ *         description: Forbidden - You don't have permission to perform this action
+ *       500:
+ *         description: Internal Server Error
+ */

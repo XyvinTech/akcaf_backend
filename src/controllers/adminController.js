@@ -228,3 +228,24 @@ exports.approveUser = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getDropdown = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_view")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const user = await User.find({ status: "active" });
+    const mappedData = user.map((item) => ({
+      _id: item._id,
+      email: item.email,
+    }));
+    return responseHandler(res, 200, "Dropdown found successfully", mappedData);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
