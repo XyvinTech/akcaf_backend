@@ -148,3 +148,33 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /admin/approvals:
+ *   get:
+ *     summary: Get a list of users awaiting approval
+ *     description: Retrieves a paginated list of users with an "inactive" status, awaiting approval.
+ *     tags:
+ *       - Admin
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of users per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of users awaiting approval
+ *       403:
+ *         description: Forbidden - User does not have permission to view approvals
+ *       500:
+ *         description: Internal Server Error
+ */

@@ -458,3 +458,31 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/login:
+ *   post:
+ *     summary: Login or register a user
+ *     description: Authenticates a user using a Firebase client token. If the user does not exist, a new user is created and logged in.
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               clientToken:
+ *                 type: string
+ *                 description: The Firebase client token for user authentication
+ *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlZjQ3..."
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *       400:
+ *         description: Client Token is required
+ *       500:
+ *         description: Internal Server Error
+ */
