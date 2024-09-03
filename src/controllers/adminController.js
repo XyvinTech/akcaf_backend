@@ -183,6 +183,7 @@ exports.getApprovals = async (req, res) => {
     const filter = { status: "inactive" };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
+      .populate("college", "course")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1 })
@@ -190,6 +191,8 @@ exports.getApprovals = async (req, res) => {
     const mappedData = data.map((item) => {
       return {
         ...item,
+        college: item?.college?.collegeName,
+        course: item?.course?.courseName,
         fullName: `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
       };
     });
