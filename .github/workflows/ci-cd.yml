@@ -54,6 +54,8 @@ jobs:
           API_VERSION: ${{ secrets.API_VERSION }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          EMAIL_ID: ${{ secrets.EMAIL_ID }}
+          PASSWORD: ${{ secrets.PASSWORD }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
@@ -89,5 +91,7 @@ jobs:
               -e API_VERSION=${{ env.API_VERSION }} \
               -e MONGO_URL=${{ env.MONGO_URL }} \
               -e JWT_SECRET=${{ env.JWT_SECRET }} \
+              -e EMAIL_ID=${{ env.EMAIL_ID }} \
+              -e PASSWORD=${{ env.PASSWORD }} \
               -e PORT=${{ env.PORT }} \
                 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
