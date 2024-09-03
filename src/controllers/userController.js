@@ -328,7 +328,7 @@ exports.loginUser = async (req, res) => {
       .auth()
       .verifyIdToken(id)
       .then(async (decodedToken) => {
-        user = await User.findOne({ uid: decodedToken.uid });
+        user = await User.findOne({ phone: decodedToken.phone_number });
         if (!user) {
           const newUser = await User.create({
             uid: decodedToken.uid,
@@ -341,7 +341,17 @@ exports.loginUser = async (req, res) => {
             "User logged in successfully",
             token
           );
+        } else if (user.uid !== null) {
+          const token = generateToken(user._id);
+          return responseHandler(
+            res,
+            200,
+            "User logged in successfully",
+            token
+          );
         } else {
+          user.uid = decodedToken.uid;
+          user.save();
           const token = generateToken(user._id);
           return responseHandler(
             res,
