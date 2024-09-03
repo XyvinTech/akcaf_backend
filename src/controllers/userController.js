@@ -365,3 +365,11 @@ exports.loginUser = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.getVersion = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+}

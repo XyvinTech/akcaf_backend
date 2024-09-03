@@ -183,7 +183,7 @@ exports.getApprovals = async (req, res) => {
     const filter = { status: "inactive" };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
-      .populate("college", "course")
+      .populate("college course")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1 })
