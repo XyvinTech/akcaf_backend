@@ -1,6 +1,7 @@
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const Admin = require("../models/adminModel");
+const User = require("../models/userModel");
 const { comparePasswords, hashPassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
@@ -194,6 +195,35 @@ exports.getApprovals = async (req, res) => {
       data,
       totalCount
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.approveUser = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("memberManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    const editUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User ${status} successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
