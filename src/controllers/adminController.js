@@ -193,7 +193,9 @@ exports.getApprovals = async (req, res) => {
         ...item,
         college: item?.college?.collegeName,
         course: item?.course?.courseName,
-        fullName: `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
+        fullName:
+          item.name &&
+          `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
       };
     });
     return responseHandler(
