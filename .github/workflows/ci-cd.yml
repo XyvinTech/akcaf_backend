@@ -52,16 +52,6 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           API_VERSION: ${{ secrets.API_VERSION }}
-          BUCKET_URL: ${{ secrets.BUCKET_URL }}
-          FIRE_PROJECT_ID: ${{ secrets.FIRE_PROJECT_ID }}
-          FIRE_PRIVATE_KEY_ID: ${{ secrets.FIRE_PRIVATE_KEY_ID }}
-          FIRE_PRIVATE_KEY: ${{ secrets.FIRE_PRIVATE_KEY }}
-          FIRE_CLIENT_ID: ${{ secrets.FIRE_CLIENT_ID }}
-          FIRE_CLIENT_EMAIL: ${{ secrets.FIRE_CLIENT_EMAIL }}
-          FIRE_AUTH_URI: ${{ secrets.FIRE_AUTH_URI }}
-          FIRE_TOKEN_URI: ${{ secrets.FIRE_TOKEN_URI }}
-          FIRE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIRE_AUTH_PROVIDER_X509_CERT_URL }}
-          FIRE_CLIENT_X509_CERT_URL: ${{ secrets.FIRE_CLIENT_X509_CERT_URL }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           ECR_REPOSITORY: akcaf
@@ -86,8 +76,8 @@ jobs:
             # Pull Docker Image
             sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-            # sudo docker stop ${{ env.CONTAINER_NAME }} || true
-            # sudo docker rm ${{ env.CONTAINER_NAME }} || true
+            sudo docker stop ${{ env.CONTAINER_NAME }} || true
+            sudo docker rm ${{ env.CONTAINER_NAME }} || true
 
             sudo docker run -d \
               -p ${{ env.PORT }}:${{ env.PORT }}\
@@ -99,15 +89,5 @@ jobs:
               -e API_VERSION=${{ env.API_VERSION }} \
               -e MONGO_URL=${{ env.MONGO_URL }} \
               -e JWT_SECRET=${{ env.JWT_SECRET }} \
-              -e BUCKET_URL=${{ env.BUCKET_URL }} \
-              -e FIRE_PROJECT_ID=${{ env.FIRE_PROJECT_ID }} \
-              -e FIRE_PRIVATE_KEY_ID=${{ env.FIRE_PRIVATE_KEY_ID }} \
-              -e FIRE_PRIVATE_KEY=${{ env.FIRE_PRIVATE_KEY }} \
-              -e FIRE_CLIENT_ID=${{ env.FIRE_CLIENT_ID }} \
-              -e FIRE_CLIENT_EMAIL=${{ env.FIRE_CLIENT_EMAIL }} \
-              -e FIRE_AUTH_URI=${{ env.FIRE_AUTH_URI }} \
-              -e FIRE_TOKEN_URI=${{ env.FIRE_TOKEN_URI }} \
-              -e FIRE_AUTH_PROVIDER_X509_CERT_URL=${{ env.FIRE_AUTH_PROVIDER_X509_CERT_URL }} \
-              -e FIRE_CLIENT_X509_CERT_URL=${{ env.FIRE_CLIENT_X509_CERT_URL }} \
               -e PORT=${{ env.PORT }} \
                 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
