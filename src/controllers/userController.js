@@ -330,7 +330,25 @@ exports.loginUser = async (req, res) => {
       .then(async (decodedToken) => {
         user = await User.findOne({ uid: decodedToken.uid });
         if (!user) {
-          console.log("🚀 ~ admin.auth ~ decodedToken:", decodedToken);
+          const newUser = await User.create({
+            uid: decodedToken.uid,
+            phone: decodedToken.phone_number,
+          });
+          const token = generateToken(newUser._id);
+          return responseHandler(
+            res,
+            200,
+            "User logged in successfully",
+            token
+          );
+        } else {
+          const token = generateToken(user._id);
+          return responseHandler(
+            res,
+            200,
+            "User logged in successfully",
+            token
+          );
         }
       });
   } catch (error) {
