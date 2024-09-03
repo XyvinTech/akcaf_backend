@@ -1,3 +1,4 @@
+const admin = require("firebase-admin");
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const User = require("../models/userModel");
@@ -311,6 +312,27 @@ exports.fetchUser = async (req, res) => {
     } else {
       return responseHandler(res, 404, "User not found");
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  try {
+    const id = req.body.clientToken;
+    if (!id) {
+      return responseHandler(res, 400, "Client Token is required");
+    }
+    let user;
+    admin
+      .auth()
+      .verifyIdToken(id)
+      .then(async (decodedToken) => {
+        user = await User.findOne({ uid: decodedToken.uid });
+        if (!user) {
+          console.log("🚀 ~ admin.auth ~ decodedToken:", decodedToken);
+        }
+      });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }

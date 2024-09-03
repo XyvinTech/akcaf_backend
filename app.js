@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const volleyball = require("volleyball");
 const clc = require("cli-color");
+const admin = require("firebase-admin");
+import { serviceAccount } from "./src/config/firebase";
 const responseHandler = require("./src/helpers/responseHandler");
 const adminRoute = require("./src/routes/admin");
 const collegeRoute = require("./src/routes/college");
@@ -24,6 +26,12 @@ app.use(volleyball);
 
 //* Define the PORT & API version based on environment variable
 const { PORT, API_VERSION, NODE_ENV } = process.env;
+
+//* Initialize Firebase
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: process.env.BUCKET_URL,
+});
 
 //* Enable Cross-Origin Resource Sharing (CORS) middleware
 app.use(cors());

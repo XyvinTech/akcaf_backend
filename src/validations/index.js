@@ -77,7 +77,7 @@ exports.createPromotionSchema = Joi.object({
   type: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
-  media: Joi.string().required(),
+  media: Joi.string(),
   link: Joi.string(),
 });
 

@@ -174,6 +174,9 @@ exports.getAllPromotion = async (req, res) => {
 exports.getUserPromotion = async (req, res) => {
   try {
     const filter = {};
+    if (req.query.type) {
+      filter = filter.type = req.query.type;
+    }
     const data = await Promotion.find(filter).sort({ createdAt: -1 }).lean();
 
     return responseHandler(res, 200, `Promotions found successfull..!`, data);
