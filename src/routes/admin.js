@@ -15,5 +15,5 @@ adminRoute
 adminRoute.route("/single/:id").get(adminController.fetchAdmin);
 
 adminRoute.get("/list", adminController.getAllAdmins);
-
+adminRoute.get("/approvals", adminController.getApprovals);
 module.exports = adminRoute;
