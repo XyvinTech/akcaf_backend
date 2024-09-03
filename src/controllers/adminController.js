@@ -187,12 +187,17 @@ exports.getApprovals = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 })
       .lean();
-
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        fullName: `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
+      };
+    });
     return responseHandler(
       res,
       200,
       `Approvals found successfull..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {
