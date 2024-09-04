@@ -13,7 +13,8 @@ collegeRoute
   .delete(collegeController.deleteCollege);
 
 collegeRoute.post("/bulk", collegeController.bulkCreateCollege);
-collegeRoute.get("/list", collegeController.getAllColleges)
-collegeRoute.get("/dropdown", collegeController.getCollegeDropdown)
+collegeRoute.get("/list", collegeController.getAllColleges);
+collegeRoute.get("/dropdown", collegeController.getCollegeDropdown);
+collegeRoute.get("/:collegeId/course/:courseId", collegeController.getCouseWise);
 
 module.exports = collegeRoute;

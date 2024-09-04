@@ -251,3 +251,45 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /college/{collegeId}/course/{courseId}:
+ *   get:
+ *     summary: Get course-wise batch list
+ *     description: Retrieves a list of batches for a specific course within a college, with pagination support.
+ *     tags:
+ *       - College
+ *     parameters:
+ *       - in: path
+ *         name: collegeId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the college
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the course
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of items per page
+ *     responses:
+ *       200:
+ *         description: Batch list for the specified course and college retrieved successfully
+ *       500:
+ *         description: Internal Server Error
+ */

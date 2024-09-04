@@ -3,6 +3,8 @@ const responseHandler = require("../helpers/responseHandler");
 const College = require("../models/collegeModel");
 const validations = require("../validations");
 const checkAccess = require("../helpers/checkAccess");
+const mongoose = require("mongoose");
+const User = require("../models/userModel");
 
 exports.createCollege = async (req, res) => {
   try {
@@ -291,6 +293,38 @@ exports.getCollegeDropdown = async (req, res) => {
     if (colleges) {
       return responseHandler(res, 200, `Colleges`, colleges);
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getCouseWise = async (req, res) => {
+  try {
+    const { collegeId, courseId } = req.params;
+    const { pageNo = 1, status, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+
+    const aggregateQuery = [
+      {
+        $match: {
+          college: new mongoose.Types.ObjectId(collegeId),
+          course: new mongoose.Types.ObjectId(courseId),
+        },
+      },
+      {
+        $group: {
+          _id: "$batch",
+          noOfMembers: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+      { $skip: skipCount },
+      { $limit: parseInt(limit) },
+    ];
+
+    const batchData = await User.aggregate(aggregateQuery);
+
+    return responseHandler(res, 200, `Course wise Batch List`, batchData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

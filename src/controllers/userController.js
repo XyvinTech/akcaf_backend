@@ -155,7 +155,7 @@ exports.getUser = async (req, res) => {
       return responseHandler(res, 400, "User ID is required");
     }
 
-    const findUser = await User.findById(id);
+    const findUser = await User.findById(id).populate("college course");
     if (findUser) {
       return responseHandler(res, 200, `User found successfull..!`, findUser);
     }
