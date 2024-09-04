@@ -236,11 +236,42 @@ exports.getAllColleges = async (req, res) => {
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     const totalCount = await College.countDocuments(filter);
-    const data = await College.find(filter)
-      .skip(skipCount)
-      .limit(limit)
-      .sort({ createdAt: -1 })
-      .lean();
+    const aggregateQuery = [
+      { $match: filter },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "college",
+          as: "members",
+        },
+      },
+      {
+        $addFields: {
+          noOfMembers: { $size: "$members" },
+          noOfCourses: {
+            $cond: {
+              if: { $isArray: "$course" },
+              then: { $size: "$course" },
+              else: 0,
+            },
+          },
+          noOfBatches: {
+            $cond: {
+              if: { $isArray: "$batch" },
+              then: { $size: "$batch" },
+              else: 0,
+            },
+          },
+        },
+      },
+      { $unset: "members" },
+      { $sort: { createdAt: -1 } },
+      { $skip: skipCount },
+      { $limit: parseInt(limit) },
+    ];
+
+    const data = await College.aggregate(aggregateQuery);
 
     return responseHandler(
       res,
