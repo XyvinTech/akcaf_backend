@@ -27,6 +27,11 @@ chatNamespace.on("connection", (socket) => {
     console.log(`User ${userId} mapped to socket ${socket.id}`);
   }
 
+  socket.on("joinRoom", (roomId) => {
+    console.log(`User ${socket.id} joining room ${roomId}`);
+    socket.join(roomId);
+  });
+
   chatNamespace.emit("getOnlineUsers", Array.from(userSocketMap.keys()));
 
   socket.on("disconnect", () => {
