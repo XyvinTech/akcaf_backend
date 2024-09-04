@@ -144,6 +144,7 @@ exports.updateUserSchema = Joi.object({
     phone: Joi.string(),
     address: Joi.string(),
     logo: Joi.string(),
+    
   }),
   social: Joi.array().items(
     Joi.object({
