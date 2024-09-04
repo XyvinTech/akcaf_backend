@@ -242,3 +242,8 @@ exports.createNotificationSchema = Joi.object({
   link: Joi.string(),
   type: Joi.string().required(),
 });
+
+exports.createGroupSchame = Joi.object({
+  groupName: Joi.string().required(),
+  participantIds: Joi.array().required(),
+});

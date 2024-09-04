@@ -245,11 +245,18 @@ exports.getAllUsers = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
+    const mappedData = data.map((user) => {
+      return {
+        ...user,
+        fullName: `${user.name?.first} ${user.name?.middle} ${user.name?.last}`,
+      };
+    });
+
     return responseHandler(
       res,
       200,
       `Users found successfull..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {

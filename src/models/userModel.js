@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema(
     videos: [linkSchema],
     certificates: [linkSchema],
     reason: { type: String },
+    otp: { type: Number },
   },
   { timestamps: true }
 );

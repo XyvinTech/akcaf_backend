@@ -15,7 +15,7 @@ const chatNamespace = io.of("/api/v1/chat");
 const userSocketMap = new Map();
 
 const getReceiverSocketId = (receiverId) => {
-  return userSocketMap[receiverId];
+  return userSocketMap.get(receiverId);
 };
 
 chatNamespace.on("connection", (socket) => {
@@ -23,16 +23,16 @@ chatNamespace.on("connection", (socket) => {
 
   const userId = socket.handshake.query.userId;
   if (userId) {
-    userSocketMap[userId] = socket.id;
+    userSocketMap.set(userId, socket.id);
     console.log(`User ${userId} mapped to socket ${socket.id}`);
   }
 
-  chatNamespace.emit("getOnlineUsers", Object.keys(userSocketMap));
+  chatNamespace.emit("getOnlineUsers", Array.from(userSocketMap.keys()));
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
-    delete userSocketMap[userId];
-    chatNamespace.emit("getOnlineUsers", Object.keys(userSocketMap));
+    userSocketMap.delete(userId);
+    chatNamespace.emit("getOnlineUsers", Array.from(userSocketMap.keys()));
   });
 });
 

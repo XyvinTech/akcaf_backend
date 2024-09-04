@@ -2,17 +2,16 @@ const mongoose = require("mongoose");
 
 const messageModel = mongoose.Schema(
   {
-    sender: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    content: {
-      type: String,
-      trim: true,
-    },
-    chat: {
+    from: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    to: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
+    },
+    content: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["sent", "delivered", "seen"],
+      default: "sent",
     },
   },
   {
