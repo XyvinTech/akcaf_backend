@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive", "rejected", "deleted"],
       default: "inactive",
     },
-    otp: { type: Number },
     address: { type: String },
     company: {
       name: { type: String },

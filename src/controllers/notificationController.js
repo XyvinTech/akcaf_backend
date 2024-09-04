@@ -15,10 +15,11 @@ exports.createNotification = async (req, res) => {
     }
 
     let userMail = [];
+    const { users, media } = req.body;
 
-    if (req.body.user.length > 0) {
-      for (let i = 0; i < req.body.user.length; i++) {
-        const id = req.body.user[i];
+    if (users.length > 0) {
+      for (let i = 0; i < users.length; i++) {
+        const id = users[i].user;
         const findUser = await User.findById(id);
         if (findUser) {
           userMail.push(findUser.email);
@@ -26,11 +27,21 @@ exports.createNotification = async (req, res) => {
       }
     }
 
+    const attachments = media
+      ? [
+          {
+            filename: media.split("/").pop(),
+            path: media,
+          },
+        ]
+      : [];
+
     const data = {
       to: userMail,
       subject: req.body.subject,
       text: req.body.content,
-      attachments: req.body.media,
+      attachments: attachments,
+      link: req.body.link,
     };
 
     await sendMail(data);
@@ -39,7 +50,7 @@ exports.createNotification = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notification created successfull..!`,
+      `Notification created successfully..!`,
       createNotification
     );
   } catch (error) {

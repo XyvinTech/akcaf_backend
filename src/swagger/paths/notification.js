@@ -10,7 +10,7 @@
  * /notification:
  *   post:
  *     summary: Create a new notification
- *     description: Creates a new notification in the system using the data provided in the request body.
+ *     description: Creates a new notification and optionally sends emails to the users specified in the request.
  *     tags:
  *       - Notification
  *     requestBody:
@@ -22,29 +22,39 @@
  *             properties:
  *               users:
  *                 type: array
- *                 description: Array of user IDs who will receive the notification
  *                 items:
- *                   type: string
- *                 example: ["60d21b4667d0d8992e610c85", "60d21b5667d0d8992e610c86"]
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: string
+ *                       format: objectId
+ *                       description: User ID for whom the notification is intended
+ *                     read:
+ *                       type: boolean
+ *                       description: Whether the notification has been read
+ *                 example:
+ *                   - user: "60d21b4667d0d8992e610c85"
+ *                     read: false
  *               subject:
  *                 type: string
- *                 description: The subject of the notification
+ *                 description: Subject of the notification
  *                 example: "System Update"
  *               content:
  *                 type: string
- *                 description: The content/message of the notification
- *                 example: "The system will undergo maintenance on 2024-09-05."
+ *                 description: Content of the notification
+ *                 example: "There will be a system update at midnight."
  *               media:
  *                 type: string
- *                 description: URL of any media associated with the notification
- *                 example: "https://example.com/media/image.png"
+ *                 description: Media link associated with the notification
+ *                 example: "https://example.com/media/update-image.png"
  *               link:
  *                 type: string
- *                 description: Optional link related to the notification
- *                 example: "https://example.com/update-details"
+ *                 description: Link for more information
+ *                 example: "https://example.com/more-info"
  *               type:
  *                 type: string
- *                 description: The type of notification (e.g., "email", "in-app")
+ *                 enum: ["email", "in-app"]
+ *                 description: Type of notification
  *                 example: "email"
  *     responses:
  *       200:
