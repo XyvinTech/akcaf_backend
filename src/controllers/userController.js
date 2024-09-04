@@ -169,7 +169,7 @@ exports.getUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");
-    if (!check || !check.includes("memberManagement_delete")) {
+    if (!check || !check.includes("memberManagement_modify")) {
       return responseHandler(
         res,
         403,
@@ -187,7 +187,13 @@ exports.deleteUser = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
 
-    const deleteUser = await User.findByIdAndDelete(id);
+    const deleteUser = await User.findByIdAndUpdate(
+      id,
+      { status: "deleted" },
+      {
+        new: true,
+      }
+    );
     if (deleteUser) {
       return responseHandler(res, 200, `User deleted successfully..!`);
     }
