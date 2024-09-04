@@ -177,7 +177,7 @@ exports.getGroupMessage = async (req, res) => {
 
   try {
     const messages = await Message.find({
-      to: groupId,
+      to: id,
     }).sort({ timestamp: 1 });
 
     if (!messages.length) {
