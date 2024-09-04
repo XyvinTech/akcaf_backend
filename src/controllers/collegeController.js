@@ -249,6 +249,14 @@ exports.getAllColleges = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "courses",
+          localField: "course",
+          foreignField: "_id",
+          as: "courseDetails",
+        },
+      },
+      {
         $addFields: {
           noOfMembers: { $size: "$members" },
           noOfCourses: {
