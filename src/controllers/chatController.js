@@ -221,6 +221,7 @@ exports.getGroupList = async (req, res) => {
         _id: item._id,
         groupName: item.groupName,
         groupInfo: item.groupInfo,
+        members: item.participants,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
         memberCount: item.participants.length,
