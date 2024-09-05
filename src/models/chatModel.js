@@ -7,6 +7,7 @@ const chatModel = mongoose.Schema(
     unreadCount: { type: Map, of: Number, default: {} },
     isGroup: { type: Boolean, default: false },
     groupName: { type: String },
+    groupInfo: { type: String },
   },
   {
     timestamps: true,

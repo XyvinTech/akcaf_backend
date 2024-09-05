@@ -248,6 +248,7 @@ exports.getAllUsers = async (req, res) => {
     const filter = {};
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
+      .populate("college course")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1 })
@@ -256,6 +257,8 @@ exports.getAllUsers = async (req, res) => {
     const mappedData = data.map((user) => {
       return {
         ...user,
+        college: user.college?.collegeName,
+        course: user.course?.courseName,
         fullName: `${user.name?.first} ${user.name?.middle} ${user.name?.last}`,
       };
     });
