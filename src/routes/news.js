@@ -14,5 +14,6 @@ newsRoute
   .delete(newsController.deleteNews);
 
 newsRoute.get("/list", newsController.getAllNews);
+newsRoute.get("/user", newsController.getUserNews);
 
 module.exports = newsRoute;

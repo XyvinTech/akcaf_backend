@@ -167,3 +167,18 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /news/user:
+ *   get:
+ *     summary: Get a user list of news
+ *     description: Retrieves a  user list of news.
+ *     tags:
+ *       - News
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of news
+ *       500:
+ *         description: Internal Server Error
+ */

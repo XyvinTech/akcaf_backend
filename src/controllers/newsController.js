@@ -166,3 +166,16 @@ exports.getAllNews = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getUserNews = async (req, res) => {
+  try {
+    const filter = {
+      status: "published",
+    };
+    const data = await News.find(filter).sort({ createdAt: -1 }).lean();
+
+    return responseHandler(res, 200, `News found successfull..!`, data);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
