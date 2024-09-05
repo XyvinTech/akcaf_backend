@@ -9,6 +9,7 @@ const feedsSchema = mongoose.Schema(
     media: { type: String },
     link: { type: String },
     content: { type: String },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     like: [
       {
         type: mongoose.Schema.Types.ObjectId,

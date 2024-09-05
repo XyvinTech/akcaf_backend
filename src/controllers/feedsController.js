@@ -18,7 +18,7 @@ exports.createFeeds = async (req, res) => {
         `Invalid input: ${createFeedsValidator.error}`
       );
     }
-
+    req.body.author = req.userId;
     const newFeeds = await Feeds.create(req.body);
     if (!newFeeds) {
       return responseHandler(res, 400, `Feeds creation failed...!`);
