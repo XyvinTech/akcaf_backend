@@ -519,20 +519,11 @@ exports.listUsers = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    const mappedData = data.map((user) => {
-      return {
-        ...user,
-        college: user.college?.collegeName,
-        course: user.course?.courseName,
-        fullName: `${user.name?.first} ${user.name?.middle} ${user.name?.last}`,
-      };
-    });
-
     return responseHandler(
       res,
       200,
       `Users found successfull..!`,
-      mappedData,
+      data,
       totalCount
     );
   } catch (error) {
