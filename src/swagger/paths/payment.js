@@ -64,3 +64,41 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /payment/list:
+ *   get:
+ *     summary: Get all payments
+ *     description: Retrieve a paginated list of all payments with an optional status filter.
+ *     tags:
+ *       - Payment
+ *     parameters:
+ *       - name: pageNo
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination.
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page.
+ *       - name: status
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Payment status filter.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved payment list
+ *       400:
+ *         description: Bad request, invalid parameters
+ *       500:
+ *         description: Internal Server Error
+ */

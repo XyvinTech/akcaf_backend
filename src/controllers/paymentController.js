@@ -20,7 +20,7 @@ exports.makePayment = async (req, res) => {
     instance.orders.create(options, async function (err, order) {
       if (order) {
         const paymentData = {
-          userId,
+          user: userId,
           razorpayId: order.id,
           entity: order.entity,
           amount: order.amount / 100,
@@ -106,6 +106,41 @@ exports.razorpayCallback = async (req, res) => {
     } else {
       return responseHandler(res, 500, "Payment not found");
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.getAllPayment = async (req, res) => {
+  try {
+    const { pageNo = 1, status, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+    const payment = await Payment.find(filter)
+      .populate("user", "name")
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+    const totalCount = await Payment.countDocuments(filter);
+
+    const mappedData = payment.map((item) => {
+      return {
+        ...item,
+        fullName: `${item.user.name.first} ${item.user.name.middle} ${item.user.name.last}`,
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      `Payment found successfull..!`,
+      mappedData,
+      totalCount
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
