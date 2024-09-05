@@ -166,6 +166,24 @@ exports.getUser = async (req, res) => {
   }
 };
 
+exports.getSingleUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(id)
+      .populate("college", "collegeName country state")
+      .populate("course", "courseName");
+    if (findUser) {
+      return responseHandler(res, 200, `User found successfull..!`, findUser);
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");

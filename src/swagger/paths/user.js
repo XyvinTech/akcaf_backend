@@ -501,3 +501,32 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/single/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     description: Retrieves a user's details based on the provided user ID.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user to retrieve
+ *         schema:
+ *           type: string
+ *           example: "6123abc456def7890ghi1234"
+ *     responses:
+ *       200:
+ *         description: User found successfully
+ *       400:
+ *         description: User ID is missing
+ *       403:
+ *         description: Forbidden, user lacks permissions
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
