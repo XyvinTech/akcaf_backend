@@ -95,5 +95,7 @@ jobs:
               -e JWT_SECRET=${{ env.JWT_SECRET }} \
               -e EMAIL_ID=${{ env.EMAIL_ID }} \
               -e PASSWORD=${{ env.PASSWORD }} \
+              -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
+              -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
               -e PORT=${{ env.PORT }} \
                 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
