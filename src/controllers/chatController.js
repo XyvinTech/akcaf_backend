@@ -205,3 +205,36 @@ exports.getGroupMessage = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.getGroupList = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const group = await Chat.find({ isGroup: true })
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+    const totalCount = await Chat.countDocuments();
+    const mappedData = group.map((item) => {
+      return {
+        _id: item._id,
+        groupName: item.groupName,
+        groupInfo: item.groupInfo,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        memberCount: item.participants.length,
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      `Group list found successfull..!`,
+      mappedData,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};

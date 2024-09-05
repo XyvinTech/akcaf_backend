@@ -109,3 +109,35 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /chat/list-group:
+ *   get:
+ *     summary: Get list of chat groups
+ *     description: Retrieve a paginated list of chat groups with member count.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: pageNo
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination.
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved chat group list
+ *       400:
+ *         description: Bad request, invalid parameters
+ *       500:
+ *         description: Internal Server Error
+ */

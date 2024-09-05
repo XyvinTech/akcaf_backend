@@ -10,5 +10,6 @@ chatRoute.post("/create-group", chatController.createGroup);
 chatRoute.get("/get-chats", chatController.getChats);
 chatRoute.get("/group-message/:id", chatController.getGroupMessage);
 chatRoute.get("/between-users/:id", chatController.getBetweenUsers);
+chatRoute.get("/list-group", chatController.getGroupList);
 
 module.exports = chatRoute;
