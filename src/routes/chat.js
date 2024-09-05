@@ -12,5 +12,7 @@ chatRoute.get("/group-message/:id", chatController.getGroupMessage);
 chatRoute.get("/between-users/:id", chatController.getBetweenUsers);
 chatRoute.get("/list-group", chatController.getGroupList);
 chatRoute.get("/group-details/:id", chatController.getGroupDetails);
+chatRoute.put("/group/:id", chatController.editGroup);
+chatRoute.delete("/delete-group/:id", chatController.deleteGroup);
 
 module.exports = chatRoute;

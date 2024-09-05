@@ -271,3 +271,61 @@ exports.getGroupDetails = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.editGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, `Group id is required`);
+    }
+    const { error } = validations.editGroupSchema.validate(req.body, {
+      abortEarly: true,
+    });
+
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+
+    const { groupName, groupInfo, participantIds } = req.body;
+
+    const updateGroup = await Chat.findByIdAndUpdate(
+      id,
+      {
+        groupName,
+        groupInfo,
+        participants: participantIds,
+      },
+      { new: true }
+    );
+    if (updateGroup) {
+      return responseHandler(
+        res,
+        200,
+        "Group updated successfully!",
+        updateGroup
+      );
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.deleteGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, `Group id is required`);
+    }
+    const deleteGroup = await Chat.findByIdAndDelete(id);
+    if (deleteGroup) {
+      return responseHandler(
+        res,
+        200,
+        "Group deleted successfully!",
+        deleteGroup
+      );
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};

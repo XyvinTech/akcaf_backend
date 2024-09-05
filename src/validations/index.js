@@ -251,3 +251,9 @@ exports.createGroupSchame = Joi.object({
   groupInfo: Joi.string().required(),
   participantIds: Joi.array().required(),
 });
+
+exports.editGroupSchema = Joi.object({
+  groupName: Joi.string(),
+  groupInfo: Joi.string(),
+  participantIds: Joi.array(),
+});

@@ -163,3 +163,29 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /feeds/single/{id}:
+ *   delete:
+ *     summary: Delete a feed
+ *     description: Delete a specific feed by its ID.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the feed to be deleted
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the feed
+ *       400:
+ *         description: Bad request, missing feed ID
+ *       404:
+ *         description: Feed not found
+ *       500:
+ *         description: Internal Server Error
+ */

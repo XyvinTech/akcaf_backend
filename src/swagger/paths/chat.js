@@ -167,3 +167,79 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /chat/group/{id}:
+ *   put:
+ *     summary: Update chat group details
+ *     description: Update the name, info, and participants of a specific chat group.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the chat group to be updated
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               groupName:
+ *                 type: string
+ *                 description: New name of the chat group
+ *               groupInfo:
+ *                 type: string
+ *                 description: New information about the chat group
+ *               participantIds:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of participant IDs to be added to the group
+ *             example:
+ *               groupName: "New Group Name"
+ *               groupInfo: "Updated group information"
+ *               participantIds:
+ *                 - "60d0fe4f5311236168a109ca"
+ *                 - "60d0fe4f5311236168a109cb"
+ *     responses:
+ *       200:
+ *         description: Successfully updated the group
+ *       400:
+ *         description: Bad request, invalid input or missing group ID
+ *       404:
+ *         description: Group not found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /chat/delete-group/{id}:
+ *   delete:
+ *     summary: Delete a chat group
+ *     description: Delete a specific chat group by its ID.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the chat group to be deleted
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the group
+ *       400:
+ *         description: Bad request, missing group ID
+ *       404:
+ *         description: Group not found
+ *       500:
+ *         description: Internal Server Error
+ */
