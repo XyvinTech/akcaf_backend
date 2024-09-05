@@ -530,3 +530,73 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/approvals:
+ *   get:
+ *     summary: Get a list of users awaiting approval
+ *     description: Retrieves a paginated list of users with an "inactive" status, awaiting approval.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: query
+ *         name: pageNo
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: The page number for pagination (defaults to 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: The number of users per page (defaults to 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of users awaiting approval
+ *       403:
+ *         description: Forbidden - User does not have permission to view approvals
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /user/approval/{id}:
+ *   put:
+ *     summary: Approve or update a user's status
+ *     description: Approves or updates the status of a user based on the provided user ID. The user must have the permission to perform this action.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user to approve or update
+ *         schema:
+ *           type: string
+ *           example: "60d21b4667d0d8992e610c85"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 description: The new status of the user (e.g., "active", "rejected", etc.)
+ *                 example: "active"
+ *     responses:
+ *       200:
+ *         description: User status updated successfully
+ *       400:
+ *         description: User ID is required or User update failed
+ *       403:
+ *         description: Access denied due to insufficient permissions
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */

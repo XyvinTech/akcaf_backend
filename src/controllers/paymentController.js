@@ -2,6 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Payment = require("../models/paymentModel");
 const responseHandler = require("../helpers/responseHandler");
+const User = require("../models/userModel");
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID_KEY,
   key_secret: process.env.RAZORPAY_SECRET_KEY,
@@ -75,6 +76,11 @@ exports.razorpayCallback = async (req, res) => {
               status: fetchOrderData.status,
               attempts: fetchOrderData.attempts,
             },
+            { new: true }
+          );
+          await User.findByIdAndUpdate(
+            updatePayment.userId,
+            { status: "active" },
             { new: true }
           );
           return responseHandler(

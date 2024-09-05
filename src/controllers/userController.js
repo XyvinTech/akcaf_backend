@@ -417,3 +417,84 @@ exports.getVersion = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.getApprovals = async (req, res) => {
+  try {
+    const { userId } = req;
+    const findUser = await User.findById(userId);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (findUser.role === "member") {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { pageNo = 1, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = { status: { $in: ["inactive", "awaiting_payment"] } };
+    const totalCount = await User.countDocuments(filter);
+    const data = await User.find(filter)
+      .populate("college course")
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        college: item?.college?.collegeName,
+        course: item?.course?.courseName,
+        fullName:
+          item.name &&
+          `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
+      };
+    });
+    return responseHandler(
+      res,
+      200,
+      `Approvals found successfull..!`,
+      mappedData,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.approveUser = async (req, res) => {
+  try {
+    const { userId } = req;
+    const fetchUser = await User.findById(userId);
+    if (!fetchUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (fetchUser.role === "member") {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    const editUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User ${status} successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
