@@ -26,7 +26,7 @@ const feedsSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ["published", "unpublished"],
-      default: "published",
+      default: "unpublished",
     },
   },
   { timestamps: true }

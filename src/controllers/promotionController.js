@@ -177,6 +177,13 @@ exports.getAllPromotion = async (req, res) => {
 exports.getUserPromotion = async (req, res) => {
   try {
     const filter = {};
+    const today = moment.utc().startOf("day").toDate();
+    filter.endDate = {
+      $gte: today,
+    };
+    filter.startDate = {
+      $lte: today,
+    };
     const data = await Promotion.find(filter).sort({ createdAt: -1 }).lean();
 
     return responseHandler(res, 200, `Promotions found successfull..!`, data);
