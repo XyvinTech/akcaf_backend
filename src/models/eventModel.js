@@ -15,6 +15,7 @@ const eventSchema = mongoose.Schema(
     platform: { type: String },
     link: { type: String },
     venue: { type: String },
+    organiserName: { type: String },
     speakers: [
       {
         name: { type: String },

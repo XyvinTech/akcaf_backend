@@ -189,6 +189,7 @@ exports.createEventSchema = Joi.object({
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),
+  organiserName: Joi.string().required(),
   speakers: Joi.array()
     .items(
       Joi.object({
@@ -213,6 +214,7 @@ exports.editEventSchema = Joi.object({
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),
+  organiserName: Joi.string(),
   speakers: Joi.array().items(
     Joi.object({
       name: Joi.string(),

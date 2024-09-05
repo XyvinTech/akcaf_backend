@@ -62,6 +62,10 @@
  *                 type: string
  *                 description: The venue of the event
  *                 example: "Main Auditorium"
+ *               organiserName:
+ *                 type: string
+ *                 description: The organiserName of the event
+ *                 example: "Shibu"
  *               speakers:
  *                 type: array
  *                 items:
@@ -190,6 +194,10 @@
  *                 type: string
  *                 description: The venue of the event
  *                 example: "Main Auditorium"
+ *               organiserName:
+ *                 type: string
+ *                 description: The organiserName of the event
+ *                 example: "Shibu"
  *               speakers:
  *                 type: array
  *                 items:
