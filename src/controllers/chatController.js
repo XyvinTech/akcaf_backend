@@ -221,7 +221,6 @@ exports.getGroupList = async (req, res) => {
         _id: item._id,
         groupName: item.groupName,
         groupInfo: item.groupInfo,
-        members: item.participants,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
         memberCount: item.participants.length,
@@ -306,6 +305,23 @@ exports.editGroup = async (req, res) => {
         updateGroup
       );
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.getGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, `Group id is required`);
+    }
+
+    const group = await Chat.findById(id);
+    if (!group) {
+      return responseHandler(res, 404, `Group not found`);
+    }
+    return responseHandler(res, 200, `Group details`, group);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }

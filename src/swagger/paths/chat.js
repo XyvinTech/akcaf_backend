@@ -220,7 +220,33 @@
 
 /**
  * @swagger
- * /chat/delete-group/{id}:
+ * /chat/group/{id}:
+ *   get:
+ *     summary: Get chat group details
+ *     description: Get the name, info, and participants of a specific chat group.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the chat group to be Get
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the group
+ *       400:
+ *         description: Bad request, invalid input or missing group ID
+ *       404:
+ *         description: Group not found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /chat/group/{id}:
  *   delete:
  *     summary: Delete a chat group
  *     description: Delete a specific chat group by its ID.
