@@ -56,6 +56,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           EMAIL_ID: ${{ secrets.EMAIL_ID }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          RAZORPAY_ID_KEY: ${{ secrets.RAZORPAY_ID_KEY }}
+          RAZORPAY_SECRET_KEY: ${{ secrets.RAZORPAY_SECRET_KEY }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
