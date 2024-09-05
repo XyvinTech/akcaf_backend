@@ -84,7 +84,9 @@ exports.createUser = async (req, res) => {
         `User with this email or phone already exists`
       );
     }
-
+    const count = await User.countDocuments();
+    const paddedNumber = (count + 1).toString().padStart(4, "0");
+    req.body.memberId = `AKCAF-${paddedNumber}`;
     const newUser = await User.create(req.body);
 
     if (newUser)
@@ -367,9 +369,12 @@ exports.loginUser = async (req, res) => {
       .then(async (decodedToken) => {
         user = await User.findOne({ phone: decodedToken.phone_number });
         if (!user) {
+          const count = await User.countDocuments();
+          const paddedNumber = (count + 1).toString().padStart(4, "0");
           const newUser = await User.create({
             uid: decodedToken.uid,
             phone: decodedToken.phone_number,
+            memberId: `AKCAF-${paddedNumber}`,
           });
           const token = generateToken(newUser._id);
           return responseHandler(

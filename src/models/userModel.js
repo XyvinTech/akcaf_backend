@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema(
       last: { type: String },
     },
     uid: { type: String },
+    memberId: { type: String },
     college: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",

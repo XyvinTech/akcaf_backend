@@ -99,3 +99,67 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /feeds/like/{id}:
+ *   post:
+ *     summary: Like or Unlike a feed
+ *     description: Allows a user to like or unlike a specific feed. If the user has already liked the feed, it will be unliked, and if the user hasn't liked it yet, it will be liked.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the feed to like or unlike.
+ *     responses:
+ *       200:
+ *         description: Successfully liked or unliked the feed
+ *       400:
+ *         description: Bad request, feed ID is required
+ *       404:
+ *         description: Feed not found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /feeds/comment/{id}:
+ *   post:
+ *     summary: Comment on a feed
+ *     description: Adds a comment to a specific feed by the user.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the feed to comment on.
+ *       - name: body
+ *         in: body
+ *         required: true
+ *         description: The comment to add to the feed.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             comment:
+ *               type: string
+ *               example: "This is a great post!"
+ *     responses:
+ *       200:
+ *         description: Successfully commented on the feed
+ *       400:
+ *         description: Bad request, feed ID is required
+ *       404:
+ *         description: Feed not found
+ *       500:
+ *         description: Internal Server Error
+ */

@@ -74,3 +74,78 @@ exports.getAllFeeds = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.likeFeed = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Feeds with this Id is required");
+    }
+
+    const findFeeds = await Feeds.findById(id);
+    if (!findFeeds) {
+      return responseHandler(res, 404, "Feeds not found");
+    }
+
+    if (findFeeds.likes.includes(req.userId)) {
+      const updateFeeds = await Feeds.findByIdAndUpdate(
+        id,
+        {
+          $pull: { likes: req.userId },
+        },
+        { new: true }
+      );
+      return responseHandler(
+        res,
+        200,
+        "Feeds unliked successfully",
+        updateFeeds
+      );
+    }
+
+    const updateFeeds = await Feeds.findByIdAndUpdate(
+      id,
+      {
+        $push: { likes: req.userId },
+      },
+      { new: true }
+    );
+    return responseHandler(res, 200, "Feeds liked successfully", updateFeeds);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.commentFeed = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Feeds with this Id is required");
+    }
+
+    const findFeeds = await Feeds.findById(id);
+    if (!findFeeds) {
+      return responseHandler(res, 404, "Feeds not found");
+    }
+    const updateFeeds = await Feeds.findByIdAndUpdate(
+      id,
+      {
+        $push: {
+          comments: {
+            user: req.userId,
+            comment: req.body.comment,
+          },
+        },
+      },
+      { new: true }
+    );
+    return responseHandler(
+      res,
+      200,
+      "Feeds commented successfully",
+      updateFeeds
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
