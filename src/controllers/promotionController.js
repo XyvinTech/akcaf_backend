@@ -177,7 +177,7 @@ exports.getAllPromotion = async (req, res) => {
 exports.getUserPromotion = async (req, res) => {
   try {
     const filter = {};
-    const today = moment.utc().startOf("day").toDate();
+    const today = moment().toISOString();
     filter.endDate = {
       $gte: today,
     };

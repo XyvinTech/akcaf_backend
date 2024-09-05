@@ -293,3 +293,57 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /college/{collegeId}/course/{courseId}/batch/{batch}:
+ *   get:
+ *     summary: Get batch-wise users
+ *     description: Retrieves a list of users for a specific batch, course, and college.
+ *     tags:
+ *       - College
+ *     parameters:
+ *       - name: collegeId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the college.
+ *       - name: courseId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: objectId
+ *         description: The ID of the course.
+ *       - name: batch
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The batch identifier.
+ *       - name: pageNo
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination.
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of results per page.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved batch-wise list
+ *       400:
+ *         description: Bad request, invalid parameters
+ *       404:
+ *         description: Data not found
+ *       500:
+ *         description: Internal Server Error
+ */

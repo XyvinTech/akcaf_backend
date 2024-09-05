@@ -337,3 +337,35 @@ exports.getCouseWise = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getBatchWise = async (req, res) => {
+  try {
+    const { collegeId, courseId, batch } = req.params;
+    const { pageNo = 1, status, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const aggregateQuery = [
+      {
+        $match: {
+          college: new mongoose.Types.ObjectId(collegeId),
+          course: new mongoose.Types.ObjectId(courseId),
+          batch: parseInt(batch),
+        },
+      },
+      {
+        $addFields: {
+          fullName: {
+            $concat: ["$name.first", " ", "$name.middle", " ", "$name.last"],
+          },
+        },
+      },
+      { $sort: { _id: 1 } },
+      { $skip: skipCount },
+      { $limit: parseInt(limit) },
+    ];
+
+    const batchData = await User.aggregate(aggregateQuery);
+    return responseHandler(res, 200, `Batch wise List`, batchData);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
