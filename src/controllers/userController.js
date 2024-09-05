@@ -503,3 +503,39 @@ exports.approveUser = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.listUsers = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {
+      status: "active",
+    };
+    const totalCount = await User.countDocuments(filter);
+    const data = await User.find(filter)
+      .populate("college course")
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const mappedData = data.map((user) => {
+      return {
+        ...user,
+        college: user.college?.collegeName,
+        course: user.course?.courseName,
+        fullName: `${user.name?.first} ${user.name?.middle} ${user.name?.last}`,
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      `Users found successfull..!`,
+      mappedData,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

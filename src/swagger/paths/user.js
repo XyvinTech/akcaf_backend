@@ -600,3 +600,33 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/list:
+ *   get:
+ *     summary: Get a list of active users
+ *     description: Retrieve a paginated list of users with "active" status, including populated college and course details.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - name: pageNo
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number for pagination (default is 1)
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Number of users per page (default is 10)
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of active users
+ *       500:
+ *         description: Internal Server Error
+ */

@@ -25,4 +25,6 @@ userRoute.get("/single/:id", userController.getSingleUser);
 
 userRoute.get("/admin/list", userController.getAllUsers);
 
+userRoute.get("/list", userController.listUsers);
+
 module.exports = userRoute;
