@@ -24,6 +24,9 @@
  *                 type: string
  *                 description: The name of the group chat
  *                 example: "Project Team"
+ *               groupInfo:
+ *                 type: string
+ *                 description: Additional information about the group
  *               participantIds:
  *                 type: array
  *                 items:

@@ -146,11 +146,12 @@ exports.createGroup = async (req, res) => {
     if (error) {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
-    const { participantIds, groupName } = req.body;
+    const { participantIds, groupName, groupInfo } = req.body;
 
     const newChat = new Chat({
       participants: participantIds,
       groupName,
+      groupInfo,
       isGroup: true,
       unreadCount: participantIds.reduce((acc, userId) => {
         acc[userId] = 0;
