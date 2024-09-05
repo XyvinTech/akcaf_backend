@@ -238,3 +238,36 @@ exports.getGroupList = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.getGroupDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, `Group id is required`);
+    }
+
+    const group = await Chat.findById(id)
+      .populate("participants", "name phone batch college memberId")
+      .populate({
+        path: "participants",
+        populate: { path: "college" },
+      });
+    if (!group) {
+      return responseHandler(res, 404, `Group not found`);
+    }
+    const mappedData = group.participants.map((item) => {
+      return {
+        _id: item._id,
+        name: `${item.name.first} ${item.name.middle} ${item.name.last}`,
+        phone: item.phone,
+        batch: item.batch,
+        college: item.college.collegeName,
+        memberId: item.memberId ? item.memberId : null,
+        status: item.status,
+      };
+    });
+    return responseHandler(res, 200, `Group details`, mappedData);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};

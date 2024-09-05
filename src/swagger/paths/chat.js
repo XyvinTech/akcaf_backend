@@ -141,3 +141,29 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /chat/group-details/{id}:
+ *   get:
+ *     summary: Get details of a specific chat group
+ *     description: Retrieve detailed information of a chat group, including participant details.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the chat group
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved group details
+ *       400:
+ *         description: Bad request, group ID is missing
+ *       404:
+ *         description: Group not found
+ *       500:
+ *         description: Internal Server Error
+ */
