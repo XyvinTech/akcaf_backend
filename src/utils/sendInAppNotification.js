@@ -2,11 +2,33 @@ const { getMessaging } = require("firebase-admin/messaging");
 
 const sendInAppNotification = async (fcm, title, body, media = null) => {
   try {
+    // const message = {
+    //   notification: {
+    //     title,
+    //     body,
+    //     ...(media && { image: media }),
+    //   },
+    //   token: fcm,
+    // };
     const message = {
       notification: {
         title,
         body,
-        ...(media && { image: media }),
+      },
+      android: {
+        notification: {
+          ...(media && { imageUrl: media }),
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            "mutable-content": 1,
+          },
+        },
+        fcm_options: {
+          ...(media && { image: media }),
+        },
       },
       token: fcm,
     };
