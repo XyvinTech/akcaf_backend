@@ -20,6 +20,7 @@ const feedsSchema = mongoose.Schema(
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         comment: { type: String },
+        _id: false,
       },
     ],
     status: {
