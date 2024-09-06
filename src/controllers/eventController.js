@@ -130,6 +130,9 @@ exports.addRSVP = async (req, res) => {
     if (!findEvent) {
       return responseHandler(res, 404, "Event not found");
     }
+    if (findEvent.rsvp.includes(req.userId)) {
+      return responseHandler(res, 400, "You have already RSVPed to this event");
+    }
     findEvent.rsvp.push(req.userId);
     await findEvent.save();
     return responseHandler(res, 200, "RSVP added successfully");
