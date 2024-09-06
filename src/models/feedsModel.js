@@ -25,9 +25,10 @@ const feedsSchema = mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["published", "unpublished"],
+      enum: ["published", "unpublished", "rejected"],
       default: "unpublished",
     },
+    reason: { type: String },
   },
   { timestamps: true }
 );

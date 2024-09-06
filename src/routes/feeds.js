@@ -11,11 +11,11 @@ feedsRoute
   .route("/single/:id")
   .get(feedsController.getFeeds)
   .delete(feedsController.deletefeeds);
-//   .put(feedsController.updateFeeds)
 
 feedsRoute.get("/list", feedsController.getAllFeeds);
 feedsRoute.post("/like/:id", feedsController.likeFeed);
 feedsRoute.post("/comment/:id", feedsController.commentFeed);
 feedsRoute.get("/user/:id", feedsController.getUserFeeds);
+feedsRoute.put("/single/:action/:id", feedsController.updateFeeds);
 
 module.exports = feedsRoute;

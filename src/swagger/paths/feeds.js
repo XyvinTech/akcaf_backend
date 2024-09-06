@@ -215,3 +215,46 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /feeds/single/{action}/{id}:
+ *   put:
+ *     summary: Update feed status (accept/reject)
+ *     description: Accept or reject a feed by updating its status. Accepting a feed sets the status to "published", while rejecting it sets the status to "rejected" with a reason.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - name: action
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [accept, reject]
+ *         description: Action to be performed (accept or reject).
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the feed to be updated.
+ *       - name: reason
+ *         in: body
+ *         required: false
+ *         description: Reason for rejecting the feed (only required if action is "reject").
+ *         schema:
+ *           type: object
+ *           properties:
+ *             reason:
+ *               type: string
+ *               example: "The content does not meet the guidelines."
+ *     responses:
+ *       200:
+ *         description: Feeds updated successfully
+ *       400:
+ *         description: Feed ID is required
+ *       404:
+ *         description: Feed not found
+ *       500:
+ *         description: Internal server error
+ */
