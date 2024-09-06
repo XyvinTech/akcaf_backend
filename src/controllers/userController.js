@@ -359,6 +359,7 @@ exports.fetchUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const id = req.body.clientToken;
+    const { fcm } = req.body;
     if (!id) {
       return responseHandler(res, 400, "Client Token is required");
     }
@@ -375,6 +376,7 @@ exports.loginUser = async (req, res) => {
             uid: decodedToken.uid,
             phone: decodedToken.phone_number,
             memberId: `AKCAF-${paddedNumber}`,
+            fcm,
           });
           const token = generateToken(newUser._id);
           return responseHandler(
@@ -393,6 +395,7 @@ exports.loginUser = async (req, res) => {
           );
         } else {
           user.uid = decodedToken.uid;
+          user.fcm = fcm;
           user.save();
           const token = generateToken(user._id);
           return responseHandler(

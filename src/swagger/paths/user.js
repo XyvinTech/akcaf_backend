@@ -478,6 +478,10 @@
  *                 type: string
  *                 description: The Firebase client token for user authentication
  *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlZjQ3..."
+ *               fcm:
+ *                 type: string
+ *                 description: The FCM token for push notifications
+ *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlZjQ3..."
  *     responses:
  *       200:
  *         description: User logged in successfully
