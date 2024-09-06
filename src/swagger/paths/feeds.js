@@ -258,3 +258,20 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /feeds/my-feeds:
+ *   get:
+ *     summary: Get feeds created by the authenticated user
+ *     description: Retrieve all feeds authored by the currently authenticated user.
+ *     tags:
+ *       - Feeds
+ *     responses:
+ *       200:
+ *         description: Feeds found successfully
+ *       404:
+ *         description: Feeds not found
+ *       500:
+ *         description: Internal server error
+ */

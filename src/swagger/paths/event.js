@@ -314,3 +314,20 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /event/reg-events:
+ *   get:
+ *     summary: Get events the user has registered for
+ *     description: Retrieve a list of events for which the authenticated user has RSVP'd.
+ *     tags:
+ *       - Event
+ *     responses:
+ *       200:
+ *         description: Events retrieved successfully
+ *       404:
+ *         description: No events found
+ *       500:
+ *         description: Internal server error
+ */

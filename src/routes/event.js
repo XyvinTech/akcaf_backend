@@ -16,4 +16,6 @@ eventRoute
   .delete(eventController.deleteEvent)
   .patch(eventController.addRSVP);
 
+eventRoute.get("/reg-events", eventController.getRegEvents);
+
 module.exports = eventRoute;

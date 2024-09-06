@@ -140,3 +140,22 @@ exports.addRSVP = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getRegEvents = async (req, res) => {
+  try {
+    const regEvents = await Event.find({
+      rsvp: { $elemMatch: { $eq: req.userId } },
+    });
+    if (!regEvents || regEvents.length === 0) {
+      return responseHandler(res, 404, "No events found");
+    }
+    return responseHandler(
+      res,
+      200,
+      "Events retrieved successfully",
+      regEvents
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
