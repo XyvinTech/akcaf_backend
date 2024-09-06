@@ -283,7 +283,7 @@
 
 /**
  * @swagger
- * /event/single/{id}/rsvp:
+ * /event/single/{id}:
  *   patch:
  *     summary: Add an RSVP to an event
  *     description: Adds the current user's ID to the RSVP list of a specified event.
