@@ -513,6 +513,7 @@ exports.listUsers = async (req, res) => {
     const skipCount = 10 * (pageNo - 1);
     const filter = {
       status: "active",
+      _id: { $ne: req.userId },
     };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
