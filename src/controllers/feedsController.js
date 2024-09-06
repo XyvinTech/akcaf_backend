@@ -79,6 +79,10 @@ exports.getAllFeeds = async (req, res) => {
     const filter = {};
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
+      .populate({
+        path: "comment.user",
+        select: "name image",
+      })
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1 })
@@ -107,7 +111,7 @@ exports.likeFeed = async (req, res) => {
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
-    
+
     if (findFeeds.like.includes(req.userId)) {
       const updateFeeds = await Feeds.findByIdAndUpdate(
         id,
@@ -172,7 +176,6 @@ exports.commentFeed = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
-
 
 exports.getUserFeeds = async (req, res) => {
   try {
