@@ -180,6 +180,7 @@ exports.updateUserSchema = Joi.object({
 
 exports.createEventSchema = Joi.object({
   eventName: Joi.string().required(),
+  description: Joi.string().required(),
   type: Joi.string().required(),
   image: Joi.string(),
   startDate: Joi.date().required(),
@@ -205,6 +206,7 @@ exports.createEventSchema = Joi.object({
 
 exports.editEventSchema = Joi.object({
   eventName: Joi.string(),
+  description: Joi.string(),
   type: Joi.string(),
   image: Joi.string(),
   startDate: Joi.date(),

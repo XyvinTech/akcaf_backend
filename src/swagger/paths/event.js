@@ -24,6 +24,10 @@
  *                 type: string
  *                 description: The name of the event
  *                 example: "Sample Event"
+ *               description:
+ *                 type: string
+ *                 description: The description of the event
+ *                 example: "This is a sample event..."
  *               type:
  *                 type: string
  *                 description: The type of the event
@@ -154,6 +158,10 @@
  *                 type: string
  *                 description: The name of the event
  *                 example: "Sample Event"
+ *               description:
+ *                 type: string
+ *                 description: The description of the event
+ *                 example: "This is a sample event..."
  *               type:
  *                 type: string
  *                 description: The type of the event

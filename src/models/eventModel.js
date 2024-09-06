@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const eventSchema = mongoose.Schema(
   {
     eventName: { type: String },
+    description: { type: String },
     type: {
       type: String,
       enum: ["Online", "Offline"],
