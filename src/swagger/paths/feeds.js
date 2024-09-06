@@ -189,3 +189,29 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /feeds/user/{id}:
+ *   get:
+ *     summary: Get feeds authored by a specific user
+ *     description: Retrieve all feeds created by a user based on their user ID.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user whose feeds are being retrieved.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved feeds authored by the user
+ *       400:
+ *         description: User ID is required
+ *       404:
+ *         description: Feeds not found for the user
+ *       500:
+ *         description: Internal Server Error
+ */

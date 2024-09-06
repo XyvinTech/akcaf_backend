@@ -16,5 +16,6 @@ feedsRoute
 feedsRoute.get("/list", feedsController.getAllFeeds);
 feedsRoute.post("/like/:id", feedsController.likeFeed);
 feedsRoute.post("/comment/:id", feedsController.commentFeed);
+feedsRoute.get("/user/:id", feedsController.getUserFeeds);
 
 module.exports = feedsRoute;
