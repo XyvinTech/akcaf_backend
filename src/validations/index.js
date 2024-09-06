@@ -39,6 +39,7 @@ exports.createCollegeSchema = Joi.object({
   startYear: Joi.number().required(),
   country: Joi.string().required(),
   state: Joi.string().required(),
+  status: Joi.boolean(),
 });
 
 exports.editCollegeSchema = Joi.object({
