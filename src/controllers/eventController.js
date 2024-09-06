@@ -100,11 +100,30 @@ exports.deleteEvent = async (req, res) => {
 
 exports.getSingleEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate(
+      "rsvp",
+      "name phone memberId"
+    );
+    const mappedData = {
+      ...event._doc,
+      rsvpCount: event.rsvp.length,
+      rsvp: event.rsvp.map((rsvp) => {
+        return {
+          name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
+          phone: rsvp.phone,
+          memberId: rsvp.memberId,
+        };
+      }),
+    };
     if (!event) {
       return responseHandler(res, 404, "Event not found");
     }
-    return responseHandler(res, 200, "Event retrieved successfully", event);
+    return responseHandler(
+      res,
+      200,
+      "Event retrieved successfully",
+      mappedData
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
