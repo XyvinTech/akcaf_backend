@@ -39,16 +39,15 @@ const sendNotificationTopic = async (topic, message) => {
       type: message.type,
       id: message.id,
     },
-    topic: topic,
   };
   admin
     .messaging()
-    .send(notification_message)
+    .sendToTopic(topic, notification_message)
     .then((response) => {
-      console.log("🚀 ~ sendNotificationTopic ~ response:", response);
+      console.log("Notiication to topic send", response);
     })
     .catch((error) => {
-      console.log("🚀 ~ sendNotificationTopic ~ error:", error);
+      console.log("Notiication to topic send failed", error);
     });
 };
 
