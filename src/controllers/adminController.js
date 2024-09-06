@@ -254,6 +254,7 @@ exports.getDropdown = async (req, res) => {
     const mappedData = user.map((item) => ({
       _id: item._id,
       email: item.email,
+      name: `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
     }));
     return responseHandler(res, 200, "Dropdown found successfully", mappedData);
   } catch (error) {
