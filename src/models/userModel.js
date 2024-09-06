@@ -11,9 +11,9 @@ const linkSchema = new mongoose.Schema(
 const userSchema = new mongoose.Schema(
   {
     name: {
-      first: { type: String },
-      middle: { type: String },
-      last: { type: String },
+      first: { type: String, trim: true },
+      middle: { type: String, trim: true },
+      last: { type: String, trim: true },
     },
     uid: { type: String },
     memberId: { type: String },

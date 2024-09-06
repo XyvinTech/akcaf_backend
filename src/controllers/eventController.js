@@ -112,11 +112,29 @@ exports.getSingleEvent = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find();
+    const events = await Event.find().populate("rsvp", "name phone memberId");
+    const mappedEvents = events.map((event) => {
+      return {
+        ...event._doc,
+        rsvpCount: event.rsvp.length,
+        rsvp: event.rsvp.map((rsvp) => {
+          return {
+            name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
+            phone: rsvp.phone,
+            memberId: rsvp.memberId,
+          };
+        }),
+      };
+    });
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
-    return responseHandler(res, 200, "Events retrieved successfully", events);
+    return responseHandler(
+      res,
+      200,
+      "Events retrieved successfully",
+      mappedEvents
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
