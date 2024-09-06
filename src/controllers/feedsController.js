@@ -107,12 +107,12 @@ exports.likeFeed = async (req, res) => {
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
-
-    if (findFeeds.likes.includes(req.userId)) {
+    
+    if (findFeeds.like.includes(req.userId)) {
       const updateFeeds = await Feeds.findByIdAndUpdate(
         id,
         {
-          $pull: { likes: req.userId },
+          $pull: { like: req.userId },
         },
         { new: true }
       );
@@ -127,7 +127,7 @@ exports.likeFeed = async (req, res) => {
     const updateFeeds = await Feeds.findByIdAndUpdate(
       id,
       {
-        $push: { likes: req.userId },
+        $push: { like: req.userId },
       },
       { new: true }
     );
@@ -148,11 +148,12 @@ exports.commentFeed = async (req, res) => {
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
+
     const updateFeeds = await Feeds.findByIdAndUpdate(
       id,
       {
         $push: {
-          comments: {
+          comment: {
             user: req.userId,
             comment: req.body.comment,
           },
@@ -160,6 +161,7 @@ exports.commentFeed = async (req, res) => {
       },
       { new: true }
     );
+
     return responseHandler(
       res,
       200,
@@ -170,6 +172,7 @@ exports.commentFeed = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
 
 exports.getUserFeeds = async (req, res) => {
   try {

@@ -3,6 +3,7 @@ const Notification = require("../models/notificationModel");
 const validations = require("../validations");
 const User = require("../models/userModel");
 const sendMail = require("../utils/sendMail");
+const sendInAppNotification = require("../utils/sendInAppNotification");
 
 exports.createNotification = async (req, res) => {
   try {
@@ -14,37 +15,56 @@ exports.createNotification = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    let userMail = [];
     const { users, media } = req.body;
+    if (req.body.type === "email") {
+      let userMail = [];
 
-    if (users.length > 0) {
-      for (let i = 0; i < users.length; i++) {
-        const id = users[i].user;
-        const findUser = await User.findById(id);
-        if (findUser) {
-          userMail.push(findUser.email);
+      if (users.length > 0) {
+        for (let i = 0; i < users.length; i++) {
+          const id = users[i].user;
+          const findUser = await User.findById(id);
+          if (findUser) {
+            userMail.push(findUser.email);
+          }
         }
       }
+
+      const attachments = media
+        ? [
+            {
+              filename: media.split("/").pop(),
+              path: media,
+            },
+          ]
+        : [];
+
+      const data = {
+        to: userMail,
+        subject: req.body.subject,
+        text: req.body.content,
+        attachments: attachments,
+        link: req.body.link,
+      };
+
+      await sendMail(data);
+    } else if (req.body.type === "in-app") {
+      let userFCM = [];
+      if (users.length > 0) {
+        for (let i = 0; i < users.length; i++) {
+          const id = users[i].user;
+          const findUser = await User.findById(id);
+          if (findUser) {
+            userFCM.push(findUser.fcm);
+          }
+        }
+      }
+      await sendInAppNotification(
+        userFCM,
+        req.body.subject,
+        req.body.content,
+        media
+      );
     }
-
-    const attachments = media
-      ? [
-          {
-            filename: media.split("/").pop(),
-            path: media,
-          },
-        ]
-      : [];
-
-    const data = {
-      to: userMail,
-      subject: req.body.subject,
-      text: req.body.content,
-      attachments: attachments,
-      link: req.body.link,
-    };
-
-    await sendMail(data);
 
     const createNotification = await Notification.create(req.body);
     return responseHandler(

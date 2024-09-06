@@ -18,8 +18,7 @@ const feedsSchema = mongoose.Schema(
     ],
     comment: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         comment: { type: String },
       },
     ],

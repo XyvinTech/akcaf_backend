@@ -143,16 +143,16 @@
  *           type: string
  *           format: objectId
  *         description: The ID of the feed to comment on.
- *       - name: body
- *         in: body
- *         required: true
- *         description: The comment to add to the feed.
- *         schema:
- *           type: object
- *           properties:
- *             comment:
- *               type: string
- *               example: "This is a great post!"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               comment:
+ *                 type: string
+ *                 example: "This is the content of the feed..."
  *     responses:
  *       200:
  *         description: Successfully commented on the feed

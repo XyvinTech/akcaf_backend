@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema(
     certificates: [linkSchema],
     reason: { type: String },
     otp: { type: Number },
+    fcm: { type: String },
   },
   { timestamps: true }
 );
