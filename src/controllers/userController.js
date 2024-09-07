@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { getMessaging } = require("firebase-admin/messaging");
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const User = require("../models/userModel");
@@ -500,6 +501,24 @@ exports.approveUser = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
     const editUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+
+    const message = {
+      notification: {
+        title: `AKCAF Membership has been approved`,
+        body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
+      },
+      token: findUser.fcm,
+    };
+
+    getMessaging()
+      .send(message)
+      .then((response) => {
+        console.log("Successfully sent message:", response);
+      })
+      .catch((error) => {
+        console.log("Error sending message:", error);
+      });
+
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }

@@ -1,4 +1,5 @@
 const moment = require("moment-timezone");
+const { getMessaging } = require("firebase-admin/messaging");
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const Admin = require("../models/adminModel");
@@ -234,6 +235,24 @@ exports.approveUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
+
+    const message = {
+      notification: {
+        title: `AKCAF Membership has been approved`,
+        body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
+      },
+      token: findUser.fcm,
+    };
+
+    getMessaging()
+      .send(message)
+      .then((response) => {
+        console.log("Successfully sent message:", response);
+      })
+      .catch((error) => {
+        console.log("Error sending message:", error);
+      });
+
     return responseHandler(res, 200, `User ${status} successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);

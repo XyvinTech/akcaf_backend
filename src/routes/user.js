@@ -27,4 +27,8 @@ userRoute.get("/admin/list", userController.getAllUsers);
 
 userRoute.get("/list", userController.listUsers);
 
+userRoute.get("/approvals", userController.getApprovals);
+
+userRoute.put("/approval/:id", userController.approveUser);
+
 module.exports = userRoute;

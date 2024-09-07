@@ -1,15 +1,11 @@
 const { getMessaging } = require("firebase-admin/messaging");
 
-const sendInAppNotification = async (fcm, title, body, media = null) => {
+const sendInAppNotification = async (fcmTokens, title, body, media = null) => {
   try {
-    // const message = {
-    //   notification: {
-    //     title,
-    //     body,
-    //     ...(media && { image: media }),
-    //   },
-    //   token: fcm,
-    // };
+    if (!fcmTokens || fcmTokens.length === 0) {
+      throw new Error("FCM tokens are required");
+    }
+
     const message = {
       notification: {
         title,
@@ -30,19 +26,24 @@ const sendInAppNotification = async (fcm, title, body, media = null) => {
           ...(media && { image: media }),
         },
       },
-      token: fcm,
+      tokens: fcmTokens,
     };
 
-    getMessaging()
-      .send(message)
-      .then((res) => {
-        console.log("🚀 ~ getMessaging ~ res:", res);
-      })
-      .catch((err) => {
-        console.log("🚀 ~ getMessaging ~ err:", err);
+    const response = await getMessaging().sendMulticast(message);
+    console.log("🚀 ~ Multicast message sent successfully:", response);
+
+    if (response.failureCount > 0) {
+      response.responses.forEach((resp, idx) => {
+        if (!resp.success) {
+          console.error(
+            `🚀 ~ Token at index ${idx} failed with error:`,
+            resp.error.message
+          );
+        }
       });
+    }
   } catch (error) {
-    console.log("🚀 ~ sendInAppNotification ~ error:", error);
+    console.error("🚀 ~ sendInAppNotification ~ error:", error.message);
   }
 };
 
