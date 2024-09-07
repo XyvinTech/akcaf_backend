@@ -9,6 +9,8 @@ paymentRoute.use(authVerify);
 
 paymentRoute.post("/make-payment", paymentController.makePayment);
 
+paymentRoute.put("/verify", paymentController.verifyPayment);
+
 paymentRoute.get("/list", paymentController.getAllPayment);
 
 module.exports = paymentRoute;

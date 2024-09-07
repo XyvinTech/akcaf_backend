@@ -25,6 +25,16 @@ const notificationRoute = require("./src/routes/notification");
 const chatRoute = require("./src/routes/chat");
 const paymentRoute = require("./src/routes/payment");
 
+app.use(express.static('views'));
+
+app.get('/success', (req, res) => {
+  res.sendFile(__dirname + '/views/success.html');
+});
+
+app.get('/cancel', (req, res) => {
+  res.sendFile(__dirname + '/views/cancel.html');
+});
+
 app.use(volleyball);
 
 //* Define the PORT & API version based on environment variable

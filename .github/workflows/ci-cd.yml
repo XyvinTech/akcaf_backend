@@ -58,6 +58,7 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           RAZORPAY_ID_KEY: ${{ secrets.RAZORPAY_ID_KEY }}
           RAZORPAY_SECRET_KEY: ${{ secrets.RAZORPAY_SECRET_KEY }}
+          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
@@ -97,5 +98,6 @@ jobs:
               -e PASSWORD=${{ env.PASSWORD }} \
               -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
               -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
+              -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
               -e PORT=${{ env.PORT }} \
                 ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}

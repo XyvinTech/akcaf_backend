@@ -102,3 +102,30 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /payment/verify:
+ *   put:
+ *     summary: Verify and update payment status
+ *     description: Update the payment status based on the verification result. It marks the payment as completed or failed depending on the status received.
+ *     tags:
+ *       - Payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [success, failure]
+ *                 description: Status of the payment verification.
+ *                 example: "success"
+ *     responses:
+ *       200:
+ *         description: Payment status updated successfully
+ *       500:
+ *         description: Internal server error
+ */

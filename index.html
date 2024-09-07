@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f9f9f9;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        color: #333;
+      }
+
+      p {
+        font-size: 1em;
+        color: #555;
+      }
+
+      #checkout-button {
+        background-color: #d32f2f;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      #checkout-button:hover {
+        background-color: #b71c1c;
+        box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+      }
+
+      #checkout-button:active {
+        background-color: #9e1919;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Continue to Payment</h1>
+      <p>Complete your purchase with a one-time payment.</p>
+      <button id="checkout-button">Continue to Payment</button>
+    </div>
+
+    <script>
+      const stripe = Stripe(
+        "pk_test_51JoeerSCvyaljZkhPXMsDHfpOOcvtmDKjZcC0vWuBNAMN3N40GSxYkIFtPp7F09wSwNyPxXZ7iyaovzdoAJz6Qg1000KrTa22G"
+      );
+
+      const checkoutButton = document.getElementById("checkout-button");
+
+      const getTokenFromURL = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("token");
+      };
+
+      checkoutButton.addEventListener("click", () => {
+        const token = getTokenFromURL();
+
+        if (!token) {
+          alert("Authorization token is missing!");
+          return;
+        }
+
+        fetch("http://localhost:3000/api/v1/payment/make-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Send the Bearer token for authorization
+          },
+        })
+          .then((response) => response.json())
+          .then((session) => {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+          })
+          .then((result) => {
+            if (result.error) {
+              alert(result.error.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>

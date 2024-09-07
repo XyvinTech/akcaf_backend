@@ -16,6 +16,47 @@ exports.makePayment = async (req, res) => {
   try {
     const { userId } = req;
     const dateRandom = new Date().getTime();
+
+    if (gateway === "stripe") {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "aed",
+              product_data: {
+                name: "AKCAF Membership",
+              },
+              unit_amount: 1000,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `http://3.108.205.101:3000/success`,
+        cancel_url: `http://3.108.205.101:3000/cancel`,
+      });
+      const paymentData = {
+        user: userId,
+        gatewayId: session.id,
+        entity: "order",
+        amount: 1000,
+        amountDue: 1000,
+        amountPaid: 0,
+        currency: "AED",
+        status: "created",
+        receipt: `order_id${dateRandom}`,
+        attempts: 1,
+      };
+      const newPayment = await Payment.create(paymentData);
+      return responseHandler(
+        res,
+        200,
+        "Payment created successfully",
+        newPayment
+      );
+    }
+
     const options = {
       amount: 10 * 100,
       currency: "AED",
@@ -50,6 +91,45 @@ exports.makePayment = async (req, res) => {
         );
       }
     });
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.verifyPayment = async (req, res) => {
+  try {
+    const { status } = req.body;
+    if (status === "success") {
+      const updatePayment = await Payment.findOneAndUpdate(
+        { user: req.userId, status: "created" },
+        {
+          amountDue: 0,
+          status: "completed",
+        },
+        { new: true }
+      );
+      return responseHandler(
+        res,
+        200,
+        "Payment updated successfully",
+        updatePayment
+      );
+    } else if (status === "failure") {
+      const updatePayment = await Payment.findOneAndUpdate(
+        { user: req.userId, status: "created" },
+        {
+          amountDue: 0,
+          status: "failed",
+        },
+        { new: true }
+      );
+      return responseHandler(
+        res,
+        200,
+        "Payment updated successfully",
+        updatePayment
+      );
+    }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
