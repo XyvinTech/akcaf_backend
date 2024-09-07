@@ -3,10 +3,14 @@ const crypto = require("crypto");
 const Payment = require("../models/paymentModel");
 const responseHandler = require("../helpers/responseHandler");
 const User = require("../models/userModel");
+const Stripe = require("stripe");
+const stripe = Stripe(process.env.STRIPE_SECRET);
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID_KEY,
   key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
+
+const gateway = "stripe";
 
 exports.makePayment = async (req, res) => {
   try {
@@ -21,7 +25,7 @@ exports.makePayment = async (req, res) => {
       if (order) {
         const paymentData = {
           user: userId,
-          razorpayId: order.id,
+          gatewayId: order.id,
           entity: order.entity,
           amount: order.amount / 100,
           amountDue: order.amount_due / 100,
@@ -56,7 +60,7 @@ exports.razorpayCallback = async (req, res) => {
     const { paymentId } = req.query;
     const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
     const getDoc = await Payment.findOne({
-      razorpayId: razorpayOrderId,
+      gatewayId: razorpayOrderId,
     });
 
     if (getDoc) {

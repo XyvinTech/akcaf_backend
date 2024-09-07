@@ -386,6 +386,8 @@ exports.loginUser = async (req, res) => {
             token
           );
         } else if (user.uid !== null) {
+          user.fcm = fcm;
+          user.save();
           const token = generateToken(user._id);
           return responseHandler(
             res,
