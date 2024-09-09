@@ -269,3 +269,42 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /send-message/{id}:
+ *   post:
+ *     summary: Send a message to a chat
+ *     description: Send a message to a specific chat or group. Creates a new chat if it does not exist and updates unread message counts.
+ *     tags:
+ *       - Chat
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the chat or group to which the message is sent.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: The content of the message.
+ *                 example: "Hello, how are you?"
+ *               isGroup:
+ *                 type: boolean
+ *                 description: Indicates whether the message is sent to a group or a direct chat.
+ *                 example: false
+ *     responses:
+ *       201:
+ *         description: Message sent successfully
+ *       400:
+ *         description: Bad Request - Invalid input
+ *       500:
+ *         description: Internal server error
+ */
