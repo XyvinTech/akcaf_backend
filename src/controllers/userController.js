@@ -568,6 +568,7 @@ exports.getUsers = async (req, res) => {
     }
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
+      .populate("college course")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1 })
