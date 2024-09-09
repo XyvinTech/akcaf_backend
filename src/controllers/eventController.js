@@ -138,9 +138,7 @@ exports.getAllEvents = async (req, res) => {
         rsvpCount: event.rsvp.length,
         rsvp: event.rsvp.map((rsvp) => {
           return {
-            name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
-            phone: rsvp.phone,
-            memberId: rsvp.memberId,
+            _id: rsvp._id,
           };
         }),
       };
