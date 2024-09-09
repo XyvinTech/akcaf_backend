@@ -131,7 +131,7 @@ exports.getSingleEvent = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().populate("rsvp", "name phone memberId");
+    const events = await Event.find().populate();
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
