@@ -1,4 +1,5 @@
 const Razorpay = require("razorpay");
+const path = require("path");
 const crypto = require("crypto");
 const Payment = require("../models/paymentModel");
 const responseHandler = require("../helpers/responseHandler");
@@ -117,7 +118,7 @@ exports.successPayment = async (req, res) => {
       { status: "active" },
       { new: true }
     );
-    res.sendFile(__dirname + "/views/success.html");
+    res.sendFile(path.join(__dirname, "../../views/success.html"));
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
@@ -133,7 +134,7 @@ exports.failurePayment = async (req, res) => {
       },
       { new: true }
     );
-    return responseHandler(res, 200, "Payment failed", updatePayment);
+    res.sendFile(path.join(__dirname, "../../views/cancel.html"));
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
