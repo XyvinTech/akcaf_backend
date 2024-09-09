@@ -8,6 +8,7 @@ eventRoute.use(authVerify);
 eventRoute.route("/").post(eventController.createEvent);
 
 eventRoute.get("/list", eventController.getAllEvents);
+eventRoute.get("/admin/list", eventController.getAllEventsForAdmin);
 
 eventRoute
   .route("/single/:id")

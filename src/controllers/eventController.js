@@ -132,6 +132,18 @@ exports.getSingleEvent = async (req, res) => {
 exports.getAllEvents = async (req, res) => {
   try {
     const events = await Event.find().populate("rsvp", "name phone memberId");
+    if (!events || events.length === 0) {
+      return responseHandler(res, 404, "No events found");
+    }
+    return responseHandler(res, 200, "Events retrieved successfully", events);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getAllEventsForAdmin = async (req, res) => {
+  try {
+    const events = await Event.find().populate("rsvp", "name phone memberId");
     const mappedEvents = events.map((event) => {
       return {
         ...event._doc,
@@ -139,6 +151,8 @@ exports.getAllEvents = async (req, res) => {
         rsvp: event.rsvp.map((rsvp) => {
           return {
             _id: rsvp._id,
+            name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
+            memberId: rsvp.memberId,
           };
         }),
       };
