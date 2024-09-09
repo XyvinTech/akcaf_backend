@@ -454,21 +454,11 @@ exports.getApprovals = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 })
       .lean();
-    const mappedData = data.map((item) => {
-      return {
-        ...item,
-        college: item?.college?.collegeName,
-        course: item?.course?.courseName,
-        fullName:
-          item.name &&
-          `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
-      };
-    });
     return responseHandler(
       res,
       200,
       `Approvals found successfull..!`,
-      mappedData,
+      data,
       totalCount
     );
   } catch (error) {
