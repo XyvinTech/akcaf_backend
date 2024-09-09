@@ -634,3 +634,38 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/users:
+ *   get:
+ *     summary: Get a list of users
+ *     description: Retrieve a paginated list of users. Optionally filter by status.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - name: pageNo
+ *         in: query
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination.
+ *       - name: limit
+ *         in: query
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of users to retrieve per page.
+ *       - name: status
+ *         in: query
+ *         schema:
+ *           type: string
+ *         description: Filter users by status.
+ *     responses:
+ *       200:
+ *         description: Users found successfully
+ *       400:
+ *         description: Bad Request - Invalid parameters
+ *       500:
+ *         description: Internal server error
+ */

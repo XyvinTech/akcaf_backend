@@ -557,3 +557,30 @@ exports.listUsers = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getUsers = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10, status } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {};
+    if (status) {
+      filter.status = status;
+    }
+    const totalCount = await User.countDocuments(filter);
+    const data = await User.find(filter)
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return responseHandler(
+      res,
+      200,
+      `Users found successfull..!`,
+      data,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
