@@ -272,7 +272,7 @@
 
 /**
  * @swagger
- * /send-message/{id}:
+ * /chat/send-message/{id}:
  *   post:
  *     summary: Send a message to a chat
  *     description: Send a message to a specific chat or group. Creates a new chat if it does not exist and updates unread message counts.
