@@ -111,6 +111,12 @@ exports.successPayment = async (req, res) => {
       },
       { new: true }
     );
+
+    await User.findByIdAndUpdate(
+      updatePayment.user,
+      { status: "active" },
+      { new: true }
+    );
     return responseHandler(
       res,
       200,
