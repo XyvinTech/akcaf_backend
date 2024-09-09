@@ -33,9 +33,13 @@ exports.makePayment = async (req, res) => {
           },
         ],
         mode: "payment",
-        success_url: `http://3.108.205.101:3000/success`,
-        cancel_url: `http://3.108.205.101:3000/cancel`,
+        success_url: `http://3.108.205.101:3000/api/v1/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `http://3.108.205.101:3000/api/v1/payment/failure?session_id={CHECKOUT_SESSION_ID}`,
       });
+      const successUrl = `http://3.108.205.101:3000/api/v1/payment/success?session_id=${session.id}`;
+      const cancelUrl = `http://3.108.205.101:3000/api/v1/payment/failure?session_id=${session.id}`;
+      session.success_url = successUrl;
+      session.cancel_url = cancelUrl;
       const paymentData = {
         user: userId,
         gatewayId: session.id,
@@ -48,12 +52,12 @@ exports.makePayment = async (req, res) => {
         receipt: `order_id${dateRandom}`,
         attempts: 1,
       };
-      const newPayment = await Payment.create(paymentData);
+      await Payment.create(paymentData);
       return responseHandler(
         res,
         200,
         "Payment created successfully",
-        newPayment
+        session.url
       );
     }
 
@@ -96,40 +100,39 @@ exports.makePayment = async (req, res) => {
   }
 };
 
-exports.verifyPayment = async (req, res) => {
+exports.successPayment = async (req, res) => {
   try {
-    const { status } = req.body;
-    if (status === "success") {
-      const updatePayment = await Payment.findOneAndUpdate(
-        { user: req.userId, status: "created" },
-        {
-          amountDue: 0,
-          status: "completed",
-        },
-        { new: true }
-      );
-      return responseHandler(
-        res,
-        200,
-        "Payment updated successfully",
-        updatePayment
-      );
-    } else if (status === "failure") {
-      const updatePayment = await Payment.findOneAndUpdate(
-        { user: req.userId, status: "created" },
-        {
-          amountDue: 0,
-          status: "failed",
-        },
-        { new: true }
-      );
-      return responseHandler(
-        res,
-        200,
-        "Payment updated successfully",
-        updatePayment
-      );
-    }
+    const sessionId = req.query.session_id;
+    const updatePayment = await Payment.findOneAndUpdate(
+      { gatewayId: sessionId },
+      {
+        amountDue: 0,
+        status: "completed",
+      },
+      { new: true }
+    );
+    return responseHandler(
+      res,
+      200,
+      "Payment completed successfully",
+      updatePayment
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.failurePayment = async (req, res) => {
+  try {
+    const sessionId = req.query.session_id;
+    const updatePayment = await Payment.findOneAndUpdate(
+      { gatewayId: sessionId },
+      {
+        status: "failed",
+      },
+      { new: true }
+    );
+    return responseHandler(res, 200, "Payment failed", updatePayment);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
