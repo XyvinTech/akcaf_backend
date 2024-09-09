@@ -236,14 +236,25 @@ exports.approveUser = async (req, res) => {
       return responseHandler(res, 400, `User update failed...!`);
     }
 
-    const message = {
-      notification: {
-        title: `AKCAF Membership has been approved`,
-        body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
-      },
-      token: findUser.fcm,
-    };
+    let message;
 
+    if (status === "approved") {
+      message = {
+        notification: {
+          title: `AKCAF Membership has been approved`,
+          body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
+        },
+        token: findUser.fcm,
+      };
+    } else {
+      message = {
+        notification: {
+          title: `AKCAF Membership has been rejected`,
+          body: `Your membership for AKCAF has been rejected, because of ${req.body.reason}.`,
+        },
+        token: findUser.fcm,
+      };
+    }
     getMessaging()
       .send(message)
       .then((response) => {
