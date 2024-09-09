@@ -238,7 +238,7 @@ exports.approveUser = async (req, res) => {
 
     let message;
 
-    if (status === "approved") {
+    if (status === "awaiting_payment") {
       message = {
         notification: {
           title: `AKCAF Membership has been approved`,
