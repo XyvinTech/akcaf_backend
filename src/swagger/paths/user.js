@@ -590,8 +590,8 @@
  *             properties:
  *               status:
  *                 type: string
- *                 description: The new status of the user (e.g., "active", "rejected", etc.)
- *                 example: "active"
+ *                 description: The new status of the user (e.g., "awaiting-payment", "rejected", etc.)
+ *                 example: "awaiting-payment"
  *     responses:
  *       200:
  *         description: User status updated successfully
