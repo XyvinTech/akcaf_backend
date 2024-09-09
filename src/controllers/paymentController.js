@@ -117,12 +117,7 @@ exports.successPayment = async (req, res) => {
       { status: "active" },
       { new: true }
     );
-    return responseHandler(
-      res,
-      200,
-      "Payment completed successfully",
-      updatePayment
-    );
+    res.sendFile(__dirname + "/views/success.html");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
