@@ -446,7 +446,7 @@ exports.getApprovals = async (req, res) => {
     }
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
-    const filter = { status: "inactive" };
+    const filter = { status: "inactive", college: findUser.college };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
       .populate("college course")
