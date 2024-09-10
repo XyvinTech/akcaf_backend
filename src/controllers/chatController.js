@@ -98,7 +98,6 @@ exports.getBetweenUsers = async (req, res) => {
       .populate({
         path: "feed",
         select: "media",
-        populate: { path: "author", select: "name" },
       });
 
     await Message.updateMany(
