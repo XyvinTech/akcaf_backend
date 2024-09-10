@@ -74,7 +74,7 @@ exports.sendMessage = async (req, res) => {
     }
     return responseHandler(res, 201, "Message sent successfully!", newMessage);
   } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
 
@@ -87,7 +87,7 @@ exports.getBetweenUsers = async (req, res) => {
         { from: id, to: userId },
         { from: userId, to: id },
       ],
-    }).sort({ timestamp: 1 });
+    }).sort({ createdAt: 1 });
 
     await Message.updateMany(
       { from: id, to: userId, status: { $ne: "seen" } },
@@ -98,20 +98,15 @@ exports.getBetweenUsers = async (req, res) => {
       { participants: { $all: [id, userId] } },
       { $set: { [`unreadCount.${id}`]: 0 } }
     );
+    const chat = await Chat.findOne({ participants: { $all: [id, userId] } });
+    if (chat) {
+      const unreadCountForSender = chat.unreadCount.get(userId) || 0;
 
-    await Chat.updateOne(
-      { participants: { $all: [id, userId] } },
-      {
-        $set: {
-          [`unreadCount.${userId}`]:
-            (
-              await Chat.findOne({
-                participants: { $all: [id, userId] },
-              })
-            )?.unreadCount.get(userId) || 0,
-        },
-      }
-    );
+      await Chat.updateOne(
+        { participants: { $all: [id, userId] } },
+        { $set: { [`unreadCount.${userId}`]: unreadCountForSender } }
+      );
+    }
 
     return responseHandler(
       res,
