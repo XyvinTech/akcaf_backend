@@ -96,7 +96,7 @@ exports.getBetweenUsers = async (req, res) => {
 
     await Chat.updateOne(
       { participants: { $all: [id, userId] } },
-      { $set: { [`unreadCount.${id}`]: 0 } }
+      { $set: { [`unreadCount.${userId}`]: 0 } }
     );
     const chat = await Chat.findOne({ participants: { $all: [id, userId] } });
     if (chat) {
