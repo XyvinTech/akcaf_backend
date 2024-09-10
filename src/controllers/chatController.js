@@ -93,7 +93,13 @@ exports.getBetweenUsers = async (req, res) => {
         { from: id, to: userId },
         { from: userId, to: id },
       ],
-    }).sort({ createdAt: 1 });
+    })
+      .sort({ createdAt: 1 })
+      .populate({
+        path: "feed",
+        select: "media content",
+        populate: { path: "author", select: "name" },
+      });
 
     await Message.updateMany(
       { from: userId, to: id, status: { $ne: "seen" } },
