@@ -97,7 +97,7 @@ exports.getBetweenUsers = async (req, res) => {
       .sort({ createdAt: 1 })
       .populate({
         path: "feed",
-        select: "content media",
+        select: "media",
         populate: { path: "author", select: "name" },
       });
 
