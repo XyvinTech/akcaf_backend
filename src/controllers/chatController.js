@@ -91,12 +91,14 @@ exports.getBetweenUsers = async (req, res) => {
 
     await Message.updateMany(
       { from: userId, to: id, status: { $ne: "seen" } },
-      { status: "seen" }
+      { status: "seen" },
+      { new: true }
     );
 
     await Chat.updateOne(
       { participants: { $all: [id, userId] } },
-      { $set: { [`unreadCount.${id}`]: 0 } }
+      { $set: { [`unreadCount.${id}`]: 0 } },
+      { new: true }
     );
 
     await Chat.updateOne(
@@ -110,7 +112,8 @@ exports.getBetweenUsers = async (req, res) => {
               })
             )?.unreadCount.get(userId) || 0,
         },
-      }
+      },
+      { new: true }
     );
 
     return responseHandler(
