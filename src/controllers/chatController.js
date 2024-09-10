@@ -5,7 +5,7 @@ const { getReceiverSocketId, chatNamespace, io } = require("../socket");
 const validations = require("../validations");
 
 exports.sendMessage = async (req, res) => {
-  const { content, isGroup } = req.body;
+  const { content, isGroup, feed } = req.body;
   const to = req.params.id;
   const from = req.userId;
 
@@ -21,12 +21,18 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
-    const newMessage = new Message({
+    const newMessageData = {
       from,
       to,
       content,
       status: "sent",
-    });
+    };
+
+    if (feed) {
+      newMessageData.feed = feed;
+    }
+
+    const newMessage = new Message(newMessageData);
 
     if (!chat) {
       if (isGroup) {
