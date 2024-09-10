@@ -90,8 +90,8 @@ exports.getBetweenUsers = async (req, res) => {
     }).sort({ createdAt: 1 });
 
     await Message.updateMany(
-      { from: id, to: userId, status: { $ne: "seen" } },
-      { status: "seen" }
+      { from: userId, to: id, status: { $ne: "seen" } },
+      { $set: { status: "seen" } }
     );
 
     await Chat.updateOne(
