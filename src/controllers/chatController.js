@@ -68,6 +68,11 @@ exports.sendMessage = async (req, res) => {
 
     await Promise.all([chat.save(), newMessage.save()]);
 
+    await newMessage.populate({
+      path: "feed",
+      select: "media",
+    });
+
     if (isGroup) {
       chatNamespace.to(to).emit("message", newMessage);
     } else {
