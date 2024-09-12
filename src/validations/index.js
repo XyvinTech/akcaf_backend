@@ -231,7 +231,7 @@ exports.editEventSchema = Joi.object({
 
 exports.createFeedsSchema = Joi.object({
   type: Joi.string().required(),
-  media: Joi.string().required(),
+  media: Joi.string(),
   link: Joi.string(),
   content: Joi.string().required(),
 });
