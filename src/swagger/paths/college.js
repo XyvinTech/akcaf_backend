@@ -347,3 +347,49 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /college/bulk:
+ *   post:
+ *     summary: Bulk create colleges
+ *     description: Create multiple college entries in bulk.
+ *     tags:
+ *       - College
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 collegeName:
+ *                   type: string
+ *                   example: "MIT"
+ *                 course:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["Engineering", "Science"]
+ *                 startYear:
+ *                   type: integer
+ *                   example: 2020
+ *                 country:
+ *                   type: string
+ *                   example: "USA"
+ *                 state:
+ *                   type: string
+ *                   example: "Massachusetts"
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *     responses:
+ *       201:
+ *         description: Colleges created successfully
+ *       400:
+ *         description: Invalid input
+ *       500:
+ *         description: Internal server error
+ */

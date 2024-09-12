@@ -24,4 +24,6 @@ collegeRoute.get(
   collegeController.getBatchWise
 );
 
+collegeRoute.get("/bulk", collegeController.createCollegeBulk);
+
 module.exports = collegeRoute;

@@ -369,3 +369,19 @@ exports.getBatchWise = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.createCollegeBulk = async (req, res) => {
+  try {
+    const { error } = validations.bulkCreateCollegeSchema.validate(req.body, {
+      abortEarly: true,
+    });
+
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+    const colleges = await College.create(req.body);
+    return responseHandler(res, 201, "Colleges created successfully", colleges);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
