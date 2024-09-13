@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     },
     image: { type: String },
     email: { type: String },
-    phone: { type: String },
+    phone: { type: String, trim: true },
     bio: { type: String },
     status: {
       type: String,
