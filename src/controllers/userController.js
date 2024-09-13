@@ -7,6 +7,7 @@ const { generateOTP } = require("../utils/generateOTP");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
 const Setting = require("../models/settingsModel");
+const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -85,9 +86,8 @@ exports.createUser = async (req, res) => {
         `User with this email or phone already exists`
       );
     }
-    const count = await User.countDocuments();
-    const paddedNumber = (count + 1).toString().padStart(4, "0");
-    req.body.memberId = `AKCAF-${paddedNumber}`;
+    const uniqueMemberId = await generateUniqueDigit();
+    req.body.memberId = `AKCAF-${uniqueMemberId}`;
     const newUser = await User.create(req.body);
 
     if (newUser)
