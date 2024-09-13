@@ -373,12 +373,11 @@ exports.loginUser = async (req, res) => {
       .then(async (decodedToken) => {
         user = await User.findOne({ phone: decodedToken.phone_number });
         if (!user) {
-          const count = await User.countDocuments();
-          const paddedNumber = (count + 1).toString().padStart(4, "0");
+          const uniqueMemberId = await generateUniqueDigit();
           const newUser = await User.create({
             uid: decodedToken.uid,
             phone: decodedToken.phone_number,
-            memberId: `AKCAF-${paddedNumber}`,
+            memberId: `AKCAF-${uniqueMemberId}`,
             fcm,
           });
           const token = generateToken(newUser._id);
