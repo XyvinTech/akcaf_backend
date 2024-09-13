@@ -546,7 +546,7 @@ exports.listUsers = async (req, res) => {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
-      status: ["active", "awaiting-payment"],
+      status: { $in: ["active", "awaiting-payment"] },
       _id: { $ne: req.userId },
     };
     const totalCount = await User.countDocuments(filter);
