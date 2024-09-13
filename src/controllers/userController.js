@@ -280,7 +280,9 @@ exports.getAllUsers = async (req, res) => {
         ...user,
         college: user.college?.collegeName,
         course: user.course?.courseName,
-        fullName: `${user.name?.first} ${user.name?.middle} ${user.name?.last}`,
+        fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
+          user.name?.last || ""
+        }`.trim(),
       };
     });
 
