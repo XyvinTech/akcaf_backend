@@ -11,7 +11,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://3.108.205.101:${PORT}/api/${API_VERSION}`,
+      url: `https://akcafconnect.com/:${PORT}/api/${API_VERSION}`,
     },
     {
       url: `http://localhost:${PORT}/api/${API_VERSION}`,
