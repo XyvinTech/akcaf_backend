@@ -119,11 +119,14 @@ exports.getAllAdmins = async (req, res) => {
     }
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
-    const filter = {};
+    const filter = {
+      "role.roleName": { $ne: "Super Admin" },
+    };
     const totalCount = await Admin.countDocuments(filter);
     const data = await Admin.find(filter)
       .skip(skipCount)
       .limit(limit)
+      .populate("role")
       .sort({ createdAt: -1 })
       .lean();
 
