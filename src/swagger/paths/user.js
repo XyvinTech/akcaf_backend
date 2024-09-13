@@ -669,3 +669,29 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /user/get/{id}:
+ *   get:
+ *     summary: Get User by ID
+ *     description: Retrieve a single user by their ID.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to retrieve
+ *     responses:
+ *       200:
+ *         description: User found successfully
+ *       400:
+ *         description: User ID is required
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
