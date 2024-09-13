@@ -120,7 +120,7 @@ exports.getAllAdmins = async (req, res) => {
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
-      _id: { $ne: "66cef136282563d7bb086e30" }
+      _id: { $ne: "66cef136282563d7bb086e30" },
     };
     const totalCount = await Admin.countDocuments(filter);
     const data = await Admin.find(filter)
@@ -198,9 +198,9 @@ exports.getApprovals = async (req, res) => {
         ...item,
         college: item?.college?.collegeName,
         course: item?.course?.courseName,
-        fullName:
-          item.name &&
-          `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
+        fullName: `${item.name?.first || ""} ${item.name?.middle || ""} ${
+          item.name?.last || ""
+        }`.trim(),
       };
     });
     return responseHandler(
