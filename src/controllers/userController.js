@@ -264,8 +264,14 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
+
     const { pageNo = 1, status, limit = 10, search } = req.query;
-    const skipCount = 10 * (pageNo - 1);
+    const page = parseInt(pageNo, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skipCount = itemsPerPage * (page - 1);
+
+    const filter = {};
+
     if (search) {
       filter.$or = [
         { status: { $regex: search, $options: "i" } },
@@ -276,12 +282,11 @@ exports.getAllUsers = async (req, res) => {
         { "name.last": { $regex: search, $options: "i" } },
       ];
     }
-    const filter = {};
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
       .populate("college course")
       .skip(skipCount)
-      .limit(limit)
+      .limit(itemsPerPage)
       .sort({ createdAt: -1 })
       .lean();
 
@@ -544,7 +549,10 @@ exports.approveUser = async (req, res) => {
 exports.listUsers = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
-    const skipCount = 10 * (pageNo - 1);
+    const page = parseInt(pageNo, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skipCount = itemsPerPage * (page - 1);
+
     const filter = {
       status: { $in: ["active", "awaiting_payment"] },
       _id: { $ne: req.userId },
@@ -553,7 +561,7 @@ exports.listUsers = async (req, res) => {
     const data = await User.find(filter)
       .populate("college course")
       .skip(skipCount)
-      .limit(limit)
+      .limit(itemsPerPage)
       .sort({ createdAt: -1 })
       .lean();
 
