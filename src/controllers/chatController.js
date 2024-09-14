@@ -220,13 +220,15 @@ exports.getGroupMessage = async (req, res) => {
 exports.getGroupList = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
-    const skipCount = 10 * (pageNo - 1);
+    const page = parseInt(pageNo, 10);
+    const itemsPerPage = parseInt(limit, 10);
+    const skipCount = itemsPerPage * (page - 1);
     const group = await Chat.find({ isGroup: true })
       .skip(skipCount)
-      .limit(limit)
+      .limit(itemsPerPage)
       .sort({ createdAt: -1 })
       .lean();
-    const totalCount = await Chat.countDocuments();
+    const totalCount = await Chat.countDocuments({ isGroup: true });
     const mappedData = group.map((item) => {
       return {
         _id: item._id,
