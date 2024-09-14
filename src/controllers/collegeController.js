@@ -276,7 +276,7 @@ exports.getAllColleges = async (req, res) => {
         },
       },
       { $unset: "members" },
-      { $sort: { createdAt: -1 } },
+      { $sort: { createdAt: -1, _id: 1 } },
       { $skip: skipCount },
       { $limit: parseInt(limit) },
     ];

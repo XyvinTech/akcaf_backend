@@ -264,14 +264,9 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-
     const { pageNo = 1, status, limit = 10, search } = req.query;
-    const page = parseInt(pageNo, 10);
-    const itemsPerPage = parseInt(limit, 10);
-    const skipCount = itemsPerPage * (page - 1);
-
+    const skipCount = 10 * (pageNo - 1);
     const filter = {};
-
     if (search) {
       filter.$or = [
         { status: { $regex: search, $options: "i" } },
@@ -286,8 +281,8 @@ exports.getAllUsers = async (req, res) => {
     const data = await User.find(filter)
       .populate("college course")
       .skip(skipCount)
-      .limit(itemsPerPage)
-      .sort({ createdAt: -1 })
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     const mappedData = data.map((user) => {
@@ -468,7 +463,7 @@ exports.getApprovals = async (req, res) => {
       .populate("college course")
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
     return responseHandler(
       res,
@@ -549,10 +544,7 @@ exports.approveUser = async (req, res) => {
 exports.listUsers = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
-    const page = parseInt(pageNo, 10);
-    const itemsPerPage = parseInt(limit, 10);
-    const skipCount = itemsPerPage * (page - 1);
-
+    const skipCount = 10 * (pageNo - 1);
     const filter = {
       status: { $in: ["active", "awaiting_payment"] },
       _id: { $ne: req.userId },
@@ -561,8 +553,8 @@ exports.listUsers = async (req, res) => {
     const data = await User.find(filter)
       .populate("college course")
       .skip(skipCount)
-      .limit(itemsPerPage)
-      .sort({ createdAt: -1 })
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(
@@ -590,7 +582,7 @@ exports.getUsers = async (req, res) => {
       .populate("college course")
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(

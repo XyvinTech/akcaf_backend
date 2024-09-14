@@ -127,7 +127,7 @@ exports.getAllAdmins = async (req, res) => {
       .skip(skipCount)
       .limit(limit)
       .populate("role")
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(
@@ -191,7 +191,7 @@ exports.getApprovals = async (req, res) => {
       .populate("college course")
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
     const mappedData = data.map((item) => {
       return {
