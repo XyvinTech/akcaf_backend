@@ -159,7 +159,7 @@ exports.getAllPromotion = async (req, res) => {
     const data = await Promotion.find(filter)
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(

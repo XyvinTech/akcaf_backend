@@ -224,7 +224,7 @@ exports.getGroupList = async (req, res) => {
     const group = await Chat.find({ isGroup: true })
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1})
       .lean();
     const totalCount = await Chat.countDocuments({ isGroup: true });
     const mappedData = group.map((item) => {

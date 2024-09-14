@@ -212,7 +212,7 @@ exports.getAllPayment = async (req, res) => {
       .populate("user", "name")
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
     const totalCount = await Payment.countDocuments(filter);
 
