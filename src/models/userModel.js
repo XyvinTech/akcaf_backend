@@ -62,7 +62,8 @@ const userSchema = new mongoose.Schema(
     reason: { type: String },
     otp: { type: Number },
     fcm: { type: String },
-    QRCode: { type: String },
+    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    notInterestedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
