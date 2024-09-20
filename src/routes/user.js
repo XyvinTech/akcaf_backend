@@ -35,4 +35,8 @@ userRoute.get("/users", userController.getUsers);
 
 userRoute.put("/approval/:id", userController.approveUser);
 
+userRoute.put("/block/:id", userController.blockUser);
+
+userRoute.put("/unblock/:id", userController.unblockUser);
+
 module.exports = userRoute;
