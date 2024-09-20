@@ -14,8 +14,11 @@ const swaggerDefinition = {
       url: `https://akcafconnect.com/api/${API_VERSION}`,
     },
     {
+      url: `https://akcaf-backend.onrender.com/api/${API_VERSION}`,
+    },
+    {
       url: `http://localhost:${PORT}/api/${API_VERSION}`,
-    }
+    },
   ],
   components: {
     securitySchemes: {
