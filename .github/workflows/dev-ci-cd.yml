@@ -1,0 +1,103 @@
+name: Deploy akcaf-backend
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+      AWS_REGION: ${{ secrets.AWS_REGION_DEV }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
+      ECR_REPOSITORY: akcaf-dev
+      IMAGE_TAG: latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Docker image
+        id: build-and-push-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: akcaf-dev
+          IMAGE_TAG: latest
+
+        run: |
+          docker build -t ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+          docker push ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Deploy to EC2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+          AWS_REGION: ${{ secrets.AWS_REGION_DEV }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_DEV }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          API_VERSION: ${{ secrets.API_VERSION }}
+          MONGO_URL: ${{ secrets.MONGO_URL_DEV }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          EMAIL_ID: ${{ secrets.EMAIL_ID }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          RAZORPAY_ID_KEY: ${{ secrets.RAZORPAY_ID_KEY }}
+          RAZORPAY_SECRET_KEY: ${{ secrets.RAZORPAY_SECRET_KEY }}
+          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+          ECR_REPOSITORY: akcaf-dev
+          IMAGE_TAG: latest
+          EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
+          SSH_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          USERNAME: ec2-user
+          PORT: 3000
+          CONTAINER_NAME: AKCAF_BACKEND
+
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.SSH_KEY}}
+
+          script: |
+
+            # Refresh ECR login
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
+            # Pull Docker Image
+            sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+            sudo docker stop ${{ env.CONTAINER_NAME }} || true
+            sudo docker rm ${{ env.CONTAINER_NAME }} || true
+
+            sudo docker run -d \
+              -p ${{ env.PORT }}:${{ env.PORT }}\
+              --name ${{ env.CONTAINER_NAME }} \
+              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID_DEV }} \
+              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} \
+              -e AWS_REGION=${{ secrets.AWS_REGION_DEV }} \
+              -e ENVIRONMENT=development \
+              -e API_VERSION=${{ env.API_VERSION }} \
+              -e MONGO_URL=${{ env.MONGO_URL }} \
+              -e JWT_SECRET=${{ env.JWT_SECRET }} \
+              -e EMAIL_ID=${{ env.EMAIL_ID }} \
+              -e PASSWORD=${{ env.PASSWORD }} \
+              -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
+              -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
+              -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
+              -e PORT=${{ env.PORT }} \
+                ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
