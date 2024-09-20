@@ -18,5 +18,7 @@ feedsRoute.post("/comment/:id", feedsController.commentFeed);
 feedsRoute.get("/user/:id", feedsController.getUserFeeds);
 feedsRoute.put("/single/:action/:id", feedsController.updateFeeds);
 feedsRoute.get("/my-feeds", feedsController.getMyFeeds);
+feedsRoute.put("/not-interested/:id", feedsController.notInterested);
+feedsRoute.put("/interested/:id", feedsController.interestedPosts);
 
 module.exports = feedsRoute;

@@ -545,9 +545,14 @@ exports.listUsers = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
+    const currentUser = await User.findById(req.userId).select("blockedUsers");
+    const blockedUsersList = currentUser.blockedUsers;
     const filter = {
       status: { $in: ["active", "awaiting_payment"] },
-      _id: { $ne: req.userId },
+      _id: {
+        $ne: req.userId,
+        $nin: blockedUsersList,
+      },
     };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)

@@ -275,3 +275,53 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /feeds/not-interested/{id}:
+ *   put:
+ *     summary: Mark a feed as not interested
+ *     description: Add the User ID to the user's list of "not interested" feeds.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to mark as not interested
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: Feed marked as not interested successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /feeds/interested/{id}:
+ *   put:
+ *     summary: Mark a feed as interested
+ *     description: Remove the User ID from the user's list of "not interested" feeds.
+ *     tags:
+ *       - Feeds
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to remove from the not interested list
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: Feed marked as interested successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       500:
+ *         description: Internal server error
+ */

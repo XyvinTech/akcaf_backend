@@ -1,5 +1,6 @@
 const responseHandler = require("../helpers/responseHandler");
 const Feeds = require("../models/feedsModel");
+const User = require("../models/userModel");
 const validations = require("../validations");
 
 exports.createFeeds = async (req, res) => {
@@ -76,7 +77,18 @@ exports.getAllFeeds = async (req, res) => {
   try {
     const { pageNo = 1, status, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
-    const filter = {};
+    const currentUser = await User.findById(req.userId).select(
+      "blockedUsers notInterestedPosts"
+    );
+    const blockedUsersList = currentUser.blockedUsers;
+    const notInterestedUsersList = currentUser.notInterestedPosts;
+
+    const filter = {
+      status: "published",
+      author: {
+        $nin: [...blockedUsersList, ...notInterestedUsersList],
+      },
+    };
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
       .populate({
@@ -85,7 +97,7 @@ exports.getAllFeeds = async (req, res) => {
       })
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1, _id: 1})
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(
@@ -254,6 +266,56 @@ exports.getMyFeeds = async (req, res) => {
       return responseHandler(res, 404, "Feeds not found");
     }
     return responseHandler(res, 200, "Feeds found successfull..!", findFeeds);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.notInterested = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Feeds with this Id is required");
+    }
+    const notInterested = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        $push: { notInterestedPosts: id },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!notInterested) {
+      return responseHandler(res, 400, `Feeds update failed...!`);
+    }
+    return responseHandler(res, 200, `Feeds not interest added successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.interestedPosts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Feeds with this Id is required");
+    }
+    const interested = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        $pull: { notInterestedPosts: id },
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!interested) {
+      return responseHandler(res, 400, `Feeds update failed...!`);
+    }
+    return responseHandler(res, 200, `Feeds not interest removed successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
