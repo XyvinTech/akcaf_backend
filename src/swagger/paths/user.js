@@ -749,3 +749,57 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /user/admin/block-user/{id}:
+ *   patch:
+ *     summary: Block a user by admin
+ *     description: Block a user by setting their status to "blocked". This action can only be performed by an admin.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to block
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user/admin/unblock-user/{id}:
+ *   patch:
+ *     summary: Block a user by admin
+ *     description: Block a user by setting their status to "blocked". This action can only be performed by an admin.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to block
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */

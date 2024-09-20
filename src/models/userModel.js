@@ -37,7 +37,14 @@ const userSchema = new mongoose.Schema(
     bio: { type: String },
     status: {
       type: String,
-      enum: ["active", "inactive", "rejected", "deleted", "awaiting_payment"],
+      enum: [
+        "active",
+        "inactive",
+        "rejected",
+        "deleted",
+        "awaiting_payment",
+        "blocked",
+      ],
       default: "inactive",
     },
     address: { type: String },

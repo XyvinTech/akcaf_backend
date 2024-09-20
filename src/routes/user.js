@@ -39,4 +39,8 @@ userRoute.put("/block/:id", userController.blockUser);
 
 userRoute.put("/unblock/:id", userController.unblockUser);
 
+userRoute.patch("/admin/block-user/:id", userController.adminUserBlock);
+
+userRoute.patch("/admin/unblock-user/:id", userController.adminUserUnblock);
+
 module.exports = userRoute;

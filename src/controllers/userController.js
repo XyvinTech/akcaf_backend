@@ -655,3 +655,55 @@ exports.unblockUser = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.adminUserBlock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    const editUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "blocked" },
+      },
+      { new: true }
+    );
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User blocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.adminUserUnblock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    const editUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "active" },
+      },
+      { new: true }
+    );
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User unblocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
