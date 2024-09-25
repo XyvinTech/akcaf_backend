@@ -33,6 +33,7 @@ userRoute.get("/approvals", userController.getApprovals);
 
 userRoute.get("/users", userController.getUsers);
 
+
 userRoute.put("/approval/:id", userController.approveUser);
 
 module.exports = userRoute;
