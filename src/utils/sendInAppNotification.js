@@ -29,7 +29,7 @@ const sendInAppNotification = async (fcmTokens, title, body, media = null) => {
       tokens: fcmTokens,
     };
 
-    const response = await getMessaging().sendMulticast(message);
+    const response = await getMessaging().sendEachForMulticast(message);
     console.log("🚀 ~ Multicast message sent successfully:", response);
 
     if (response.failureCount > 0) {
