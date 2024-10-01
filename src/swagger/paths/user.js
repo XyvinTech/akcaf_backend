@@ -803,3 +803,20 @@
  *       500:
  *         description: Internal server error
  */
+
+/**
+ * @swagger
+ * /user/request-nfc:
+ *   post:
+ *     summary: Request NFC
+ *     description: Allows a user to request an NFC by sending their information (member ID, name, email, and address) via email.
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: NFC request email sent successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */

@@ -8,6 +8,7 @@ const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
 const Setting = require("../models/settingsModel");
 const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
+const sendSelfMail = require("../utils/sendSelfMail");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -703,6 +704,33 @@ exports.adminUserUnblock = async (req, res) => {
       return responseHandler(res, 400, `User update failed...!`);
     }
     return responseHandler(res, 200, `User unblocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.requestNFC = async (req, res) => {
+  try {
+    const { userId } = req;
+    const findUser = await User.findById(userId);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    const fullName = `${findUser.name.first} ${findUser.name.middle} ${findUser.name.last}`;
+
+    const data = {
+      from: findUser.email,
+      subject: `Request for NFC from ${fullName}`,
+      text: `Hi from ${fullName} with AKCAF member ID ${findUser.memberId},\n\n
+        I would like to request for NFC. Please contact me on ${findUser.phone} or email me at ${findUser.email}.\n
+        Thank you.
+        `,
+    };
+
+    await sendSelfMail(data);
+
+    return responseHandler(res, 200, "NFC Request sent successfully");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
