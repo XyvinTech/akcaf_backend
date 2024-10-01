@@ -2,12 +2,15 @@ const mongoose = require("mongoose");
 
 const reportSchema = mongoose.Schema(
   {
-    content: { type: String },
+    content: {
+      type: mongoose.Schema.Types.ObjectId,
+      refPath: "reportType",
+    },
     reportBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     reportTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     reportType: {
-      type: { String },
-      enum: ["post", "chat", "user"],
+      type: String,
+      enum: ["Post", "Chat", "User", "Message"],
     },
   },
   { timestamps: true }
