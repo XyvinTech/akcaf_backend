@@ -609,8 +609,7 @@ exports.blockUser = async (req, res) => {
     if (!id) {
       return responseHandler(res, 400, "User ID is required");
     }
-    const { userId } = req;
-    const findUser = await User.findById(id);
+    const findUser = await User.findById(req.userId);
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
@@ -632,13 +631,13 @@ exports.unblockUser = async (req, res) => {
       return responseHandler(res, 400, "User ID is required");
     }
     const { userId } = req;
-    const findUser = await User.findById(id);
+    const findUser = await User.findById(req.userId);
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
     findUser.blockedUsers = findUser.blockedUsers.filter(
       (user) => user.toString() !== userId
-    )
+    );
     const editUser = await findUser.save();
     if (!editUser) {
       return responseHandler(res, 400, `User unblock failed...!`);
