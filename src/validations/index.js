@@ -262,6 +262,7 @@ exports.editGroupSchema = Joi.object({
 });
 
 exports.createReport = Joi.object({
-  reportTo: Joi.array().required(),
-  reportType: Joi.array().required(),
+  reportTo: Joi.string().required(),
+  content: Joi.string().required(),
+  reportType: Joi.string().valid("Post", "Chat", "User", "Message").required(),
 });

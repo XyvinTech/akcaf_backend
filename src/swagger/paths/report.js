@@ -22,10 +22,10 @@
  *             properties:
  *               content:
  *                 type: string
- *                 example: "Issue with event scheduling"
+ *                 example: "643a12b4e6c12d1d14e9f875"
  *               reportType:
  *                 type: string
- *                 example: "post"
+ *                 example: "Post"
  *               reportTo:
  *                 type: string
  *                 example: "643a12b4e6c12d1d14e9f875"
