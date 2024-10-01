@@ -614,15 +614,10 @@ exports.blockUser = async (req, res) => {
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
-    const editUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        $push: { blockedUsers: id },
-      },
-      { new: true }
-    );
+    findUser.blockedUsers.push(id);
+    const editUser = await findUser.save();
     if (!editUser) {
-      return responseHandler(res, 400, `User update failed...!`);
+      return responseHandler(res, 400, `User block failed...!`);
     }
     return responseHandler(res, 200, `User blocked successfully`);
   } catch (error) {
@@ -641,15 +636,12 @@ exports.unblockUser = async (req, res) => {
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
-    const editUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        $pull: { blockedUsers: id },
-      },
-      { new: true }
-    );
+    findUser.blockedUsers = findUser.blockedUsers.filter(
+      (user) => user.toString() !== userId
+    )
+    const editUser = await findUser.save();
     if (!editUser) {
-      return responseHandler(res, 400, `User update failed...!`);
+      return responseHandler(res, 400, `User unblock failed...!`);
     }
     return responseHandler(res, 200, `User unblocked successfully`);
   } catch (error) {
