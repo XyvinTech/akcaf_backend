@@ -277,15 +277,10 @@ exports.notInterested = async (req, res) => {
     if (!id) {
       return responseHandler(res, 400, "Feeds with this Id is required");
     }
-    const notInterested = await User.findByIdAndUpdate(
-      req.userId,
-      {
-        $push: { notInterestedPosts: id },
-      },
-      {
-        new: true,
-      }
-    );
+
+    const findUser = await User.findById(req.userId);
+    findUser.notInterestedPosts.push(id);
+    const notInterested = await findUser.save();
 
     if (!notInterested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
@@ -302,15 +297,12 @@ exports.interestedPosts = async (req, res) => {
     if (!id) {
       return responseHandler(res, 400, "Feeds with this Id is required");
     }
-    const interested = await User.findByIdAndUpdate(
-      req.userId,
-      {
-        $pull: { notInterestedPosts: id },
-      },
-      {
-        new: true,
-      }
+
+    const findUser = await User.findById(req.userId);
+    findUser.notInterestedPosts = findUser.notInterestedPosts.filter(
+      (post) => post.toString() !== id
     );
+    const interested = await findUser.save();
 
     if (!interested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
