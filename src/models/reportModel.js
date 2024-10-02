@@ -7,7 +7,6 @@ const reportSchema = mongoose.Schema(
       refPath: "reportType",
     },
     reportBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    reportTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     reportType: {
       type: String,
       enum: ["Post", "Chat", "User", "Message"],
