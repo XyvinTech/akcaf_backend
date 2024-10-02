@@ -26,9 +26,6 @@
  *               reportType:
  *                 type: string
  *                 example: "Post"
- *               reportTo:
- *                 type: string
- *                 example: "643a12b4e6c12d1d14e9f875"
  *     responses:
  *       201:
  *         description: Report created successfully
