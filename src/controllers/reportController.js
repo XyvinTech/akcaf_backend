@@ -32,15 +32,41 @@ exports.getReports = async (req, res) => {
     const filter = {};
     const totalCount = await Report.countDocuments(filter);
     const data = await Report.find(filter)
+      .populate("reportBy", "name")
+      .populate("content")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
+
+    const mappedData = data.map((item) => {
+      let content = "";
+
+      if (item.reportType === "Feeds") {
+        content = item.content?.content || "";
+      } else if (item.reportType === "User") {
+        content = `${item.content?.name?.first || ""} ${
+          item.content?.name?.middle || ""
+        } ${item.content?.name?.last || ""}`.trim();
+      } else if (item.reportType === "Message") {
+        content = item.content?.content || "Chat";
+      }
+
+      return {
+        _id: item._id,
+        content: content,
+        reportType: item.reportType,
+        reportBy: `${item.reportBy?.name?.first || ""} ${
+          item.reportBy?.name?.middle || ""
+        } ${item.reportBy?.name?.last || ""}`.trim(),
+      };
+    });
+
     return responseHandler(
       res,
       200,
       `Reports found successfull..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {

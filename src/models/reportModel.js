@@ -9,7 +9,7 @@ const reportSchema = mongoose.Schema(
     reportBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     reportType: {
       type: String,
-      enum: ["Post", "Chat", "User", "Message"],
+      enum: ["Feeds", "Chat", "User", "Message"],
     },
   },
   { timestamps: true }

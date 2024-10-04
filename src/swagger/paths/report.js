@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /reports:
+ * /report:
  *   post:
  *     summary: Create a report
  *     description: Create a new report with the specified details.
