@@ -254,6 +254,8 @@ exports.getGroupListForAdmin = async (req, res) => {
     const group = await Chat.find({ isGroup: true })
       .populate("lastMessage")
       .sort({ createdAt: -1, _id: 1 })
+      .skip(skipCount)
+      .limit(limit)
       .lean();
     const totalCount = await Chat.countDocuments({ isGroup: true });
 
