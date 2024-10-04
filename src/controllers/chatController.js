@@ -247,6 +247,28 @@ exports.getGroupList = async (req, res) => {
   }
 };
 
+exports.getGroupListForAdmin = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const group = await Chat.find({ isGroup: true })
+      .populate("lastMessage")
+      .sort({ createdAt: -1, _id: 1 })
+      .lean();
+    const totalCount = await Chat.countDocuments({ isGroup: true });
+
+    return responseHandler(
+      res,
+      200,
+      `Group list found successfull..!`,
+      group,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
 exports.getGroupDetails = async (req, res) => {
   try {
     const { id } = req.params;
