@@ -636,7 +636,7 @@ exports.unblockUser = async (req, res) => {
     if (!id) {
       return responseHandler(res, 400, "User ID is required");
     }
-    const { userId } = req;
+
     const findUser = await User.findById(req.userId);
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
