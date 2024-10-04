@@ -220,11 +220,9 @@ exports.getGroupMessage = async (req, res) => {
 exports.getGroupList = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
-    const skipCount = 10 * (pageNo - 1);
+    // const skipCount = 10 * (pageNo - 1);
     const group = await Chat.find({ isGroup: true })
       .populate("lastMessage")
-      .skip(skipCount)
-      .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
     const totalCount = await Chat.countDocuments({ isGroup: true });
