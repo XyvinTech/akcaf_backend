@@ -80,8 +80,8 @@ exports.getAllFeeds = async (req, res) => {
     const currentUser = await User.findById(req.userId).select(
       "blockedUsers notInterestedPosts"
     );
-    const blockedUsersList = currentUser.blockedUsers;
-    const notInterestedUsersList = currentUser.notInterestedPosts;
+    const blockedUsersList = currentUser?.blockedUsers;
+    const notInterestedUsersList = currentUser?.notInterestedPosts;
 
     const filter = {
       status: "published",
