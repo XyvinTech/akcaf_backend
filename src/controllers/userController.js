@@ -609,10 +609,16 @@ exports.blockUser = async (req, res) => {
     if (!id) {
       return responseHandler(res, 400, "User ID is required");
     }
+
     const findUser = await User.findById(req.userId);
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
+
+    if (findUser.blockedUsers.includes(id)) {
+      return responseHandler(res, 400, "User is already blocked");
+    }
+
     findUser.blockedUsers.push(id);
     const editUser = await findUser.save();
     if (!editUser) {
@@ -620,7 +626,7 @@ exports.blockUser = async (req, res) => {
     }
     return responseHandler(res, 200, `User blocked successfully`);
   } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
 
@@ -658,6 +664,11 @@ exports.adminUserBlock = async (req, res) => {
     if (!findUser) {
       return responseHandler(res, 404, "User not found");
     }
+
+    if (findUser.blockedUsers.includes(id)) {
+      return responseHandler(res, 400, "User is already blocked");
+    }
+
     const editUser = await User.findByIdAndUpdate(
       id,
       {
