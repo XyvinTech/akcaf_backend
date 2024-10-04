@@ -183,9 +183,18 @@ exports.getApprovals = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, limit = 10 } = req.query;
+    const { pageNo = 1, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = { status: "inactive" };
+    if (search) {
+      filter.$or = [
+        { phone: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { "name.first": { $regex: search, $options: "i" } },
+        { "name.middle": { $regex: search, $options: "i" } },
+        { "name.last": { $regex: search, $options: "i" } },
+      ];
+    }
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
       .populate("college course")

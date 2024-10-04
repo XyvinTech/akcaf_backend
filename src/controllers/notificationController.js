@@ -77,3 +77,17 @@ exports.createNotification = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find();
+    return responseHandler(
+      res,
+      200,
+      `Notifications fetched successfully..!`,
+      notifications
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

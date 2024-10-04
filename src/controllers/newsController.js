@@ -145,9 +145,15 @@ exports.getAllNews = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
+    if (search) {
+      filter.$or = [
+        { category: { $regex: search, $options: "i" } },
+        { title: { $regex: search, $options: "i" } },
+      ];
+    }
     const totalCount = await News.countDocuments(filter);
     const data = await News.find(filter)
       .skip(skipCount)

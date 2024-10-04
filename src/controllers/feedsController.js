@@ -114,12 +114,15 @@ exports.getAllFeeds = async (req, res) => {
 
 exports.getAllFeedsForAdmin = async (req, res) => {
   try {
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
 
     const filter = {
       status: "unpublished",
     };
+    if (search) {
+      filter.$or = [{ type: { $regex: search, $options: "i" } }];
+    }
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
       .populate("author", "name")

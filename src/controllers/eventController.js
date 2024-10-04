@@ -149,6 +149,9 @@ exports.getAllEventsForAdmin = async (req, res) => {
     if (search) {
       filter.$or = [{ eventName: { $regex: search, $options: "i" } }];
     }
+    if (status) {
+      filter.status = status;
+    }
     const events = await Event.find(filter)
       .populate("rsvp", "name phone memberId")
       .skip(skipCount)
