@@ -642,7 +642,7 @@ exports.unblockUser = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
     findUser.blockedUsers = findUser.blockedUsers.filter(
-      (user) => user.toString() !== userId
+      (user) => user.toString() !== id
     );
     const editUser = await findUser.save();
     if (!editUser) {
