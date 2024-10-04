@@ -291,6 +291,23 @@
 
 /**
  * @swagger
+ * /event/admin/list:
+ *   get:
+ *     summary: Get all events
+ *     description: Retrieve all events from the database.
+ *     tags:
+ *       - Event
+ *     responses:
+ *       200:
+ *         description: Events retrieved successfully
+ *       404:
+ *         description: No events found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
  * /event/single/{id}:
  *   patch:
  *     summary: Add an RSVP to an event

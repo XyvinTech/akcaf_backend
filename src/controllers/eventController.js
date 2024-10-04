@@ -160,7 +160,7 @@ exports.getAllEventsForAdmin = async (req, res) => {
       .lean();
     const mappedEvents = events.map((event) => {
       return {
-        ...event._doc,
+        ...event,
         rsvpCount: event.rsvp.length,
         rsvp: event.rsvp.map((rsvp) => {
           return {
