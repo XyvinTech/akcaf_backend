@@ -155,7 +155,7 @@ exports.getAllNews = async (req, res) => {
       ];
     }
 
-    if (category) {
+    if (category !== "All") {
       filter.category = category;
     }
     if (status) {
