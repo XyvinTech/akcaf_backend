@@ -296,7 +296,14 @@ exports.getGroupDetails = async (req, res) => {
     if (!group) {
       return responseHandler(res, 404, `Group not found`);
     }
-    const mappedData = group.participants.map((item) => {
+
+    const groupInfo = {
+      groupName: group.groupName,
+      groupInfo: group.groupInfo,
+      memberCount: group.participants.length,
+    };
+
+    const participantsData = group.participants.map((item) => {
       return {
         _id: item._id,
         name: `${item.name.first} ${item.name.middle} ${item.name.last}`,
@@ -307,7 +314,10 @@ exports.getGroupDetails = async (req, res) => {
         status: item.status,
       };
     });
-    return responseHandler(res, 200, `Group details`, mappedData);
+    return responseHandler(res, 200, `Group details`, {
+      groupInfo,
+      participantsData,
+    });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
