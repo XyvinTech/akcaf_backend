@@ -190,7 +190,7 @@ exports.getGroupMessage = async (req, res) => {
   try {
     const messages = await Message.find({
       to: id,
-    }).sort({ timestamp: 1 });
+    }).sort({ timestamp: 1 }).populate("from", "name image");
 
     if (!messages.length) {
       return responseHandler(res, 404, "No messages found in this group.");
