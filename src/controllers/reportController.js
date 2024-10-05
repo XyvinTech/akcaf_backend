@@ -30,6 +30,10 @@ exports.getReports = async (req, res) => {
     const { pageNo = 1, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
+
+    if (search) {
+      filter.$or = [{ reportType: { $regex: search, $options: "i" } }];
+    }
     const totalCount = await Report.countDocuments(filter);
     const data = await Report.find(filter)
       .populate("reportBy", "name")
