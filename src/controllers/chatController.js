@@ -249,14 +249,22 @@ exports.getGroupList = async (req, res) => {
 
 exports.getGroupListForAdmin = async (req, res) => {
   try {
-    const { pageNo = 1, limit = 10 } = req.query;
+    const { pageNo = 1, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
-    const group = await Chat.find({ isGroup: true })
+    const filter = {
+      isGroup: true,
+    }
+
+    if (search) {
+      filter.$or = [{ groupName: { $regex: search, $options: "i" } }];
+    }
+
+    const group = await Chat.find(filter)
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
-    const totalCount = await Chat.countDocuments({ isGroup: true });
+    const totalCount = await Chat.countDocuments(filter);
     const mappedData = group.map((item) => {
       return {
         _id: item._id,
