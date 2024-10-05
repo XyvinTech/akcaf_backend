@@ -145,7 +145,7 @@ exports.getAllNews = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10, search } = req.query;
+    const { pageNo = 1, status, limit = 10, search, category } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
@@ -154,11 +154,19 @@ exports.getAllNews = async (req, res) => {
         { title: { $regex: search, $options: "i" } },
       ];
     }
+
+    if (category) {
+      filter.category = category;
+    }
+    if (status) {
+      filter.status = status;
+    }
+
     const totalCount = await News.countDocuments(filter);
     const data = await News.find(filter)
       .skip(skipCount)
       .limit(limit)
-      .sort({ createdAt: -1 , _id: 1})
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
 
     return responseHandler(
