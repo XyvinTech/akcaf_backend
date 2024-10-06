@@ -1,6 +1,7 @@
 const responseHandler = require("../helpers/responseHandler");
 const Chat = require("../models/chatModel");
 const Message = require("../models/messageModel");
+const Notification = require("../models/notificationModel");
 const User = require("../models/userModel");
 const { getReceiverSocketId, chatNamespace, io } = require("../socket");
 const sendInAppNotification = require("../utils/sendInAppNotification");
@@ -43,6 +44,13 @@ exports.sendMessage = async (req, res) => {
       `New Message ${fromUser.name.first}`,
       content
     );
+
+    await Notification.create({
+      users: toUser._id,
+      subject: `New Message ${fromUser.name.first}`,
+      content: content,
+      type: "in-app",
+    });
 
     if (!chat) {
       if (isGroup) {

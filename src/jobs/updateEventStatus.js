@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const moment = require("moment-timezone");
 const Event = require("../models/eventModel");
 const { getMessaging } = require("firebase-admin/messaging");
+const Notification = require("../models/notificationModel");
 require("dotenv").config();
 
 cron.schedule("* * * * *", async () => {
@@ -22,6 +23,13 @@ cron.schedule("* * * * *", async () => {
     for (const event of progressEvents) {
       event.status = "live";
       await event.save();
+      await Notification.create({
+        users: event.rsvp,
+        subject: `Event "${event.eventName}" is now live!`,
+        content: `The event "${event.eventName}" has started. Join now!`,
+        link: event.type === "Online" ? event.link : event.venue,
+        type: "in-app",
+      });
 
       const topic = `event_${event._id}`;
       const message = {
@@ -57,6 +65,12 @@ cron.schedule("* * * * *", async () => {
     for (const event of doneEvents) {
       event.status = "completed";
       await event.save();
+      await Notification.create({
+        users: event.rsvp,
+        subject: `Event "${event.eventName}" is now completed!`,
+        content: `The event "${event.eventName}" has ended. Thank you for participating!`,
+        type: "in-app",
+      });
 
       const topic = `event_${event._id}`;
       const message = {
