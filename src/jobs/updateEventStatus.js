@@ -8,6 +8,7 @@ require("dotenv").config();
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
   const currentISOTime = now.toISOString();
+  console.log("🚀 ~ cron.schedule ~ currentISOTime:", currentISOTime)
 
   try {
     //* Update events from "pending" to "live" and send notification
