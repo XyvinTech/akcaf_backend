@@ -7,7 +7,7 @@ require("dotenv").config();
 
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
-  const currentISOTime = now.toISOString();
+  const currentISOTime = now.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
   console.log("🚀 ~ cron.schedule ~ currentISOTime:", currentISOTime)
 
   try {
