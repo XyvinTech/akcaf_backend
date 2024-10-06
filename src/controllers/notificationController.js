@@ -111,7 +111,7 @@ exports.getUserNotifications = async (req, res) => {
         },
       },
     })
-      .sort({ createdAt: -1, _id: 1 })
+      .sort({ createdAt: 1, _id: 1 })
       .limit(20);
 
     if (notifications.length > 0) {
