@@ -99,3 +99,43 @@ exports.getNotifications = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getUserNotifications = async (req, res) => {
+  try {
+    const { userId } = req;
+
+    const notifications = await Notification.find({
+      users: {
+        $elemMatch: {
+          user: userId,
+          read: false,
+        },
+      },
+    });
+
+    if (notifications.length > 0) {
+      await Notification.updateMany(
+        {
+          users: {
+            $elemMatch: {
+              user: userId,
+              read: false,
+            },
+          },
+        },
+        {
+          $set: { "users.$.read": true },
+        }
+      );
+    }
+
+    return responseHandler(
+      res,
+      200,
+      `Notifications fetched successfully..!`,
+      notifications
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

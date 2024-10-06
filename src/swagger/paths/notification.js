@@ -64,3 +64,18 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /notification/user:
+ *   get:
+ *     summary: Get a user list of Notification
+ *     description: Retrieves a  user list of Notification.
+ *     tags:
+ *       - Notification
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of Notification
+ *       500:
+ *         description: Internal Server Error
+ */

@@ -10,4 +10,6 @@ notificationRoute
   .post(notificationController.createNotification)
   .get(notificationController.getNotifications);
 
+notificationRoute.get("/user", notificationController.getUserNotifications);
+
 module.exports = notificationRoute;
