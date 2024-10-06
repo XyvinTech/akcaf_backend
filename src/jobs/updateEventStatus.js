@@ -8,6 +8,7 @@ require("dotenv").config();
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
   const currentDateTime = moment.utc(now.format("YYYY-MM-DDTHH:mm")).toDate();
+  console.log("🚀 ~ cron.schedule ~ currentDateTime:", currentDateTime)
 
   try {
     //* Update events from "pending" to "live" and send notification

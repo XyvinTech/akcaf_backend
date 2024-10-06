@@ -262,7 +262,7 @@ exports.getGroupList = async (req, res) => {
       return {
         _id: item._id,
         groupName: item.groupName,
-        lastMessage: item.lastMessage.content,
+        lastMessage: item.lastMessage?.content,
         unreadCount: item.unreadCount[req.userId] || 0,
       };
     });
