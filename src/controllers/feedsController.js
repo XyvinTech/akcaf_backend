@@ -193,9 +193,10 @@ exports.likeFeed = async (req, res) => {
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
     const fromUser = await User.findById(req.userId).select("name");
+    const fcmUser = [toUser.fcm];
 
     await sendInAppNotification(
-      toUser.fcm,
+      fcmUser,
       `${fromUser.name.first} Liked Your Post`,
       `${fromUser.name.first} Liked Your ${updateFeeds.content}`
     );
@@ -240,9 +241,10 @@ exports.commentFeed = async (req, res) => {
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
     const fromUser = await User.findById(req.userId).select("name");
+    const fcmUser = [toUser.fcm];
 
     await sendInAppNotification(
-      toUser.fcm,
+      fcmUser,
       `${fromUser.name.first} Commented Your Post`,
       `${fromUser.name.first} Commented Your ${updateFeeds.content}`
     );

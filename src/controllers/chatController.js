@@ -38,9 +38,9 @@ exports.sendMessage = async (req, res) => {
     const newMessage = new Message(newMessageData);
     const toUser = await User.findById(to).select("fcm");
     const fromUser = await User.findById(from).select("name");
-
+    const fcmUser = [toUser.fcm]
     await sendInAppNotification(
-      toUser.fcm,
+      fcmUser,
       `New Message ${fromUser.name.first}`,
       content
     );
