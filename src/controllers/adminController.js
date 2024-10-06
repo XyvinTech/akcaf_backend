@@ -292,14 +292,29 @@ exports.getDropdown = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const user = await User.find({ status: "active" });
-    const mappedData = user.map((item) => ({
-      _id: item._id,
-      email: item.email,
-      name: `${item?.name?.first} ${item?.name?.middle} ${item?.name?.last}`,
-    }));
+
+    const users = await User.find({
+      status: { $in: ["active", "awaiting_payment"] },
+    });
+
+    const mappedData = users.map((user) => {
+      let fullName = user.name.first;
+      if (user.name.middle) {
+        fullName += ` ${user.name.middle}`;
+      }
+      if (user.name.last) {
+        fullName += ` ${user.name.last}`;
+      }
+
+      return {
+        _id: user._id,
+        email: user.email,
+        name: fullName,
+      };
+    });
+
     return responseHandler(res, 200, "Dropdown found successfully", mappedData);
   } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
