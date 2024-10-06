@@ -15,7 +15,15 @@ exports.createNotification = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { users, media } = req.body;
+    let { users, media } = req.body;
+
+    if (users[0] === "*") {
+      const allUsers = await User.find({
+        status: { $in: ["active", "awaiting_payment"] },
+      }).select("_id fcm");
+      users = allUsers.map((user) => user._id);
+    }
+
     if (req.body.type === "email") {
       let userMail = [];
 
