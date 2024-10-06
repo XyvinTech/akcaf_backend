@@ -3,6 +3,7 @@ const responseHandler = require("../helpers/responseHandler");
 const News = require("../models/newsModel");
 const validations = require("../validations");
 const checkAccess = require("../helpers/checkAccess");
+const User = require("../models/userModel");
 
 exports.createNews = async (req, res) => {
   try {
@@ -31,6 +32,21 @@ exports.createNews = async (req, res) => {
     }
 
     const newNews = await News.create(req.body);
+
+    const users = await User.find({
+      status: { $in: ["active", "awaiting_payment"] },
+    }).select("fcm");
+    const fcmUser = users.map((user) => user.fcm);
+    const userIds = users.map((user) => user._id);
+    await sendInAppNotification(fcmUser, newNews.title, newNews.content);
+
+    await Notification.create({
+      users: userIds,
+      subject: newNews.title,
+      content: newNews.content,
+      type: "in-app",
+    });
+
     if (!newNews) {
       return responseHandler(res, 400, `news creation failed...!`);
     }
