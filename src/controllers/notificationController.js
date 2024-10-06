@@ -108,7 +108,6 @@ exports.getUserNotifications = async (req, res) => {
       users: {
         $elemMatch: {
           user: userId,
-          read: false,
         },
       },
     });
