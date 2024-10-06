@@ -110,8 +110,15 @@ exports.getSingleEvent = async (req, res) => {
       ...event._doc,
       rsvpCount: event.rsvp.length,
       rsvp: event.rsvp.map((rsvp) => {
+        let fullName = rsvp.name.first;
+        if (rsvp.name.middle) {
+          fullName += ` ${rsvp.name.middle}`;
+        }
+        if (rsvp.name.last) {
+          fullName += ` ${rsvp.name.last}`;
+        }
         return {
-          name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
+          name: fullName,
           phone: rsvp.phone,
           memberId: rsvp.memberId,
         };
