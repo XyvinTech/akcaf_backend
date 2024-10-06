@@ -4,7 +4,7 @@ const NewsSchema = mongoose.Schema(
   {
     category: {
       type: String,
-      enum: ["Latest", "Business", "Entertainment", "Economy", "Politics"],
+      enum: ["Latest", "Business", "Entertainment", "Economy", "Politics", "Market"],
     },
     title: { type: String },
     content: { type: String },

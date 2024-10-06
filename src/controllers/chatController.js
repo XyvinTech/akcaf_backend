@@ -137,7 +137,7 @@ exports.getBetweenUsers = async (req, res) => {
 
 exports.getChats = async (req, res) => {
   try {
-    const chats = await Chat.find({ participants: req.userId })
+    const chats = await Chat.find({ participants: req.userId, isGroup: false })
       .populate("participants", "name image")
       .populate("lastMessage")
       .exec();
@@ -190,7 +190,7 @@ exports.getGroupMessage = async (req, res) => {
   try {
     const messages = await Message.find({
       to: id,
-    }).sort({ timestamp: 1 });
+    }).sort({ timestamp: 1 }).populate("from", "name image");
 
     if (!messages.length) {
       return responseHandler(res, 404, "No messages found in this group.");
@@ -220,13 +220,51 @@ exports.getGroupMessage = async (req, res) => {
 exports.getGroupList = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
-    const skipCount = 10 * (pageNo - 1);
+    // const skipCount = 10 * (pageNo - 1);
     const group = await Chat.find({ isGroup: true })
-      .skip(skipCount)
-      .limit(limit)
-      .sort({ createdAt: -1, _id: 1})
+      .populate("lastMessage")
+      .sort({ createdAt: -1, _id: 1 })
       .lean();
     const totalCount = await Chat.countDocuments({ isGroup: true });
+    const mappedData = group.map((item) => {
+      return {
+        _id: item._id,
+        groupName: item.groupName,
+        lastMessage: item.lastMessage.content,
+        unreadCount: item.unreadCount[req.userId] || 0,
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      `Group list found successfull..!`,
+      mappedData,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.getGroupListForAdmin = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10, search } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {
+      isGroup: true,
+    }
+
+    if (search) {
+      filter.$or = [{ groupName: { $regex: search, $options: "i" } }];
+    }
+
+    const group = await Chat.find(filter)
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
+      .lean();
+    const totalCount = await Chat.countDocuments(filter);
     const mappedData = group.map((item) => {
       return {
         _id: item._id,
@@ -266,7 +304,14 @@ exports.getGroupDetails = async (req, res) => {
     if (!group) {
       return responseHandler(res, 404, `Group not found`);
     }
-    const mappedData = group.participants.map((item) => {
+
+    const groupInfo = {
+      groupName: group.groupName,
+      groupInfo: group.groupInfo,
+      memberCount: group.participants.length,
+    };
+
+    const participantsData = group.participants.map((item) => {
       return {
         _id: item._id,
         name: `${item.name.first} ${item.name.middle} ${item.name.last}`,
@@ -277,7 +322,10 @@ exports.getGroupDetails = async (req, res) => {
         status: item.status,
       };
     });
-    return responseHandler(res, 200, `Group details`, mappedData);
+    return responseHandler(res, 200, `Group details`, {
+      groupInfo,
+      participantsData,
+    });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }

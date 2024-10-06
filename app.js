@@ -24,15 +24,16 @@ const courseRoute = require("./src/routes/course");
 const notificationRoute = require("./src/routes/notification");
 const chatRoute = require("./src/routes/chat");
 const paymentRoute = require("./src/routes/payment");
+const reportRoute = require("./src/routes/report");
 
-app.use(express.static('views'));
+app.use(express.static("views"));
 
-app.get('/success', (req, res) => {
-  res.sendFile(__dirname + '/views/success.html');
+app.get("/success", (req, res) => {
+  res.sendFile(__dirname + "/views/success.html");
 });
 
-app.get('/cancel', (req, res) => {
-  res.sendFile(__dirname + '/views/cancel.html');
+app.get("/cancel", (req, res) => {
+  res.sendFile(__dirname + "/views/cancel.html");
 });
 
 app.use(volleyball);
@@ -84,6 +85,7 @@ app.use(`${BASE_PATH}/course`, courseRoute);
 app.use(`${BASE_PATH}/notification`, notificationRoute);
 app.use(`${BASE_PATH}/chat`, chatRoute);
 app.use(`${BASE_PATH}/payment`, paymentRoute);
+app.use(`${BASE_PATH}/report`, reportRoute);
 
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");

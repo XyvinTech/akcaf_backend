@@ -37,7 +37,14 @@ const userSchema = new mongoose.Schema(
     bio: { type: String },
     status: {
       type: String,
-      enum: ["active", "inactive", "rejected", "deleted", "awaiting_payment"],
+      enum: [
+        "active",
+        "inactive",
+        "rejected",
+        "deleted",
+        "awaiting_payment",
+        "blocked",
+      ],
       default: "inactive",
     },
     address: { type: String },
@@ -62,7 +69,8 @@ const userSchema = new mongoose.Schema(
     reason: { type: String },
     otp: { type: Number },
     fcm: { type: String },
-    QRCode: { type: String },
+    blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    notInterestedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

@@ -234,9 +234,14 @@ exports.getAllColleges = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
+    if (search) {
+      filter.$or = [
+        { collegeName: { $regex: search, $options: "i" } },
+      ];
+    }
     const totalCount = await College.countDocuments(filter);
     const aggregateQuery = [
       { $match: filter },

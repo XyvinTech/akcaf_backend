@@ -5,6 +5,9 @@ const notificationRoute = express.Router();
 
 notificationRoute.use(authVerify);
 
-notificationRoute.post("/", notificationController.createNotification);
+notificationRoute
+  .route("/")
+  .post(notificationController.createNotification)
+  .get(notificationController.getNotifications);
 
 module.exports = notificationRoute;

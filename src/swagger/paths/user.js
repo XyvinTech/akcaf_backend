@@ -695,3 +695,128 @@
  *       500:
  *         description: Internal Server Error
  */
+
+/**
+ * @swagger
+ * /user/block/{id}:
+ *   put:
+ *     summary: Block a user
+ *     description: Block the user with the specified ID.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to be blocked
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *       400:
+ *         description: Bad request (e.g., missing user ID)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user/unblock/{id}:
+ *   put:
+ *     summary: Unblock a user
+ *     description: Unblock the user with the specified ID.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to be unblocked
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User unblocked successfully
+ *       400:
+ *         description: Bad request (e.g., missing user ID)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user/admin/block-user/{id}:
+ *   patch:
+ *     summary: Block a user by admin
+ *     description: Block a user by setting their status to "blocked". This action can only be performed by an admin.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to block
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user/admin/unblock-user/{id}:
+ *   patch:
+ *     summary: Block a user by admin
+ *     description: Block a user by setting their status to "blocked". This action can only be performed by an admin.
+ *     tags:
+ *       - User
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the user to block
+ *         schema:
+ *           type: string
+ *           example: "643b2a4a5b673a64f56c742b"
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *       400:
+ *         description: Invalid request (e.g., missing user ID or failed update)
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /user/request-nfc:
+ *   post:
+ *     summary: Request NFC
+ *     description: Allows a user to request an NFC by sending their information (member ID, name, email, and address) via email.
+ *     tags:
+ *       - User
+ *     responses:
+ *       200:
+ *         description: NFC request email sent successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */

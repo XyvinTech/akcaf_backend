@@ -8,6 +8,7 @@ const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
 const Setting = require("../models/settingsModel");
 const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
+const sendSelfMail = require("../utils/sendSelfMail");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -545,9 +546,14 @@ exports.listUsers = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
+    const currentUser = await User.findById(req.userId).select("blockedUsers");
+    const blockedUsersList = currentUser.blockedUsers;
     const filter = {
       status: { $in: ["active", "awaiting_payment"] },
-      _id: { $ne: req.userId },
+      _id: {
+        $ne: req.userId,
+        $nin: blockedUsersList,
+      },
     };
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
@@ -592,6 +598,141 @@ exports.getUsers = async (req, res) => {
       data,
       totalCount
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.blockUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(req.userId);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (findUser.blockedUsers.includes(id)) {
+      return responseHandler(res, 400, "User is already blocked");
+    }
+
+    findUser.blockedUsers.push(id);
+    const editUser = await findUser.save();
+    if (!editUser) {
+      return responseHandler(res, 400, `User block failed...!`);
+    }
+    return responseHandler(res, 200, `User blocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.unblockUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+
+    const findUser = await User.findById(req.userId);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    findUser.blockedUsers = findUser.blockedUsers.filter(
+      (user) => user.toString() !== id
+    );
+    const editUser = await findUser.save();
+    if (!editUser) {
+      return responseHandler(res, 400, `User unblock failed...!`);
+    }
+    return responseHandler(res, 200, `User unblocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.adminUserBlock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (findUser.blockedUsers.includes(id)) {
+      return responseHandler(res, 400, "User is already blocked");
+    }
+
+    const editUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "blocked" },
+      },
+      { new: true }
+    );
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User blocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.adminUserUnblock = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const findUser = await User.findById(id);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+    const editUser = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { status: "active" },
+      },
+      { new: true }
+    );
+    if (!editUser) {
+      return responseHandler(res, 400, `User update failed...!`);
+    }
+    return responseHandler(res, 200, `User unblocked successfully`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.requestNFC = async (req, res) => {
+  try {
+    const { userId } = req;
+    const findUser = await User.findById(userId);
+    if (!findUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    const fullName = `${findUser.name.first} ${findUser.name.middle} ${findUser.name.last}`;
+
+    const data = {
+      from: findUser.email,
+      subject: `Request for NFC from ${fullName}`,
+      text: `Hi from ${fullName} with AKCAF member ID ${findUser.memberId},\n\n
+        I would like to request for NFC. Please contact me on ${findUser.phone} or email me at ${findUser.email}.\n
+        Thank you.
+        `,
+    };
+
+    await sendSelfMail(data);
+
+    return responseHandler(res, 200, "NFC Request sent successfully");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

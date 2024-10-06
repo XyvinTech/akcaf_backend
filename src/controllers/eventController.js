@@ -143,10 +143,24 @@ exports.getAllEvents = async (req, res) => {
 
 exports.getAllEventsForAdmin = async (req, res) => {
   try {
-    const events = await Event.find().populate("rsvp", "name phone memberId");
+    const { pageNo = 1, status, limit = 10, search } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+    const filter = {};
+    if (search) {
+      filter.$or = [{ eventName: { $regex: search, $options: "i" } }];
+    }
+    if (status) {
+      filter.status = status;
+    }
+    const events = await Event.find(filter)
+      .populate("rsvp", "name phone memberId")
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
+      .lean();
     const mappedEvents = events.map((event) => {
       return {
-        ...event._doc,
+        ...event,
         rsvpCount: event.rsvp.length,
         rsvp: event.rsvp.map((rsvp) => {
           return {

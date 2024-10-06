@@ -260,3 +260,8 @@ exports.editGroupSchema = Joi.object({
   groupInfo: Joi.string(),
   participantIds: Joi.array(),
 });
+
+exports.createReport = Joi.object({
+  content: Joi.string().required(),
+  reportType: Joi.string().valid("Post", "Chat", "User", "Message").required(),
+});
