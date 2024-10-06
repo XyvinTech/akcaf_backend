@@ -2,6 +2,8 @@ const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const validations = require("../validations");
 const Event = require("../models/eventModel");
+const { getMessaging } = require("firebase-admin/messaging");
+const User = require("../models/userModel");
 
 exports.createEvent = async (req, res) => {
   try {
@@ -198,6 +200,12 @@ exports.addRSVP = async (req, res) => {
     }
     findEvent.rsvp.push(req.userId);
     await findEvent.save();
+
+    const user = await User.findById(req.userId).select("fcm");
+
+    const topic = `event_${id}`;
+    const fcmToken = user.fcm;
+    await getMessaging().subscribeToTopic(fcmToken, topic);
     return responseHandler(res, 200, "RSVP added successfully");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);

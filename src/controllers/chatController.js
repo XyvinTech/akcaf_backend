@@ -1,7 +1,9 @@
 const responseHandler = require("../helpers/responseHandler");
 const Chat = require("../models/chatModel");
 const Message = require("../models/messageModel");
+const User = require("../models/userModel");
 const { getReceiverSocketId, chatNamespace, io } = require("../socket");
+const sendInAppNotification = require("../utils/sendInAppNotification");
 const validations = require("../validations");
 
 exports.sendMessage = async (req, res) => {
@@ -33,6 +35,14 @@ exports.sendMessage = async (req, res) => {
     }
 
     const newMessage = new Message(newMessageData);
+    const toUser = await User.findById(to).select("fcm");
+    const fromUser = await User.findById(from).select("name");
+
+    await sendInAppNotification(
+      toUser.fcm,
+      `New Message ${fromUser.name.first}`,
+      content
+    );
 
     if (!chat) {
       if (isGroup) {
@@ -190,7 +200,9 @@ exports.getGroupMessage = async (req, res) => {
   try {
     const messages = await Message.find({
       to: id,
-    }).sort({ timestamp: 1 }).populate("from", "name image");
+    })
+      .sort({ timestamp: 1 })
+      .populate("from", "name image");
 
     if (!messages.length) {
       return responseHandler(res, 404, "No messages found in this group.");
@@ -253,7 +265,7 @@ exports.getGroupListForAdmin = async (req, res) => {
     const skipCount = 10 * (pageNo - 1);
     const filter = {
       isGroup: true,
-    }
+    };
 
     if (search) {
       filter.$or = [{ groupName: { $regex: search, $options: "i" } }];
