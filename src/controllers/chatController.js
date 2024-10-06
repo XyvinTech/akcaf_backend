@@ -123,7 +123,6 @@ exports.sendMessage = async (req, res) => {
 exports.getBetweenUsers = async (req, res) => {
   const { id } = req.params;
   const { userId } = req;
-
   try {
     const messages = await Message.find({
       $or: [
@@ -138,22 +137,22 @@ exports.getBetweenUsers = async (req, res) => {
       });
 
     await Message.updateMany(
-      { from: id, to: userId, status: { $ne: "seen" } },
+      { from: userId, to: id, status: { $ne: "seen" } },
       { $set: { status: "seen" } }
     );
 
+    await Chat.updateOne(
+      { participants: { $all: [id, userId] } },
+      { $set: { [`unreadCount.${userId}`]: 0 } }
+    );
     const chat = await Chat.findOne({ participants: { $all: [id, userId] } });
-
     if (chat) {
-      const unreadCountForUser = chat.unreadCount.get(userId) || 0;
-      if (unreadCountForUser !== 0) {
-        chat.unreadCount.set(userId, 0); 
-        await chat.save(); 
-      }
+      const unreadCountForSender = chat.unreadCount.get(userId) || 0;
 
-      const unreadCountForSender = chat.unreadCount.get(id) || 0;
-      chat.unreadCount.set(id, unreadCountForSender); 
-      await chat.save();
+      await Chat.updateOne(
+        { participants: { $all: [id, userId] } },
+        { $set: { [`unreadCount.${userId}`]: unreadCountForSender } }
+      );
     }
 
     return responseHandler(
