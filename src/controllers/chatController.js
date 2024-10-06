@@ -61,17 +61,22 @@ exports.sendMessage = async (req, res) => {
           unreadCount: {},
         });
         const allUsers = chat.participants;
-        const allUsersFCM = await User.find({ _id: { $in: allUsers } }).select(
-          "fcm"
-        );
+        const allUsersFCM = await User.find({
+          _id: { $in: allUsers },
+          fcm: { $exists: true, $ne: null },
+        }).select("fcm");
 
         const fcmTokens = allUsersFCM.map((user) => user.fcm);
 
-        await sendInAppNotification(
-          fcmTokens,
-          `New Message ${chat.groupName}`,
-          content
-        );
+        if (fcmTokens.length > 0) {
+          const notificationTitle = chat.isGroup
+            ? `New Message in Group: ${chat.groupName}`
+            : `New Message from ${
+                chat.participants.length === 2 ? "Chat Participant" : "Group"
+              }`;
+
+          await sendInAppNotification(fcmTokens, notificationTitle, content);
+        }
       } else {
         chat = new Chat({
           participants: [from, to],
