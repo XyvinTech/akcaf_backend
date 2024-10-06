@@ -217,9 +217,16 @@ exports.getAllPayment = async (req, res) => {
     const totalCount = await Payment.countDocuments(filter);
 
     const mappedData = payment.map((item) => {
+      let fullName = item.name.first;
+      if (item.name.middle) {
+        fullName += ` ${item.name.middle}`;
+      }
+      if (item.name.last) {
+        fullName += ` ${item.name.last}`;
+      }
       return {
         ...item,
-        fullName: `${item.user.name.first} ${item.user.name.middle} ${item.user.name.last}`,
+        fullName,
       };
     });
 
