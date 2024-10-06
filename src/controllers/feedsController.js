@@ -1,6 +1,7 @@
 const responseHandler = require("../helpers/responseHandler");
 const Feeds = require("../models/feedsModel");
 const User = require("../models/userModel");
+const sendInAppNotification = require("../utils/sendInAppNotification");
 const validations = require("../validations");
 
 exports.createFeeds = async (req, res) => {
@@ -189,6 +190,23 @@ exports.likeFeed = async (req, res) => {
       },
       { new: true }
     );
+
+    const toUser = await User.findById(updateFeeds.author).select("fcm");
+    const fromUser = await User.findById(req.userId).select("name");
+
+    await sendInAppNotification(
+      toUser.fcm,
+      `${fromUser.name.first} Liked Your Post`,
+      `${fromUser.name.first} Liked Your ${updateFeeds.content}`
+    );
+
+    await Notification.create({
+      users: toUser._id,
+      subject: `${fromUser.name.first} Liked Your Post`,
+      content: `${fromUser.name.first} Liked Your ${updateFeeds.content}`,
+      type: "in-app",
+    });
+
     return responseHandler(res, 200, "Feeds liked successfully", updateFeeds);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -219,6 +237,22 @@ exports.commentFeed = async (req, res) => {
       },
       { new: true }
     );
+
+    const toUser = await User.findById(updateFeeds.author).select("fcm");
+    const fromUser = await User.findById(req.userId).select("name");
+
+    await sendInAppNotification(
+      toUser.fcm,
+      `${fromUser.name.first} Commented Your Post`,
+      `${fromUser.name.first} Commented Your ${updateFeeds.content}`
+    );
+
+    await Notification.create({
+      users: toUser._id,
+      subject: `${fromUser.name.first} Commented Your Post`,
+      content: `${fromUser.name.first} Commented Your ${updateFeeds.content}`,
+      type: "in-app",
+    });
 
     return responseHandler(
       res,
