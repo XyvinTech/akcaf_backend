@@ -129,7 +129,7 @@ exports.getBetweenUsers = async (req, res) => {
         { from: userId, to: id },
       ],
     })
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1, _id: 1 })
       .populate({
         path: "feed",
         select: "media",
@@ -212,7 +212,7 @@ exports.getGroupMessage = async (req, res) => {
     const messages = await Message.find({
       to: id,
     })
-      .sort({ timestamp: 1 })
+      .sort({ createdAt: -1, _id: 1 })
       .populate("from", "name image");
 
     if (!messages.length) {
