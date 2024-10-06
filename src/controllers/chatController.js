@@ -48,7 +48,6 @@ exports.sendMessage = async (req, res) => {
         const allUsers = chat.participants;
         const allUsersFCM = await User.find({
           _id: { $in: allUsers },
-          fcm: { $exists: true, $ne: null },
         }).select("fcm");
 
         const fcmTokens = allUsersFCM.map((user) => user.fcm);
@@ -136,22 +135,25 @@ exports.getBetweenUsers = async (req, res) => {
         select: "media",
       });
 
+    // Update the status of messages to 'seen'
     await Message.updateMany(
       { from: userId, to: id, status: { $ne: "seen" } },
       { $set: { status: "seen" } }
     );
 
-    await Chat.updateOne(
-      { participants: { $all: [id, userId] } },
-      { $set: { [`unreadCount.${userId}`]: 0 } }
-    );
+    // Update the unread count for the other user
     const chat = await Chat.findOne({ participants: { $all: [id, userId] } });
-    if (chat) {
-      const unreadCountForSender = chat.unreadCount.get(userId) || 0;
 
+    if (chat) {
+      const currentCount = chat.unreadCount.get(userId) || 0;
+
+      // Reset unread count for userId to 0 and keep track of the other user
       await Chat.updateOne(
-        { participants: { $all: [id, userId] } },
-        { $set: { [`unreadCount.${userId}`]: unreadCountForSender } }
+        { _id: chat._id },
+        {
+          $set: { [`unreadCount.${userId}`]: 0 },
+          $inc: { [`unreadCount.${id}`]: -currentCount }, // decrease unread count for the other user
+        }
       );
     }
 
@@ -345,9 +347,16 @@ exports.getGroupDetails = async (req, res) => {
     };
 
     const participantsData = group.participants.map((item) => {
+      let fullName = item.name.first;
+      if (item.name.middle) {
+        fullName += ` ${item.name.middle}`;
+      }
+      if (item.name.last) {
+        fullName += ` ${item.name.last}`;
+      }
       return {
         _id: item._id,
-        name: `${item.name.first} ${item.name.middle} ${item.name.last}`,
+        name: fullName,
         phone: item.phone,
         batch: item.batch,
         college: item.college.collegeName,

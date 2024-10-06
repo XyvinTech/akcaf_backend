@@ -195,18 +195,20 @@ exports.likeFeed = async (req, res) => {
     const fromUser = await User.findById(req.userId).select("name");
     const fcmUser = [toUser.fcm];
 
-    await sendInAppNotification(
-      fcmUser,
-      `${fromUser.name.first} Liked Your Post`,
-      `${fromUser.name.first} Liked Your ${updateFeeds.content}`
-    );
+    if (req.userId !== updateFeeds.author) {
+      await sendInAppNotification(
+        fcmUser,
+        `${fromUser.name.first} Liked Your Post`,
+        `${fromUser.name.first} Liked Your ${updateFeeds.content}`
+      );
 
-    await Notification.create({
-      users: toUser._id,
-      subject: `${fromUser.name.first} Liked Your Post`,
-      content: `${fromUser.name.first} Liked Your ${updateFeeds.content}`,
-      type: "in-app",
-    });
+      await Notification.create({
+        users: toUser._id,
+        subject: `${fromUser.name.first} Liked Your Post`,
+        content: `${fromUser.name.first} Liked Your ${updateFeeds.content}`,
+        type: "in-app",
+      });
+    }
 
     return responseHandler(res, 200, "Feeds liked successfully", updateFeeds);
   } catch (error) {
@@ -243,18 +245,20 @@ exports.commentFeed = async (req, res) => {
     const fromUser = await User.findById(req.userId).select("name");
     const fcmUser = [toUser.fcm];
 
-    await sendInAppNotification(
-      fcmUser,
-      `${fromUser.name.first} Commented Your Post`,
-      `${fromUser.name.first} Commented Your ${updateFeeds.content}`
-    );
+    if (req.userId !== updateFeeds.author) {
+      await sendInAppNotification(
+        fcmUser,
+        `${fromUser.name.first} Commented Your Post`,
+        `${fromUser.name.first} Commented Your ${updateFeeds.content}`
+      );
 
-    await Notification.create({
-      users: toUser._id,
-      subject: `${fromUser.name.first} Commented Your Post`,
-      content: `${fromUser.name.first} Commented Your ${updateFeeds.content}`,
-      type: "in-app",
-    });
+      await Notification.create({
+        users: toUser._id,
+        subject: `${fromUser.name.first} Commented Your Post`,
+        content: `${fromUser.name.first} Commented Your ${updateFeeds.content}`,
+        type: "in-app",
+      });
+    }
 
     return responseHandler(
       res,
