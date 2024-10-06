@@ -7,19 +7,14 @@ require("dotenv").config();
 
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
-  const currentDate = now.format("YYYY-MM-DD");
-  console.log("🚀 ~ cron.schedule ~ currentDate:", currentDate)
-  const currentTime = now.format("HH:mm");
-  console.log("🚀 ~ cron.schedule ~ currentTime:", currentTime)
+  const currentDateTime = moment.utc(now.format("YYYY-MM-DDTHH:mm")).toDate();
 
   try {
     //* Update events from "pending" to "live" and send notification
     const progressEvents = await Event.find({
       status: "pending",
-      startDate: currentDate,
-      startTime: {
-        $lte: moment.utc(`${currentDate}T${currentTime}`).toDate(),
-      },
+      startDate: { $lte: now.toDate() },
+      startTime: { $lte: currentDateTime },
     });
 
     for (const event of progressEvents) {
@@ -58,10 +53,8 @@ cron.schedule("* * * * *", async () => {
     //* Update events from "live" to "completed" and send notification
     const doneEvents = await Event.find({
       status: "live",
-      startDate: currentDate,
-      startTime: {
-        $lte: moment.utc(`${currentDate}T${currentTime}`).toDate(),
-      },
+      endDate: { $lte: now.toDate() },
+      endTime: { $lte: currentDateTime },
     });
 
     for (const event of doneEvents) {
