@@ -135,27 +135,15 @@ exports.getBetweenUsers = async (req, res) => {
         select: "media",
       });
 
-    // Update the status of messages to 'seen'
     await Message.updateMany(
       { from: userId, to: id, status: { $ne: "seen" } },
       { $set: { status: "seen" } }
     );
 
-    // Update the unread count for the other user
-    const chat = await Chat.findOne({ participants: { $all: [id, userId] } });
-
-    if (chat) {
-      const currentCount = chat.unreadCount.get(userId) || 0;
-
-      // Reset unread count for userId to 0 and keep track of the other user
-      await Chat.updateOne(
-        { _id: chat._id },
-        {
-          $set: { [`unreadCount.${userId}`]: 0 },
-          $inc: { [`unreadCount.${id}`]: -currentCount }, // decrease unread count for the other user
-        }
-      );
-    }
+    await Chat.updateOne(
+      { participants: { $all: [id, userId] } },
+      { $set: { [`unreadCount.${userId}`]: 0 } }
+    );
 
     return responseHandler(
       res,
