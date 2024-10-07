@@ -33,6 +33,9 @@ cron.schedule("* * * * *", async () => {
           body: `The event "${event.eventName}" has started. Join now!`,
         },
         topic: topic,
+        data: {
+          deepLinkUrl: "https://akcaf.page.link/my_events",
+        },
       };
 
       try {
@@ -71,6 +74,9 @@ cron.schedule("* * * * *", async () => {
           body: `The event "${event.eventName}" has ended. Thank you for participating!`,
         },
         topic: topic,
+        data: {
+          deepLinkUrl: "https://akcaf.page.link/my_events",
+        },
       };
 
       try {

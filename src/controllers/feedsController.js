@@ -299,6 +299,16 @@ exports.updateFeeds = async (req, res) => {
       return responseHandler(res, 404, "Feeds not found");
     }
 
+    const toUser = await User.findById(findFeeds.author).select("fcm");
+    const fcmUser = [toUser.fcm];
+
+    await sendInAppNotification(
+      fcmUser,
+      `Your Feed request has been ${action}`,
+      `Your Feed request has been ${action} for ${findFeeds.content}`,
+      "https://akcaf.page.link/my_posts"
+    );
+
     if (action === "accept") {
       const updateFeeds = await Feeds.findByIdAndUpdate(
         id,
@@ -309,6 +319,7 @@ exports.updateFeeds = async (req, res) => {
         },
         { new: true }
       );
+
       return responseHandler(
         res,
         200,
