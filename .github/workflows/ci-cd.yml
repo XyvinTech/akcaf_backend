@@ -94,6 +94,8 @@ jobs:
               -e API_VERSION=${{ env.API_VERSION }} \
               -e MONGO_URL=${{ env.MONGO_URL }} \
               -e JWT_SECRET=${{ env.JWT_SECRET }} \
+              -e EMAIL_ID=${{ env.EMAIL_ID }} \
+              -e PASSWORD=${{ env.PASSWORD }} \
               -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
               -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
               -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
