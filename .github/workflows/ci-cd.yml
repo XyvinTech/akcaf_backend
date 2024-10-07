@@ -55,7 +55,6 @@ jobs:
           MONGO_URL: ${{ secrets.MONGO_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           NODE_EMAIL_ID: ${{ secrets.NODE_EMAIL_ID }}
-          NODE_PASS: ${{ secrets.NODE_PASS }}
           RAZORPAY_ID_KEY: ${{ secrets.RAZORPAY_ID_KEY }}
           RAZORPAY_SECRET_KEY: ${{ secrets.RAZORPAY_SECRET_KEY }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
@@ -95,7 +94,6 @@ jobs:
               -e MONGO_URL=${{ env.MONGO_URL }} \
               -e JWT_SECRET=${{ env.JWT_SECRET }} \
               -e NODE_EMAIL_ID=${{ env.NODE_EMAIL_ID }} \
-              -e NODE_PASS=${{ env.NODE_PASS }} \
               -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
               -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
               -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
