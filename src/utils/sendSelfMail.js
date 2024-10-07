@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { EMAIL_ID, PASSWORD } = process.env;
+const { NODE_EMAIL_ID, NODE_PASSWORD } = process.env;
 const nodemailer = require("nodemailer");
 
 const sendSelfMail = async (data) => {
@@ -9,14 +9,14 @@ const sendSelfMail = async (data) => {
       secure: true,
       port: 465,
       auth: {
-        user: EMAIL_ID,
-        pass: PASSWORD,
+        user: NODE_EMAIL_ID,
+        pass: NODE_PASSWORD,
       },
     });
 
     const mailOptions = {
       from: data.from,
-      to: EMAIL_ID,
+      to: NODE_EMAIL_ID,
       subject: data.subject,
       text: data.text,
     };
