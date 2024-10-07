@@ -7,7 +7,7 @@ require("dotenv").config();
 
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
-  console.log("🚀 ~ cron.schedule ~ now:", now)
+  console.log("🚀 ~ cron.schedule ~ now:", now.toDate())
   const currentDateTime = moment.utc(now.format("YYYY-MM-DDTHH:mm")).toDate();
   console.log("🚀 ~ cron.schedule ~ currentDateTime:", currentDateTime)
 
