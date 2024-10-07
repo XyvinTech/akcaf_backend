@@ -18,8 +18,12 @@ cron.schedule("* * * * *", async () => {
     for (const event of progressEvents) {
       event.status = "live";
       await event.save();
+      const data = event.rsvp.map((rsvp) => ({
+        user: rsvp._id,
+        read: false,
+      }));
       await Notification.create({
-        users: event.rsvp,
+        users: data,
         subject: `Event "${event.eventName}" is now live!`,
         content: `The event "${event.eventName}" has started. Join now!`,
         link: event.type === "Online" ? event.link : event.venue,
@@ -60,8 +64,12 @@ cron.schedule("* * * * *", async () => {
     for (const event of doneEvents) {
       event.status = "completed";
       await event.save();
+      const data = event.rsvp.map((rsvp) => ({
+        user: rsvp._id,
+        read: false,
+      }));
       await Notification.create({
-        users: event.rsvp,
+        users: data,
         subject: `Event "${event.eventName}" is now completed!`,
         content: `The event "${event.eventName}" has ended. Thank you for participating!`,
         type: "in-app",
