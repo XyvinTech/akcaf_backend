@@ -17,7 +17,7 @@ exports.createNotification = async (req, res) => {
 
     let { users, media } = req.body;
 
-    if (users[0] === "*") {
+    if (users[0].user === "*") {
       const allUsers = await User.find({
         status: { $in: ["active", "awaiting_payment"] },
       }).select("_id fcm");
