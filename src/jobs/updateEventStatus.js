@@ -24,8 +24,8 @@ cron.schedule("* * * * *", async () => {
       }));
       await Notification.create({
         users: data,
-        subject: `Event "${event.eventName}" is now live!`,
-        content: `The event "${event.eventName}" has started. Join now!`,
+        subject: `Event ${event.eventName} is now live!`,
+        content: `The event ${event.eventName} has started. Join now!`,
         link: event.type === "Online" ? event.link : event.venue,
         type: "in-app",
       });
@@ -33,8 +33,8 @@ cron.schedule("* * * * *", async () => {
       const topic = `event_${event._id}`;
       const message = {
         notification: {
-          title: `Event "${event.eventName}" is now live!`,
-          body: `The event "${event.eventName}" has started. Join now!`,
+          title: `Event ${event.eventName} is now live!`,
+          body: `The event ${event.eventName} has started. Join now!`,
         },
         topic: topic,
         data: {
@@ -70,16 +70,16 @@ cron.schedule("* * * * *", async () => {
       }));
       await Notification.create({
         users: data,
-        subject: `Event "${event.eventName}" is now completed!`,
-        content: `The event "${event.eventName}" has ended. Thank you for participating!`,
+        subject: `Event ${event.eventName} is now completed!`,
+        content: `The event ${event.eventName} has ended. Thank you for participating!`,
         type: "in-app",
       });
 
       const topic = `event_${event._id}`;
       const message = {
         notification: {
-          title: `Event "${event.eventName}" is now completed!`,
-          body: `The event "${event.eventName}" has ended. Thank you for participating!`,
+          title: `Event ${event.eventName} is now completed!`,
+          body: `The event ${event.eventName} has ended. Thank you for participating!`,
         },
         topic: topic,
         data: {
