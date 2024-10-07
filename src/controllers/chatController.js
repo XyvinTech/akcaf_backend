@@ -45,39 +45,12 @@ exports.sendMessage = async (req, res) => {
           lastMessage: newMessage._id,
           unreadCount: {},
         });
-        const allUsers = chat.participants;
-        const allUsersFCM = await User.find({
-          _id: { $in: allUsers },
-        }).select("fcm");
-
-        const fcmTokens = allUsersFCM.map((user) => user.fcm);
-
-        await sendInAppNotification(
-          fcmTokens,
-          `New Message ${chat.groupName}`,
-          content
-        );
       } else {
         chat = new Chat({
           participants: [from, to],
           lastMessage: newMessage._id,
           unreadCount: { [to]: 1 },
           isGroup: false,
-        });
-        const toUser = await User.findById(to).select("fcm");
-        const fromUser = await User.findById(from).select("name");
-        const fcmUser = [toUser.fcm];
-        await sendInAppNotification(
-          fcmUser,
-          `New Message ${fromUser.name.first}`,
-          content
-        );
-
-        await Notification.create({
-          users: toUser._id,
-          subject: `New Message ${fromUser.name.first}`,
-          content: content,
-          type: "in-app",
         });
       }
     } else {
@@ -105,8 +78,35 @@ exports.sendMessage = async (req, res) => {
 
     if (isGroup) {
       chatNamespace.to(to).emit("message", newMessage);
+      const allUsers = chat.participants;
+      const allUsersFCM = await User.find({
+        _id: { $in: allUsers },
+      }).select("fcm");
+
+      const fcmTokens = allUsersFCM.map((user) => user.fcm);
+
+      await sendInAppNotification(
+        fcmTokens,
+        `New Message ${chat.groupName}`,
+        content
+      );
     } else {
       const receiverSocketId = getReceiverSocketId(to);
+      const toUser = await User.findById(to).select("fcm");
+      const fromUser = await User.findById(from).select("name");
+      const fcmUser = [toUser.fcm];
+      await sendInAppNotification(
+        fcmUser,
+        `New Message ${fromUser.name.first}`,
+        content
+      );
+
+      await Notification.create({
+        users: toUser._id,
+        subject: `New Message ${fromUser.name.first}`,
+        content: content,
+        type: "in-app",
+      });
       if (receiverSocketId) {
         chatNamespace.to(receiverSocketId).emit("message", newMessage);
       } else {
