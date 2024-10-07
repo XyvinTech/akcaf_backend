@@ -4,6 +4,7 @@ const validations = require("../validations");
 const User = require("../models/userModel");
 const sendMail = require("../utils/sendMail");
 const sendInAppNotification = require("../utils/sendInAppNotification");
+const mongoose = require("mongoose");
 
 exports.createNotification = async (req, res) => {
   try {
@@ -108,7 +109,7 @@ exports.getUserNotifications = async (req, res) => {
     const notifications = await Notification.find({
       users: {
         $elemMatch: {
-          user: userId,
+          user: new mongoose.Types.ObjectId(userId),
         },
       },
     })
