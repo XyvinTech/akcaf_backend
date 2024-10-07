@@ -78,7 +78,8 @@ exports.sendMessage = async (req, res) => {
 
     if (isGroup) {
       chatNamespace.to(to).emit("message", newMessage);
-      const allUsers = chat.participants;
+      let allUsers = chat.participants;
+      allUsers = allUsers.filter((user) => user.toString() !== from);
       const allUsersFCM = await User.find({
         _id: { $in: allUsers },
       }).select("fcm");
