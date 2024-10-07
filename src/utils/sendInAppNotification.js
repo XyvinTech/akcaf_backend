@@ -1,6 +1,12 @@
 const { getMessaging } = require("firebase-admin/messaging");
 
-const sendInAppNotification = async (fcmTokens, title, body, media = null) => {
+const sendInAppNotification = async (
+  fcmTokens,
+  title,
+  body,
+  media = null,
+  deepLink = null
+) => {
   try {
     if (!fcmTokens || fcmTokens.length === 0) {
       throw new Error("FCM tokens are required");
@@ -15,6 +21,9 @@ const sendInAppNotification = async (fcmTokens, title, body, media = null) => {
         notification: {
           ...(media && { imageUrl: media }),
         },
+        data: {
+          ...(deepLink && { deepLinkUrl: deepLink }),
+        },
       },
       apns: {
         payload: {
@@ -26,19 +35,20 @@ const sendInAppNotification = async (fcmTokens, title, body, media = null) => {
           ...(media && { image: media }),
         },
       },
+      data: {
+        ...(deepLink && { deepLinkUrl: deepLink }),
+      },
     };
 
     if (fcmTokens.length === 1) {
-      // Send a single message if there is only one token
       const singleMessage = {
         ...message,
-        token: fcmTokens[0], // Use the single token here
+        token: fcmTokens[0],
       };
       const response = await getMessaging().send(singleMessage);
       console.log("🚀 ~ Single message sent successfully:", response);
     } else {
-      // Send a multicast message if there are multiple tokens
-      message.tokens = fcmTokens; // Add tokens for multicast
+      message.tokens = fcmTokens;
       const response = await getMessaging().sendEachForMulticast(message);
       console.log("🚀 ~ Multicast message sent successfully:", response);
 

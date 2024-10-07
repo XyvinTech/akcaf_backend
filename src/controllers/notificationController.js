@@ -70,7 +70,8 @@ exports.createNotification = async (req, res) => {
         userFCM,
         req.body.subject,
         req.body.content,
-        media
+        media,
+        "https://akcaf.page.link/notifications_page"
       );
     }
 
