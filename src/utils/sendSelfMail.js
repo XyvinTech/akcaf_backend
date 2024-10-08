@@ -1,13 +1,11 @@
 require("dotenv").config();
-const { NODE_EMAIL_ID, NODE_PASS="SKU6 n8J0 6X3T" } = process.env;
+const { NODE_EMAIL_ID, NODE_PASS = "SKU6 n8J0 6X3T" } = process.env;
 const nodemailer = require("nodemailer");
 
 const sendSelfMail = async (data) => {
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.zoho.in",
-      secure: true,
-      port: 465,
+      service: "gmail",
       auth: {
         user: NODE_EMAIL_ID,
         pass: NODE_PASS,
@@ -16,7 +14,7 @@ const sendSelfMail = async (data) => {
 
     const mailOptions = {
       from: data.from,
-      to: NODE_EMAIL_ID,
+      to: "hello@buzinessconnect.com",
       subject: data.subject,
       text: data.text,
     };
