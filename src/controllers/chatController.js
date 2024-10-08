@@ -103,13 +103,6 @@ exports.sendMessage = async (req, res) => {
         content,
         "https://akcaf.page.link/chat_page"
       );
-
-      await Notification.create({
-        users: toUser._id,
-        subject: `New Message ${fromUser.name.first}`,
-        content: content,
-        type: "in-app",
-      });
       if (receiverSocketId) {
         chatNamespace.to(receiverSocketId).emit("message", newMessage);
       } else {
