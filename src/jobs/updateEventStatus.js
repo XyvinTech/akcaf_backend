@@ -37,6 +37,24 @@ cron.schedule("* * * * *", async () => {
           body: `The event ${event.eventName} has started. Join now!`,
         },
         topic: topic,
+        android: {
+          notification: {
+            imageUrl: event.image,
+          },
+          data: {
+            deepLinkUrl: "https://akcaf.page.link/my_events",
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              "mutable-content": 1,
+            },
+          },
+          fcm_options: {
+            imageUrl: event.image,
+          },
+        },
         data: {
           deepLinkUrl: "https://akcaf.page.link/my_events",
         },
