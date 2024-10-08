@@ -89,8 +89,7 @@ exports.sendMessage = async (req, res) => {
       await sendInAppNotification(
         fcmTokens,
         `New Message ${chat.groupName}`,
-        content,
-        "https://akcaf.page.link/group_chat_page"
+        content
       );
     } else {
       const receiverSocketId = getReceiverSocketId(to);
@@ -100,8 +99,7 @@ exports.sendMessage = async (req, res) => {
       await sendInAppNotification(
         fcmUser,
         `New Message ${fromUser.name.first}`,
-        content,
-        "https://akcaf.page.link/chat_page"
+        content
       );
       if (receiverSocketId) {
         chatNamespace.to(receiverSocketId).emit("message", newMessage);
