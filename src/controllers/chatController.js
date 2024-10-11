@@ -155,7 +155,7 @@ exports.getChats = async (req, res) => {
     const chats = await Chat.find({ participants: req.userId, isGroup: false })
       .populate("participants", "name image")
       .populate("lastMessage")
-      .sort({ updatedAt: -1, _id: 1 })
+      .sort({ lastMessage: -1, _id: 1 })
       .exec();
 
     return responseHandler(res, 200, "Chat retrieved successfully!", chats);
