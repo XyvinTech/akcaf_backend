@@ -129,22 +129,22 @@ exports.editUserSchema = Joi.object({
 exports.updateUserSchema = Joi.object({
   name: Joi.object({
     first: Joi.string(),
-    middle: Joi.string(),
+    middle: Joi.string().allow(""),
     last: Joi.string(),
   }),
   image: Joi.string(),
   email: Joi.string(),
-  address: Joi.string(),
+  address: Joi.string().allow(""),
   college: Joi.string(),
   course: Joi.string(),
   batch: Joi.number(),
-  bio: Joi.string(),
+  bio: Joi.string().allow(""),
   company: Joi.object({
-    name: Joi.string(),
-    designation: Joi.string(),
-    phone: Joi.string(),
-    address: Joi.string(),
-    logo: Joi.string(),
+    name: Joi.string().allow(""),
+    designation: Joi.string().allow(""),
+    phone: Joi.string().allow(""),
+    address: Joi.string().allow(""),
+    logo: Joi.string().allow(""),
   }),
   social: Joi.array().items(
     Joi.object({
