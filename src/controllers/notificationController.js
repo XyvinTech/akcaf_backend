@@ -62,6 +62,7 @@ exports.createNotification = async (req, res) => {
           const id = users[i].user;
           const findUser = await User.findById(id);
           if (findUser) {
+            if (!findUser.fcm) continue;
             userFCM.push(findUser.fcm);
           }
         }
