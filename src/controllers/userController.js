@@ -279,7 +279,7 @@ exports.getAllUsers = async (req, res) => {
       ];
     }
 
-    if (!fullUser) {
+    if (fullUser) {
       const totalCount = await User.countDocuments();
       const data = await User.find()
         .populate("college course")
