@@ -192,16 +192,14 @@ exports.createEventSchema = Joi.object({
   link: Joi.string(),
   venue: Joi.string(),
   organiserName: Joi.string().required(),
-  speakers: Joi.array()
-    .items(
-      Joi.object({
-        name: Joi.string().required(),
-        designation: Joi.string().required(),
-        role: Joi.string().required(),
-        image: Joi.string(),
-      })
-    )
-    .required(),
+  speakers: Joi.array().items(
+    Joi.object({
+      name: Joi.string().required(),
+      designation: Joi.string().required(),
+      role: Joi.string().required(),
+      image: Joi.string(),
+    })
+  ),
   status: Joi.string(),
 });
 
