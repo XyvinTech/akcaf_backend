@@ -265,7 +265,7 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10, search } = req.query;
+    const { pageNo = 1, fullUser = false, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
@@ -278,32 +278,59 @@ exports.getAllUsers = async (req, res) => {
         { "name.last": { $regex: search, $options: "i" } },
       ];
     }
-    const totalCount = await User.countDocuments(filter);
-    const data = await User.find(filter)
-      .populate("college course")
-      .skip(skipCount)
-      .limit(limit)
-      .sort({ createdAt: -1, _id: 1 })
-      .lean();
 
-    const mappedData = data.map((user) => {
-      return {
-        ...user,
-        college: user.college?.collegeName,
-        course: user.course?.courseName,
-        fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
-          user.name?.last || ""
-        }`.trim(),
-      };
-    });
+    if (!fullUser) {
+      const totalCount = await User.countDocuments();
+      const data = await User.find()
+        .populate("college course")
+        .sort({ createdAt: -1, _id: 1 })
+        .lean();
 
-    return responseHandler(
-      res,
-      200,
-      `Users found successfull..!`,
-      mappedData,
-      totalCount
-    );
+      const csvData = data.map((user) => {
+        return {
+          Name: `${user.name.first} ${user.name.middle || ""} ${
+            user.name.last || ""
+          }`.trim(),
+          MembershipID: user.memberId,
+          Email: user.email,
+          Mobile: user.phone,
+          College: user.college?.collegeName,
+        };
+      });
+      const headers = [
+        { header: "Membership ID", key: "MembershipID" },
+        { header: "Name", key: "Name" },
+        { header: "Email", key: "Email" },
+        { header: "Mobile", key: "Mobile" },
+        { header: "College", key: "College" },
+      ];
+
+      return responseHandler(
+        res,
+        200,
+        `Users found successfull..!`,
+        {
+          csvData,
+          headers,
+        },
+        totalCount
+      );
+    } else {
+      const totalCount = await User.countDocuments(filter);
+      const data = await User.find(filter)
+        .populate("college course")
+        .skip(skipCount)
+        .limit(limit)
+        .sort({ createdAt: -1, _id: 1 })
+        .lean();
+      return responseHandler(
+        res,
+        200,
+        `Users found successfull..!`,
+        data,
+        totalCount
+      );
+    }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
