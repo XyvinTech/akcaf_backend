@@ -234,67 +234,96 @@ exports.getAllColleges = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10, search } = req.query;
+    const { pageNo = 1, fullCollege, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
-      filter.$or = [
-        { collegeName: { $regex: search, $options: "i" } },
-      ];
+      filter.$or = [{ collegeName: { $regex: search, $options: "i" } }];
     }
-    const totalCount = await College.countDocuments(filter);
-    const aggregateQuery = [
-      { $match: filter },
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "college",
-          as: "members",
-        },
-      },
-      {
-        $lookup: {
-          from: "courses",
-          localField: "course",
-          foreignField: "_id",
-          as: "courseDetails",
-        },
-      },
-      {
-        $addFields: {
-          noOfMembers: { $size: "$members" },
-          noOfCourses: {
-            $cond: {
-              if: { $isArray: "$course" },
-              then: { $size: "$course" },
-              else: 0,
-            },
-          },
-          noOfBatches: {
-            $cond: {
-              if: { $isArray: "$batch" },
-              then: { $size: "$batch" },
-              else: 0,
-            },
+
+    if (!fullCollege) {
+      const totalCount = await College.countDocuments(filter);
+      const aggregateQuery = [
+        { $match: filter },
+        {
+          $lookup: {
+            from: "users",
+            localField: "_id",
+            foreignField: "college",
+            as: "members",
           },
         },
-      },
-      { $unset: "members" },
-      { $sort: { createdAt: -1, _id: 1 } },
-      { $skip: skipCount },
-      { $limit: parseInt(limit) },
-    ];
+        {
+          $lookup: {
+            from: "courses",
+            localField: "course",
+            foreignField: "_id",
+            as: "courseDetails",
+          },
+        },
+        {
+          $addFields: {
+            noOfMembers: { $size: "$members" },
+            noOfCourses: {
+              $cond: {
+                if: { $isArray: "$course" },
+                then: { $size: "$course" },
+                else: 0,
+              },
+            },
+            noOfBatches: {
+              $cond: {
+                if: { $isArray: "$batch" },
+                then: { $size: "$batch" },
+                else: 0,
+              },
+            },
+          },
+        },
+        { $unset: "members" },
+        { $sort: { createdAt: -1, _id: 1 } },
+        { $skip: skipCount },
+        { $limit: parseInt(limit) },
+      ];
 
-    const data = await College.aggregate(aggregateQuery);
+      const data = await College.aggregate(aggregateQuery);
 
-    return responseHandler(
-      res,
-      200,
-      `Colleges found successfull..!`,
-      data,
-      totalCount
-    );
+      return responseHandler(
+        res,
+        200,
+        `Colleges found successfull..!`,
+        data,
+        totalCount
+      );
+    } else {
+      const totalCount = await College.countDocuments();
+      const data = await College.find().sort({ createdAt: -1, _id: 1 }).lean();
+
+      const csvData = data.map((item) => {
+        return {
+          CollegeName: item.collegeName,
+          State: item.state,
+          Country: item.country,
+        };
+      });
+
+      const headers = [
+        { header: "College Name", key: "CollegeName" },
+        { header: "State", key: "State" },
+        { header: "Country", key: "Country" },
+      ];
+
+      return responseHandler(
+        res,
+        200,
+        `Colleges found successfull..!`,
+        {
+          csvData,
+          headers,
+        },
+        totalCount
+      );
+    }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
