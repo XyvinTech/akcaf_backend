@@ -52,7 +52,7 @@ exports.createCollege = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New College created successfull..!`,
+        `New College created successfully..!`,
         newCollege
       );
     }
@@ -93,7 +93,7 @@ exports.editCollege = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `College updated successfull..!`,
+        `College updated successfully..!`,
         updateCollege
       );
     }
@@ -124,7 +124,7 @@ exports.getCollege = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `College found successfull..!`,
+        `College found successfully..!`,
         findCollege
       );
     }
@@ -152,7 +152,7 @@ exports.deleteCollege = async (req, res) => {
 
     const deleteCollege = await College.findByIdAndDelete(id);
     if (deleteCollege) {
-      return responseHandler(res, 200, `College deleted successfull..!`);
+      return responseHandler(res, 200, `College deleted successfully..!`);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -215,7 +215,7 @@ exports.bulkCreateCollege = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New Colleges created successfully..!`,
+        `New Colleges created successfullyy..!`,
         newColleges
       );
     }
@@ -291,7 +291,7 @@ exports.getAllColleges = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Colleges found successfull..!`,
+        `Colleges found successfully..!`,
         data,
         totalCount
       );
@@ -316,7 +316,7 @@ exports.getAllColleges = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Colleges found successfull..!`,
+        `Colleges found successfully..!`,
         {
           csvData,
           headers,
@@ -414,7 +414,7 @@ exports.createCollegeBulk = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
     const colleges = await College.create(req.body);
-    return responseHandler(res, 201, "Colleges created successfully", colleges);
+    return responseHandler(res, 201, "Colleges created successfullyy", colleges);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

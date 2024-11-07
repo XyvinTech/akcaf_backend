@@ -16,7 +16,7 @@ exports.createReport = async (req, res) => {
       return responseHandler(
         res,
         201,
-        "Report created successfully",
+        "Report created successfullyy",
         newReport
       );
     }
@@ -69,7 +69,7 @@ exports.getReports = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Reports found successfull..!`,
+      `Reports found successfully..!`,
       mappedData,
       totalCount
     );

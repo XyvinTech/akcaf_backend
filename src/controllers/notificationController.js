@@ -79,7 +79,7 @@ exports.createNotification = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notification created successfully..!`,
+      `Notification created successfullyy..!`,
       createNotification
     );
   } catch (error) {
@@ -93,7 +93,7 @@ exports.getNotifications = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notifications fetched successfully..!`,
+      `Notifications fetched successfullyy..!`,
       notifications
     );
   } catch (error) {
@@ -134,7 +134,7 @@ exports.getUserNotifications = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notifications fetched successfully..!`,
+      `Notifications fetched successfullyy..!`,
       notifications
     );
   } catch (error) {

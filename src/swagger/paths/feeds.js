@@ -34,7 +34,7 @@
  *                 example: "This is the content of the feed..."
  *     responses:
  *       201:
- *         description: New Feeds created successfully
+ *         description: New Feeds created successfullyy
  *       400:
  *         description: Invalid input
  *       500:
@@ -58,7 +58,7 @@
  *         description: The ID of the feed to retrieve
  *     responses:
  *       200:
- *         description: Feed found successfully
+ *         description: Feed found successfullyy
  *       400:
  *         description: Bad Request - Invalid ID or ID not provided
  *       404:
@@ -95,7 +95,7 @@
  *         description: The number of feeds per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of feeds
+ *         description: successfullyy retrieved the list of feeds
  *       500:
  *         description: Internal Server Error
  */
@@ -128,7 +128,7 @@
  *         description: The number of feeds per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of feeds
+ *         description: successfullyy retrieved the list of feeds
  *       500:
  *         description: Internal Server Error
  */
@@ -151,7 +151,7 @@
  *         description: The ID of the feed to like or unlike.
  *     responses:
  *       200:
- *         description: Successfully liked or unliked the feed
+ *         description: successfullyy liked or unliked the feed
  *       400:
  *         description: Bad request, feed ID is required
  *       404:
@@ -188,7 +188,7 @@
  *                 example: "This is the content of the feed..."
  *     responses:
  *       200:
- *         description: Successfully commented on the feed
+ *         description: successfullyy commented on the feed
  *       400:
  *         description: Bad request, feed ID is required
  *       404:
@@ -214,7 +214,7 @@
  *         description: ID of the feed to be deleted
  *     responses:
  *       200:
- *         description: Successfully deleted the feed
+ *         description: successfullyy deleted the feed
  *       400:
  *         description: Bad request, missing feed ID
  *       404:
@@ -240,7 +240,7 @@
  *         description: The ID of the user whose feeds are being retrieved.
  *     responses:
  *       200:
- *         description: Successfully retrieved feeds authored by the user
+ *         description: successfullyy retrieved feeds authored by the user
  *       400:
  *         description: User ID is required
  *       404:
@@ -283,7 +283,7 @@
  *               example: "The content does not meet the guidelines."
  *     responses:
  *       200:
- *         description: Feeds updated successfully
+ *         description: Feeds updated successfullyy
  *       400:
  *         description: Feed ID is required
  *       404:
@@ -302,7 +302,7 @@
  *       - Feeds
  *     responses:
  *       200:
- *         description: Feeds found successfully
+ *         description: Feeds found successfullyy
  *       404:
  *         description: Feeds not found
  *       500:
@@ -327,7 +327,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: Feed marked as not interested successfully
+ *         description: Feed marked as not interested successfullyy
  *       400:
  *         description: Invalid request (e.g., missing user ID or failed update)
  *       500:
@@ -352,7 +352,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: Feed marked as interested successfully
+ *         description: Feed marked as interested successfullyy
  *       400:
  *         description: Invalid request (e.g., missing user ID or failed update)
  *       500:

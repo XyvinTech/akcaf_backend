@@ -33,7 +33,7 @@
  *                 example: ["read", "write"]
  *     responses:
  *       200:
- *         description: Role created successfully
+ *         description: Role created successfullyy
  *       400:
  *         description: Bad request
  */
@@ -76,7 +76,7 @@
  *                 example: true
  *     responses:
  *       200:
- *         description: Role updated successfully
+ *         description: Role updated successfullyy
  *       400:
  *         description: Bad request
  *       404:
@@ -112,7 +112,7 @@
  *           type: string
  *     responses:
  *       200:
- *         description: Role deleted successfully
+ *         description: Role deleted successfullyy
  *       400:
  *         description: Bad request
  *       404:
@@ -149,7 +149,7 @@
  *         description: The number of roles per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of roles
+ *         description: successfullyy retrieved the list of roles
  *       500:
  *         description: Internal Server Error
  */

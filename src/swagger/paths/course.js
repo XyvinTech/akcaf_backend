@@ -25,7 +25,7 @@
  *                 example: "MCA"
  *     responses:
  *       201:
- *         description: New Course created successfully
+ *         description: New Course created successfullyy
  *       400:
  *         description: Invalid input
  *       500:
@@ -42,7 +42,7 @@
  *       - Course
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of course
+ *         description: successfullyy retrieved the list of course
  *       500:
  *         description: Internal Server Error
  */

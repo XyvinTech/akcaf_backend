@@ -22,7 +22,7 @@ exports.createCourse = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New Course created successfull..!`,
+        `New Course created successfully..!`,
         newCourse
       );
     }

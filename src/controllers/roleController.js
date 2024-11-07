@@ -34,7 +34,7 @@ exports.createRole = async (req, res) => {
     return responseHandler(
       res,
       201,
-      `New Role created successfull..!`,
+      `New Role created successfully..!`,
       newRole
     );
   } catch (error) {
@@ -79,7 +79,7 @@ exports.editRole = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Role updated successfully..!`,
+        `Role updated successfullyy..!`,
         updateRole
       );
     } else {
@@ -142,7 +142,7 @@ exports.deleteRole = async (req, res) => {
 
     const deleteRole = await Role.findByIdAndDelete(id);
     if (deleteRole) {
-      return responseHandler(res, 200, `Role deleted successfully..!`);
+      return responseHandler(res, 200, `Role deleted successfullyy..!`);
     } else {
       return responseHandler(res, 400, `Role deletion failed...!`);
     }
@@ -166,7 +166,7 @@ exports.getAllRoles = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Roles found successfull..!`,
+      `Roles found successfully..!`,
       data,
       totalCount
     );

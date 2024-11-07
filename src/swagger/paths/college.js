@@ -49,7 +49,7 @@
  *               - state
  *     responses:
  *       201:
- *         description: New College created successfully
+ *         description: New College created successfullyy
  *       400:
  *         description: Invalid input
  *       409:
@@ -110,7 +110,7 @@
  *                 example: true
  *     responses:
  *       200:
- *         description: College updated successfully
+ *         description: College updated successfullyy
  *       400:
  *         description: Invalid input or missing College ID
  *       500:
@@ -134,7 +134,7 @@
  *         description: The ID of the college to retrieve
  *     responses:
  *       200:
- *         description: College found successfully
+ *         description: College found successfullyy
  *       400:
  *         description: Invalid or missing College ID
  *       500:
@@ -158,7 +158,7 @@
  *         description: The ID of the college to delete
  *     responses:
  *       200:
- *         description: College deleted successfully
+ *         description: College deleted successfullyy
  *       400:
  *         description: Invalid or missing College ID
  *       500:
@@ -197,7 +197,7 @@
  *                   example: "Kerala"
  *     responses:
  *       201:
- *         description: Colleges created successfully
+ *         description: Colleges created successfullyy
  *       400:
  *         description: Invalid input or duplicate college names found
  *       500:
@@ -232,7 +232,7 @@
  *         description: The number of colleges per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of colleges
+ *         description: successfullyy retrieved the list of colleges
  *       500:
  *         description: Internal Server Error
  */
@@ -247,7 +247,7 @@
  *       - College
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of colleges
+ *         description: successfullyy retrieved the list of colleges
  *       500:
  *         description: Internal Server Error
  */
@@ -289,7 +289,7 @@
  *         description: The number of items per page
  *     responses:
  *       200:
- *         description: Batch list for the specified course and college retrieved successfully
+ *         description: Batch list for the specified course and college retrieved successfullyy
  *       500:
  *         description: Internal Server Error
  */
@@ -339,7 +339,7 @@
  *         description: Number of results per page.
  *     responses:
  *       200:
- *         description: Successfully retrieved batch-wise list
+ *         description: successfullyy retrieved batch-wise list
  *       400:
  *         description: Bad request, invalid parameters
  *       404:
@@ -387,7 +387,7 @@
  *                   example: true
  *     responses:
  *       201:
- *         description: Colleges created successfully
+ *         description: Colleges created successfullyy
  *       400:
  *         description: Invalid input
  *       500:

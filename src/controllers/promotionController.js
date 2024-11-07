@@ -36,7 +36,7 @@ exports.createPromotion = async (req, res) => {
     return responseHandler(
       res,
       201,
-      `New Promotion created successfull..!`,
+      `New Promotion created successfullyy..!`,
       newPromotion
     );
   } catch (error) {
@@ -65,7 +65,7 @@ exports.getPromotion = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Promotion found successfull..!`,
+        `Promotion found successfully..!`,
         findPromotion
       );
     }
@@ -105,7 +105,7 @@ exports.updatePromotion = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Promotion updated successfull..!`,
+        `Promotion updated successfully..!`,
         updatePromotion
       );
     }
@@ -132,7 +132,7 @@ exports.deletePromotion = async (req, res) => {
 
     const deletePromotion = await Promotion.findByIdAndDelete(id);
     if (deletePromotion) {
-      return responseHandler(res, 200, `promotion deleted successfull..!`);
+      return responseHandler(res, 200, `promotion deleted successfully..!`);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -165,7 +165,7 @@ exports.getAllPromotion = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Promotions found successfull..!`,
+      `Promotions found successfully..!`,
       data,
       totalCount
     );
@@ -186,7 +186,7 @@ exports.getUserPromotion = async (req, res) => {
     };
     const data = await Promotion.find(filter).sort({ createdAt: -1 }).lean();
 
-    return responseHandler(res, 200, `Promotions found successfull..!`, data);
+    return responseHandler(res, 200, `Promotions found successfully..!`, data);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

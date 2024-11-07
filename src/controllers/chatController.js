@@ -107,7 +107,7 @@ exports.sendMessage = async (req, res) => {
         console.log("Receiver is not online.");
       }
     }
-    return responseHandler(res, 201, "Message sent successfully!", newMessage);
+    return responseHandler(res, 201, "Message sent successfullyy!", newMessage);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
@@ -142,7 +142,7 @@ exports.getBetweenUsers = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Messages retrieved successfully!",
+      "Messages retrieved successfullyy!",
       messages
     );
   } catch (error) {
@@ -158,7 +158,7 @@ exports.getChats = async (req, res) => {
       .sort({ lastMessage: -1, _id: 1 })
       .exec();
 
-    return responseHandler(res, 200, "Chat retrieved successfully!", chats);
+    return responseHandler(res, 200, "Chat retrieved successfullyy!", chats);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -191,7 +191,7 @@ exports.createGroup = async (req, res) => {
     return responseHandler(
       res,
       201,
-      "Group chat created successfully!",
+      "Group chat created successfullyy!",
       newChat
     );
   } catch (error) {
@@ -227,7 +227,7 @@ exports.getGroupMessage = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Group messages retrieved successfully!",
+      "Group messages retrieved successfullyy!",
       messages
     );
   } catch (error) {
@@ -256,7 +256,7 @@ exports.getGroupList = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Group list found successfull..!`,
+      `Group list found successfully..!`,
       mappedData,
       totalCount
     );
@@ -297,7 +297,7 @@ exports.getGroupListForAdmin = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Group list found successfull..!`,
+      `Group list found successfully..!`,
       mappedData,
       totalCount
     );
@@ -385,7 +385,7 @@ exports.editGroup = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Group updated successfully!",
+        "Group updated successfullyy!",
         updateGroup
       );
     }
@@ -422,7 +422,7 @@ exports.deleteGroup = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Group deleted successfully!",
+        "Group deleted successfullyy!",
         deleteGroup
       );
     }

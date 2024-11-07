@@ -28,7 +28,7 @@ exports.createFeeds = async (req, res) => {
     return responseHandler(
       res,
       201,
-      `New Feeds created successfull..!`,
+      `New Feeds created successfully..!`,
       newFeeds
     );
   } catch (error) {
@@ -46,7 +46,7 @@ exports.getFeeds = async (req, res) => {
 
     const findFeeds = await Feeds.findById(id);
     if (findFeeds) {
-      return responseHandler(res, 200, `Feeds found successfull..!`, findFeeds);
+      return responseHandler(res, 200, `Feeds found successfully..!`, findFeeds);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -65,7 +65,7 @@ exports.deletefeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds deleted successfully!",
+        "Feeds deleted successfullyy!",
         deleteFeeds
       );
     }
@@ -104,7 +104,7 @@ exports.getAllFeeds = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Feeds found successfull..!`,
+      `Feeds found successfully..!`,
       data,
       totalCount
     );
@@ -146,7 +146,7 @@ exports.getAllFeedsForAdmin = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Feeds found successfull..!`,
+      `Feeds found successfully..!`,
       mappedData,
       totalCount
     );
@@ -178,7 +178,7 @@ exports.likeFeed = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds unliked successfully",
+        "Feeds unliked successfullyy",
         updateFeeds
       );
     }
@@ -210,7 +210,7 @@ exports.likeFeed = async (req, res) => {
       });
     }
 
-    return responseHandler(res, 200, "Feeds liked successfully", updateFeeds);
+    return responseHandler(res, 200, "Feeds liked successfullyy", updateFeeds);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -263,7 +263,7 @@ exports.commentFeed = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Feeds commented successfully",
+      "Feeds commented successfullyy",
       updateFeeds
     );
   } catch (error) {
@@ -281,7 +281,7 @@ exports.getUserFeeds = async (req, res) => {
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
-    return responseHandler(res, 200, "Feeds found successfull..!", findFeeds);
+    return responseHandler(res, 200, "Feeds found successfully..!", findFeeds);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -323,7 +323,7 @@ exports.updateFeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds accepted successfully",
+        "Feeds accepted successfullyy",
         updateFeeds
       );
     } else if (action === "reject") {
@@ -340,7 +340,7 @@ exports.updateFeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds rejected successfully",
+        "Feeds rejected successfullyy",
         updateFeeds
       );
     }
@@ -358,7 +358,7 @@ exports.getMyFeeds = async (req, res) => {
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
-    return responseHandler(res, 200, "Feeds found successfull..!", findFeeds);
+    return responseHandler(res, 200, "Feeds found successfully..!", findFeeds);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -378,7 +378,7 @@ exports.notInterested = async (req, res) => {
     if (!notInterested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(res, 200, `Feeds not interest added successfully`);
+    return responseHandler(res, 200, `Feeds not interest added successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -400,7 +400,7 @@ exports.interestedPosts = async (req, res) => {
     if (!interested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(res, 200, `Feeds not interest removed successfully`);
+    return responseHandler(res, 200, `Feeds not interest removed successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

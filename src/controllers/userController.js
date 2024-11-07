@@ -21,12 +21,12 @@ exports.sendOtp = async (req, res) => {
     if (checkExist) {
       checkExist.otp = otp;
       checkExist.save();
-      return responseHandler(res, 200, "OTP sent successfully", otp);
+      return responseHandler(res, 200, "OTP sent successfullyy", otp);
     }
     // TODO: Send OTP with firebase function call after success otp send -> create user
     req.body.otp = otp;
     const user = await User.create(req.body);
-    if (user) return responseHandler(res, 200, "OTP sent successfully", otp);
+    if (user) return responseHandler(res, 200, "OTP sent successfullyy", otp);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -52,7 +52,7 @@ exports.verifyUser = async (req, res) => {
     await user.save();
     const token = generateToken(user._id);
 
-    return responseHandler(res, 200, "User verified successfully", token);
+    return responseHandler(res, 200, "User verified successfullyy", token);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -95,7 +95,7 @@ exports.createUser = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New User created successfull..!`,
+        `New User created successfully..!`,
         newUser
       );
   } catch (error) {
@@ -137,7 +137,7 @@ exports.editUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User updated successfully`, editUser);
+    return responseHandler(res, 200, `User updated successfullyy`, editUser);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -163,7 +163,7 @@ exports.getUser = async (req, res) => {
       .populate("college", "collegeName country state")
       .populate("course", "courseName");
     if (findUser) {
-      return responseHandler(res, 200, `User found successfull..!`, findUser);
+      return responseHandler(res, 200, `User found successfully..!`, findUser);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -181,7 +181,7 @@ exports.getSingleUser = async (req, res) => {
       .populate("college", "collegeName country state")
       .populate("course", "courseName");
     if (findUser) {
-      return responseHandler(res, 200, `User found successfull..!`, findUser);
+      return responseHandler(res, 200, `User found successfully..!`, findUser);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -217,7 +217,7 @@ exports.deleteUser = async (req, res) => {
       }
     );
     if (deleteUser) {
-      return responseHandler(res, 200, `User deleted successfully..!`);
+      return responseHandler(res, 200, `User deleted successfullyy..!`);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -249,7 +249,7 @@ exports.updateUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User updated successfully`, editUser);
+    return responseHandler(res, 200, `User updated successfullyy`, editUser);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -302,7 +302,7 @@ exports.getAllUsers = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Users found successfull..!`,
+        `Users found successfully..!`,
         mappedData,
         totalCount
       );
@@ -335,7 +335,7 @@ exports.getAllUsers = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Users found successfull..!`,
+        `Users found successfully..!`,
         {
           csvData,
           headers,
@@ -400,7 +400,7 @@ exports.fetchUser = async (req, res) => {
 
       findUser.profileCompletion = `${profileCompletionPercentage}%`;
 
-      return responseHandler(res, 200, "User found successfully..!", findUser);
+      return responseHandler(res, 200, "User found successfullyy..!", findUser);
     } else {
       return responseHandler(res, 404, "User not found");
     }
@@ -434,7 +434,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfully",
+            "User logged in successfullyy",
             token
           );
         } else if (user.uid !== null) {
@@ -444,7 +444,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfully",
+            "User logged in successfullyy",
             token
           );
         } else {
@@ -455,7 +455,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfully",
+            "User logged in successfullyy",
             token
           );
         }
@@ -472,7 +472,7 @@ exports.getVersion = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "App version fetched successfully",
+      "App version fetched successfullyy",
       settings
     );
   } catch (error) {
@@ -508,7 +508,7 @@ exports.getApprovals = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Approvals found successfull..!`,
+      `Approvals found successfully..!`,
       data,
       totalCount
     );
@@ -549,7 +549,7 @@ exports.approveUser = async (req, res) => {
       message = {
         notification: {
           title: `AKCAF Membership has been approved`,
-          body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
+          body: `Your membership for AKCAF has been approved successfullyy. Please complete the payment process to continue.`,
         },
         token: findUser.fcm,
       };
@@ -566,7 +566,7 @@ exports.approveUser = async (req, res) => {
     getMessaging()
       .send(message)
       .then((response) => {
-        console.log("Successfully sent message:", response);
+        console.log("successfullyy sent message:", response);
       })
       .catch((error) => {
         console.log("Error sending message:", error);
@@ -575,7 +575,7 @@ exports.approveUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User ${status} successfully`);
+    return responseHandler(res, 200, `User ${status} successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -605,7 +605,7 @@ exports.listUsers = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Users found successfull..!`,
+      `Users found successfully..!`,
       data,
       totalCount
     );
@@ -633,7 +633,7 @@ exports.getUsers = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Users found successfull..!`,
+      `Users found successfully..!`,
       data,
       totalCount
     );
@@ -663,7 +663,7 @@ exports.blockUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User block failed...!`);
     }
-    return responseHandler(res, 200, `User blocked successfully`);
+    return responseHandler(res, 200, `User blocked successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
@@ -687,7 +687,7 @@ exports.unblockUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User unblock failed...!`);
     }
-    return responseHandler(res, 200, `User unblocked successfully`);
+    return responseHandler(res, 200, `User unblocked successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -718,7 +718,7 @@ exports.adminUserBlock = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User blocked successfully`);
+    return responseHandler(res, 200, `User blocked successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -744,7 +744,7 @@ exports.adminUserUnblock = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User unblocked successfully`);
+    return responseHandler(res, 200, `User unblocked successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -771,7 +771,7 @@ exports.requestNFC = async (req, res) => {
 
     await sendSelfMail(data);
 
-    return responseHandler(res, 200, "NFC Request sent successfully");
+    return responseHandler(res, 200, "NFC Request sent successfullyy");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

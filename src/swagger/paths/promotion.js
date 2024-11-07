@@ -52,7 +52,7 @@
  *                 description: "A link to the promotion details."
  *     responses:
  *       201:
- *         description: Promotion created successfully
+ *         description: Promotion created successfullyy
  *       400:
  *         description: Invalid input
  *       500:
@@ -106,7 +106,7 @@
  *                 example: "https://example.com/updated-promotion"
  *     responses:
  *       200:
- *         description: Promotion updated successfully
+ *         description: Promotion updated successfullyy
  *       400:
  *         description: Invalid input
  *       404:
@@ -132,7 +132,7 @@
  *           type: string
  *     responses:
  *       200:
- *         description: Promotion found successfully
+ *         description: Promotion found successfullyy
  *       404:
  *         description: Promotion not found
  *       500:
@@ -156,7 +156,7 @@
  *           type: string
  *     responses:
  *       200:
- *         description: Promotion deleted successfully
+ *         description: Promotion deleted successfullyy
  *       404:
  *         description: Promotion not found
  *       500:
@@ -191,7 +191,7 @@
  *         description: The number of promotions per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of promotions
+ *         description: successfullyy retrieved the list of promotions
  *       500:
  *         description: Internal Server Error
  */
@@ -206,7 +206,7 @@
  *       - Promotion
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of promotions
+ *         description: successfullyy retrieved the list of promotions
  *       500:
  *         description: Internal Server Error
  */

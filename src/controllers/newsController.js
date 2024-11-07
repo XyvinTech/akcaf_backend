@@ -53,7 +53,7 @@ exports.createNews = async (req, res) => {
     return responseHandler(
       res,
       201,
-      `New news created successfull..!`,
+      `New news created successfully..!`,
       newNews
     );
   } catch (error) {
@@ -79,7 +79,7 @@ exports.getNews = async (req, res) => {
 
     const findNews = await News.findById(id);
     if (findNews) {
-      return responseHandler(res, 200, `news found successfull..!`, findNews);
+      return responseHandler(res, 200, `news found successfully..!`, findNews);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -117,7 +117,7 @@ exports.updateNews = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `News updated successfull..!`,
+        `News updated successfully..!`,
         updateNews
       );
     }
@@ -144,7 +144,7 @@ exports.deleteNews = async (req, res) => {
 
     const deleteNews = await News.findByIdAndDelete(id);
     if (deleteNews) {
-      return responseHandler(res, 200, `news deleted successfull..!`);
+      return responseHandler(res, 200, `news deleted successfully..!`);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -188,7 +188,7 @@ exports.getAllNews = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `News found successfull..!`,
+      `News found successfully..!`,
       data,
       totalCount
     );
@@ -204,7 +204,7 @@ exports.getUserNews = async (req, res) => {
     };
     const data = await News.find(filter).sort({ createdAt: -1 }).lean();
 
-    return responseHandler(res, 200, `News found successfull..!`, data);
+    return responseHandler(res, 200, `News found successfully..!`, data);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

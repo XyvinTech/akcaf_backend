@@ -36,7 +36,7 @@ exports.createEvent = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New Event created successfull..!`,
+        `New Event created successfully..!`,
         newEvent
       );
   } catch (error) {
@@ -71,7 +71,7 @@ exports.editEvent = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Event updated successfully!`,
+      `Event updated successfullyy!`,
       updatedEvent
     );
   } catch (error) {
@@ -94,7 +94,7 @@ exports.deleteEvent = async (req, res) => {
     if (!deletedEvent) {
       return responseHandler(res, 404, "Event not found");
     }
-    return responseHandler(res, 200, `Event deleted successfully`);
+    return responseHandler(res, 200, `Event deleted successfullyy`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -130,7 +130,7 @@ exports.getSingleEvent = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Event retrieved successfully",
+      "Event retrieved successfullyy",
       mappedData
     );
   } catch (error) {
@@ -144,7 +144,7 @@ exports.getAllEvents = async (req, res) => {
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
-    return responseHandler(res, 200, "Events retrieved successfully", events);
+    return responseHandler(res, 200, "Events retrieved successfullyy", events);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -186,7 +186,7 @@ exports.getAllEventsForAdmin = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Events retrieved successfully",
+      "Events retrieved successfullyy",
       mappedEvents
     );
   } catch (error) {
@@ -213,7 +213,7 @@ exports.addRSVP = async (req, res) => {
     const topic = `event_${id}`;
     const fcmToken = user.fcm;
     await getMessaging().subscribeToTopic(fcmToken, topic);
-    return responseHandler(res, 200, "RSVP added successfully");
+    return responseHandler(res, 200, "RSVP added successfullyy");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -230,7 +230,7 @@ exports.getRegEvents = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Events retrieved successfully",
+      "Events retrieved successfullyy",
       regEvents
     );
   } catch (error) {

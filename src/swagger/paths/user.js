@@ -62,7 +62,7 @@
  *                 example: "active"
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User created successfullyy
  *       400:
  *         description: Invalid input
  *       403:
@@ -138,7 +138,7 @@
  *                 example: "inactive"
  *     responses:
  *       200:
- *         description: User updated successfully
+ *         description: User updated successfullyy
  *       400:
  *         description: Invalid input or User ID is missing
  *       403:
@@ -167,7 +167,7 @@
  *           example: "6123abc456def7890ghi1234"
  *     responses:
  *       200:
- *         description: User found successfully
+ *         description: User found successfullyy
  *       400:
  *         description: User ID is missing
  *       403:
@@ -196,7 +196,7 @@
  *           example: "6123abc456def7890ghi1234"
  *     responses:
  *       200:
- *         description: User deleted successfully
+ *         description: User deleted successfullyy
  *       400:
  *         description: User ID is missing
  *       403:
@@ -227,7 +227,7 @@
  *                 example: "9876543210"
  *     responses:
  *       200:
- *         description: OTP sent successfully
+ *         description: OTP sent successfullyy
  *       400:
  *         description: Bad request
  *       404:
@@ -259,7 +259,7 @@
  *                 example: "9876543210"
  *     responses:
  *       200:
- *         description: User verified successfully
+ *         description: User verified successfullyy
  *       400:
  *         description: Bad request
  *       404:
@@ -396,7 +396,7 @@
  *                   link: "https://example.com/certificate"
  *     responses:
  *       200:
- *         description: User updated successfully
+ *         description: User updated successfullyy
  *       400:
  *         description: Bad Request - Invalid input or ID not provided
  *       404:
@@ -433,7 +433,7 @@
  *         description: The number of users per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of users
+ *         description: successfullyy retrieved the list of users
  *       500:
  *         description: Internal Server Error
  */
@@ -448,7 +448,7 @@
  *       - User
  *     responses:
  *       200:
- *         description: User found successfully
+ *         description: User found successfullyy
  *       400:
  *         description: User ID is missing
  *       403:
@@ -484,7 +484,7 @@
  *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlZjQ3..."
  *     responses:
  *       200:
- *         description: User logged in successfully
+ *         description: User logged in successfullyy
  *       400:
  *         description: Client Token is required
  *       500:
@@ -501,7 +501,7 @@
  *       - User
  *     responses:
  *       200:
- *         description: App version fetched successfully
+ *         description: App version fetched successfullyy
  *       500:
  *         description: Internal Server Error
  */
@@ -524,7 +524,7 @@
  *           example: "6123abc456def7890ghi1234"
  *     responses:
  *       200:
- *         description: User found successfully
+ *         description: User found successfullyy
  *       400:
  *         description: User ID is missing
  *       403:
@@ -558,7 +558,7 @@
  *         description: The number of users per page (defaults to 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of users awaiting approval
+ *         description: successfullyy retrieved the list of users awaiting approval
  *       403:
  *         description: Forbidden - User does not have permission to view approvals
  *       500:
@@ -594,7 +594,7 @@
  *                 example: "awaiting-payment"
  *     responses:
  *       200:
- *         description: User status updated successfully
+ *         description: User status updated successfullyy
  *       400:
  *         description: User ID is required or User update failed
  *       403:
@@ -630,7 +630,7 @@
  *         description: Number of users per page (default is 10)
  *     responses:
  *       200:
- *         description: Successfully retrieved the list of active users
+ *         description: successfullyy retrieved the list of active users
  *       500:
  *         description: Internal Server Error
  */
@@ -663,7 +663,7 @@
  *         description: Filter users by status.
  *     responses:
  *       200:
- *         description: Users found successfully
+ *         description: Users found successfullyy
  *       400:
  *         description: Bad Request - Invalid parameters
  *       500:
@@ -687,7 +687,7 @@
  *         description: The ID of the user to retrieve
  *     responses:
  *       200:
- *         description: User found successfully
+ *         description: User found successfullyy
  *       400:
  *         description: User ID is required
  *       404:
@@ -714,7 +714,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: User blocked successfully
+ *         description: User blocked successfullyy
  *       400:
  *         description: Bad request (e.g., missing user ID)
  *       404:
@@ -741,7 +741,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: User unblocked successfully
+ *         description: User unblocked successfullyy
  *       400:
  *         description: Bad request (e.g., missing user ID)
  *       404:
@@ -768,7 +768,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: User blocked successfully
+ *         description: User blocked successfullyy
  *       400:
  *         description: Invalid request (e.g., missing user ID or failed update)
  *       404:
@@ -795,7 +795,7 @@
  *           example: "643b2a4a5b673a64f56c742b"
  *     responses:
  *       200:
- *         description: User blocked successfully
+ *         description: User blocked successfullyy
  *       400:
  *         description: Invalid request (e.g., missing user ID or failed update)
  *       404:
@@ -814,7 +814,7 @@
  *       - User
  *     responses:
  *       200:
- *         description: NFC request email sent successfully
+ *         description: NFC request email sent successfullyy
  *       404:
  *         description: User not found
  *       500:

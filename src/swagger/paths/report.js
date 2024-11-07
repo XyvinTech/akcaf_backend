@@ -28,7 +28,7 @@
  *                 example: "Post"
  *     responses:
  *       201:
- *         description: Report created successfully
+ *         description: Report created successfullyy
  *       400:
  *         description: Invalid input
  *       500:
@@ -60,7 +60,7 @@
  *           example: "event"
  *     responses:
  *       200:
- *         description: Reports found successfully
+ *         description: Reports found successfullyy
  *       500:
  *         description: Internal server error
  */
