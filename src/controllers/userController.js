@@ -315,8 +315,8 @@ exports.getAllUsers = async (req, res) => {
 
       const csvData = data.map((user) => {
         return {
-          Name: `${user.name.first} ${user.name.middle || ""} ${
-            user.name.last || ""
+          Name: `${user?.name?.first} ${user?.name?.middle || ""} ${
+            user?.name?.last || ""
           }`.trim(),
           MembershipID: user.memberId,
           Email: user.email,
