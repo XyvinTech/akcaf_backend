@@ -265,7 +265,7 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, fullUser = false, limit = 10, search } = req.query;
+    const { pageNo = 1, fullUser, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
@@ -279,7 +279,34 @@ exports.getAllUsers = async (req, res) => {
       ];
     }
 
-    if (fullUser) {
+    if (!fullUser) {
+      const totalCount = await User.countDocuments(filter);
+      const data = await User.find(filter)
+        .populate("college course")
+        .skip(skipCount)
+        .limit(limit)
+        .sort({ createdAt: -1, _id: 1 })
+        .lean();
+  
+      const mappedData = data.map((user) => {
+        return {
+          ...user,
+          college: user.college?.collegeName,
+          course: user.course?.courseName,
+          fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
+            user.name?.last || ""
+          }`.trim(),
+        };
+      });
+  
+      return responseHandler(
+        res,
+        200,
+        `Users found successfull..!`,
+        mappedData,
+        totalCount
+      );
+    }else{
       const totalCount = await User.countDocuments();
       const data = await User.find()
         .populate("college course")
@@ -313,21 +340,6 @@ exports.getAllUsers = async (req, res) => {
           csvData,
           headers,
         },
-        totalCount
-      );
-    } else {
-      const totalCount = await User.countDocuments(filter);
-      const data = await User.find(filter)
-        .populate("college course")
-        .skip(skipCount)
-        .limit(limit)
-        .sort({ createdAt: -1, _id: 1 })
-        .lean();
-      return responseHandler(
-        res,
-        200,
-        `Users found successfull..!`,
-        data,
         totalCount
       );
     }
