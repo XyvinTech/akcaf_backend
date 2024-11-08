@@ -5,6 +5,7 @@ const NewsSchema = mongoose.Schema(
     category: {
       type: String,
       enum: [
+        "Latest",
         "Current Affairs",
         "Trending",
         "History",
