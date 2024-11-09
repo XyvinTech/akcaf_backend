@@ -1,4 +1,4 @@
-name: Deploy akcaf-backend to AWS Lightsail
+name: Deploy AKCAF-Backend to AWS Lightsail
 
 on:
   push:
