@@ -1,4 +1,4 @@
-name: Deploy akcaf-backend
+name: Deploy akcaf-backend to AWS Lightsail
 
 on:
   push:
@@ -44,12 +44,11 @@ jobs:
           docker build -t ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
           docker push ${{env.ECR_REGISTRY}}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: Deploy to EC2
+      - name: Deploy to Lightsail
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           API_VERSION: ${{ secrets.API_VERSION }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
@@ -60,31 +59,36 @@ jobs:
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
-          EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
-          SSH_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
-          USERNAME: ec2-user
+          LIGHTSAIL_INSTANCE_IP: ${{ secrets.LIGHTSAIL_INSTANCE_IP }}
+          SSH_KEY: ${{ secrets.LIGHTSAIL_PRIVATE_KEY }}
+          USERNAME: ubuntu
           PORT: 3000
           CONTAINER_NAME: AKCAF_BACKEND
 
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.EC2_INSTANCE_IP }}
+          host: ${{ env.LIGHTSAIL_INSTANCE_IP }}
           username: ${{ env.USERNAME }}
-          key: ${{ env.SSH_KEY}}
+          key: ${{ env.SSH_KEY }}
 
           script: |
+            # Update system and Docker if needed
+            sudo apt-get update
+            sudo apt-get install -y docker.io
 
-            # Refresh ECR login
-            aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+            # Login to Amazon ECR
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
 
             # Pull Docker Image
-            sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+            sudo docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-            sudo docker stop ${{ env.CONTAINER_NAME }} || true
-            sudo docker rm ${{ env.CONTAINER_NAME }} || true
+            # Stop and remove the existing container if running
+            # sudo docker stop ${{ env.CONTAINER_NAME }} || true
+            # sudo docker rm ${{ env.CONTAINER_NAME }} || true
 
+            # Run the new container
             sudo docker run -d \
-              -p ${{ env.PORT }}:${{ env.PORT }}\
+              -p ${{ env.PORT }}:${{ env.PORT }} \
               --name ${{ env.CONTAINER_NAME }} \
               -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
@@ -98,4 +102,4 @@ jobs:
               -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
               -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
               -e PORT=${{ env.PORT }} \
-                ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+                ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
