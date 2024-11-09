@@ -50,13 +50,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          API_VERSION: ${{ secrets.API_VERSION }}
-          MONGO_URL: ${{ secrets.MONGO_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          NODE_EMAIL_ID: ${{ secrets.NODE_EMAIL_ID }}
-          RAZORPAY_ID_KEY: ${{ secrets.RAZORPAY_ID_KEY }}
-          RAZORPAY_SECRET_KEY: ${{ secrets.RAZORPAY_SECRET_KEY }}
-          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
           ECR_REPOSITORY: akcaf
           IMAGE_TAG: latest
           LIGHTSAIL_INSTANCE_IP: ${{ secrets.LIGHTSAIL_INSTANCE_IP }}
@@ -64,6 +57,7 @@ jobs:
           USERNAME: ubuntu
           PORT: 3000
           CONTAINER_NAME: AKCAF_BACKEND
+          ENV_FILE_PATH: /home/ubuntu/akcaf/.env/.env.production
 
         uses: appleboy/ssh-action@master
         with:
@@ -72,7 +66,7 @@ jobs:
           key: ${{ env.SSH_KEY }}
 
           script: |
-            # Update system and Docker if needed
+            # Update system and install Docker if not installed
             sudo apt-get update
             sudo apt-get install -y docker.io
 
@@ -83,24 +77,18 @@ jobs:
             sudo docker pull ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
             # Stop and remove the existing container if running
-            # sudo docker stop ${{ env.CONTAINER_NAME }} || true
-            # sudo docker rm ${{ env.CONTAINER_NAME }} || true
+            sudo docker stop ${{ env.CONTAINER_NAME }} || true
+            sudo docker rm ${{ env.CONTAINER_NAME }} || true
 
-            
-            # Run the new container
+            # Check if the .env.production file exists
+            if [ ! -f ${{ env.ENV_FILE_PATH }} ]; then
+              echo ".env.production file is missing at ${{ env.ENV_FILE_PATH }}."
+              exit 1
+            fi
+
+            # Run the new container with the .env.production file
             sudo docker run -d \
               -p ${{ env.PORT }}:${{ env.PORT }} \
               --name ${{ env.CONTAINER_NAME }} \
-              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              -e AWS_REGION=${{ secrets.AWS_REGION }} \
-              -e ENVIRONMENT=development \
-              -e API_VERSION=${{ env.API_VERSION }} \
-              -e MONGO_URL=${{ env.MONGO_URL }} \
-              -e JWT_SECRET=${{ env.JWT_SECRET }} \
-              -e NODE_EMAIL_ID=${{ env.NODE_EMAIL_ID }} \
-              -e RAZORPAY_ID_KEY=${{ env.RAZORPAY_ID_KEY }} \
-              -e RAZORPAY_SECRET_KEY=${{ env.RAZORPAY_SECRET_KEY }} \
-              -e STRIPE_SECRET=${{ env.STRIPE_SECRET }} \
-              -e PORT=${{ env.PORT }} \
-                ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+              --env-file ${{ env.ENV_FILE_PATH }} \
+              ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
