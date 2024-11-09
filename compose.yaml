@@ -12,23 +12,9 @@ services:
     build:
       context: .
     environment:
-      NODE_ENV: production
-      REDIS_HOST: redis  
-      REDIS_PORT: 6379   
+      NODE_ENV: development
     ports:
       - 3000:3000
-    depends_on:
-      - redis 
-
-  redis:
-    image: redis:latest  
-    ports:
-      - 6379:6379         
-    volumes:
-      - redis_data:/data  
-
-volumes:
-  redis_data:
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

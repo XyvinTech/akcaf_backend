@@ -1,7 +1,6 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const authVerify = require("../middlewares/authVerify");
-const cacheMiddleware = require("../middlewares/cacheMiddleware");
 const userRoute = express.Router();
 
 userRoute.post("/send-otp", userController.sendOtp);
@@ -26,11 +25,7 @@ userRoute
 
 userRoute.get("/single/:id", userController.getSingleUser);
 
-userRoute.get(
-  "/admin/list",
-  cacheMiddleware("adminUserList"),
-  userController.getAllUsers
-);
+userRoute.get("/admin/list", userController.getAllUsers);
 
 userRoute.get("/list", userController.listUsers);
 
