@@ -25,6 +25,7 @@ const notificationRoute = require("./src/routes/notification");
 const chatRoute = require("./src/routes/chat");
 const paymentRoute = require("./src/routes/payment");
 const reportRoute = require("./src/routes/report");
+const rateLimit = require("express-rate-limit");
 
 app.use(express.static("views"));
 
@@ -51,10 +52,27 @@ admin.initializeApp({
 app.use(cors());
 //* Parse JSON request bodies
 app.use(express.json());
+
+//* Configure Rate Limiting
+const apiRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, //* 15 minutes
+  max: 100, //* Limit each IP to 100 requests per windowMs
+  message: {
+    status: 429,
+    message: "Too many requests from this IP, please try again later.",
+  },
+  standardHeaders: true, // *Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, //* Disable the `X-RateLimit-*` headers
+});
+
 //* Set the base path for API routes
 const BASE_PATH = `/api/${API_VERSION}`;
+
 //* Import database connection module
 require("./src/helpers/connection");
+
+//* Apply the rate limiter to all API routes
+app.use(`${BASE_PATH}`, apiRateLimiter);
 
 //? Define a route for the API root
 app.get(BASE_PATH, (req, res) => {
@@ -90,6 +108,7 @@ app.use(`${BASE_PATH}/chat`, chatRoute);
 app.use(`${BASE_PATH}/payment`, paymentRoute);
 app.use(`${BASE_PATH}/report`, reportRoute);
 
+//* Handle undefined routes
 app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");
 });
