@@ -83,9 +83,6 @@ app.get(BASE_PATH, (req, res) => {
   );
 });
 
-//* Start the cron job
-require("./src/jobs");
-
 //* Swagger setup
 app.use(
   `${BASE_PATH}/api-docs`,
