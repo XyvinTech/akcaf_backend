@@ -105,7 +105,7 @@ exports.createUserSchema = Joi.object({
   image: Joi.string(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
-  bio: Joi.string(),
+  bio: Joi.string().allow(""),
   status: Joi.string(),
 });
 
@@ -122,7 +122,7 @@ exports.editUserSchema = Joi.object({
   image: Joi.string(),
   email: Joi.string(),
   phone: Joi.string(),
-  bio: Joi.string(),
+  bio: Joi.string().allow(""),
   status: Joi.string(),
 });
 
