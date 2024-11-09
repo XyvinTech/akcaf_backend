@@ -9,6 +9,7 @@ const validations = require("../validations");
 const Setting = require("../models/settingsModel");
 const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
 const sendSelfMail = require("../utils/sendSelfMail");
+const redisClient = require("../helpers/redisClient");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -91,13 +92,22 @@ exports.createUser = async (req, res) => {
     req.body.memberId = `AKCAF-${uniqueMemberId}`;
     const newUser = await User.create(req.body);
 
-    if (newUser)
+    if (newUser) {
+      const cachePattern = "admin_user_list*";
+      const keys = await redisClient.keys(cachePattern);
+
+      if (keys.length > 0) {
+        await Promise.all(keys.map((key) => redisClient.del(key)));
+        console.log("Cache cleared for keys:", keys);
+      }
       return responseHandler(
         res,
         201,
         `New User created successfully..!`,
         newUser
       );
+    }
+    return responseHandler(res, 400, `User creation failed...!`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -287,7 +297,7 @@ exports.getAllUsers = async (req, res) => {
         .limit(limit)
         .sort({ createdAt: -1, _id: 1 })
         .lean();
-  
+
       const mappedData = data.map((user) => {
         return {
           ...user,
@@ -298,7 +308,7 @@ exports.getAllUsers = async (req, res) => {
           }`.trim(),
         };
       });
-  
+
       return responseHandler(
         res,
         200,
@@ -306,7 +316,7 @@ exports.getAllUsers = async (req, res) => {
         mappedData,
         totalCount
       );
-    }else{
+    } else {
       const totalCount = await User.countDocuments();
       const data = await User.find()
         .populate("college course")
