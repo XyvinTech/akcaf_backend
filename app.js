@@ -53,7 +53,6 @@ app.use(cors());
 //* Parse JSON request bodies
 app.use(express.json());
 
-
 //* Configure Rate Limiting
 const apiRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, //* 15 minutes
