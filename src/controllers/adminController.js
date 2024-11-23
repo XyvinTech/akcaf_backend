@@ -130,11 +130,21 @@ exports.getAllAdmins = async (req, res) => {
       .sort({ createdAt: -1, _id: 1 })
       .lean();
 
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        fullName: `${item.name?.first || ""} ${item.name?.middle || ""} ${
+          item.name?.last || ""
+        }`.trim(),
+        createdAt: moment(item.createdAt).format("MMM DD YYYY"),
+      };
+    });
+
     return responseHandler(
       res,
       200,
       `Admins found successfull..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {
