@@ -12,7 +12,11 @@ adminRoute
   .post(adminController.createAdmin)
   .get(adminController.getAdmin);
 
-adminRoute.route("/single/:id").get(adminController.fetchAdmin);
+adminRoute
+  .route("/single/:id")
+  .get(adminController.fetchAdmin)
+  .put(adminController.editAdmin)
+  .delete(adminController.deleteAdmin);
 
 adminRoute.get("/list", adminController.getAllAdmins);
 adminRoute.get("/approvals", adminController.getApprovals);

@@ -173,6 +173,75 @@ exports.fetchAdmin = async (req, res) => {
   }
 };
 
+exports.editAdmin = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("adminManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { error } = validations.editAdminSchema.validate(req.body, {
+      abortEarly: true,
+    });
+
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Admin ID is required");
+    }
+
+    const findAdmin = await Admin.findById(id);
+    if (!findAdmin) {
+      return responseHandler(res, 404, "Admin not found");
+    }
+
+    const editAdmin = await Admin.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+
+    if (!editAdmin) {
+      return responseHandler(res, 400, `Admin update failed...!`);
+    }
+    return responseHandler(res, 200, `Admin updated successfullyy..!`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const check = await checkAccess(req.roleId, "permissions");
+    if (!check || !check.includes("adminManagement_modify")) {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Admin ID is required");
+    }
+    const findAdmin = await Admin.findById(id);
+    if (!findAdmin) {
+      return responseHandler(res, 404, "Admin not found");
+    }
+    const deleteAdmin = await Admin.findByIdAndDelete(id);
+    if (!deleteAdmin) {
+      return responseHandler(res, 400, `Admin delete failed...!`);
+    }
+    return responseHandler(res, 200, `Admin deleted successfullyy..!`);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
 exports.getApprovals = async (req, res) => {
   try {
     const check = await checkAccess(req.roleId, "permissions");
@@ -313,7 +382,12 @@ exports.getDropdown = async (req, res) => {
       };
     });
 
-    return responseHandler(res, 200, "Dropdown found successfullyy", mappedData);
+    return responseHandler(
+      res,
+      200,
+      "Dropdown found successfullyy",
+      mappedData
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
