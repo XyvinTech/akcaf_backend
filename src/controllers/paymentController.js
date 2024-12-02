@@ -217,18 +217,20 @@ exports.getAllPayment = async (req, res) => {
     const totalCount = await Payment.countDocuments(filter);
 
     const mappedData = payment.map((item) => {
-      let fullName = item.name?.first;
-      if (item.name?.middle) {
-        fullName += ` ${item.name?.middle}`;
-      }
-      if (item.name?.last) {
-        fullName += ` ${item.name?.last}`;
-      }
+      const firstName = item.name?.first || "";
+      const middleName = item.name?.middle || "";
+      const lastName = item.name?.last || "";
+    
+      const fullName = [firstName, middleName, lastName]
+        .filter(Boolean)
+        .join(" "); 
+    
       return {
         ...item,
         fullName,
       };
     });
+    
 
     return responseHandler(
       res,
