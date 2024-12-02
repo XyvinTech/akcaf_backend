@@ -218,10 +218,10 @@ exports.getAllPayment = async (req, res) => {
 
     const mappedData = payment.map((item) => {
       let fullName = item.name?.first;
-      if (item.name.middle) {
+      if (item.name?.middle) {
         fullName += ` ${item.name?.middle}`;
       }
-      if (item.name.last) {
+      if (item.name?.last) {
         fullName += ` ${item.name?.last}`;
       }
       return {
