@@ -34,11 +34,11 @@ exports.makePayment = async (req, res) => {
           },
         ],
         mode: "payment",
-        success_url: `http://3.108.205.101:3000/api/v1/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `http://3.108.205.101:3000/api/v1/payment/failure?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `https://akcafconnect.com/api/v1/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://akcafconnect.com/api/v1/payment/failure?session_id={CHECKOUT_SESSION_ID}`,
       });
-      const successUrl = `http://3.108.205.101:3000/api/v1/payment/success?session_id=${session.id}`;
-      const cancelUrl = `http://3.108.205.101:3000/api/v1/payment/failure?session_id=${session.id}`;
+      const successUrl = `https://akcafconnect.com/api/v1/payment/success?session_id=${session.id}`;
+      const cancelUrl = `https://akcafconnect.com/api/v1/payment/failure?session_id=${session.id}`;
       session.success_url = successUrl;
       session.cancel_url = cancelUrl;
       const paymentData = {
