@@ -117,7 +117,7 @@ exports.getAllAdmins = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
       _id: { $ne: "66cef136282563d7bb086e30" },
