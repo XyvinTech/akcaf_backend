@@ -127,14 +127,25 @@ exports.getAllAdmins = async (req, res) => {
       .skip(skipCount)
       .limit(limit)
       .populate("role")
+      .populate("college")
       .sort({ createdAt: -1, _id: 1 })
       .lean();
+
+    const mappedData = data.map((user) => {
+      return {
+        ...user,
+        college: user.college?.collegeName,
+        fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
+          user.name?.last || ""
+        }`.trim(),
+      };
+    });
 
     return responseHandler(
       res,
       200,
       `Admins found successfullyy..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {
