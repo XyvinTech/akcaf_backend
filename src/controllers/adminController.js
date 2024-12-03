@@ -135,9 +135,7 @@ exports.getAllAdmins = async (req, res) => {
       return {
         ...user,
         college: user.college?.collegeName,
-        fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
-          user.name?.last || ""
-        }`.trim(),
+        fullName: user.name,
       };
     });
 
