@@ -111,6 +111,9 @@ app.all("*", (req, res) => {
 });
 
 console.log("Server restarted with new features");
+console.log("Server restarted with new features");
+console.log("Server restarted with new features");
+console.log("Server restarted with new features");
 
 
 //! Start the server and listen on the specified port from environment variable
