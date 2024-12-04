@@ -143,7 +143,7 @@ exports.getAllAdmins = async (req, res) => {
       res,
       200,
       `Admins found successfullyy..!`,
-      "Hello",
+      mappedData,
       totalCount
     );
   } catch (error) {
