@@ -110,7 +110,8 @@ app.all("*", (req, res) => {
   return responseHandler(res, 404, "No API Found..!");
 });
 
-console.log("Server started with new features");
+console.log("Server restarted with new features");
+
 
 //! Start the server and listen on the specified port from environment variable
 server.listen(PORT, () => {
