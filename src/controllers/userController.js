@@ -273,9 +273,7 @@ exports.getAllUsers = async (req, res) => {
         { status: { $regex: search, $options: "i" } },
         { phone: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
-        { "name.first": { $regex: search, $options: "i" } },
-        { "name.middle": { $regex: search, $options: "i" } },
-        { "name.last": { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -287,18 +285,15 @@ exports.getAllUsers = async (req, res) => {
         .limit(limit)
         .sort({ createdAt: -1, _id: 1 })
         .lean();
-  
+
       const mappedData = data.map((user) => {
         return {
           ...user,
           college: user.college?.collegeName,
           course: user.course?.courseName,
-          fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
-            user.name?.last || ""
-          }`.trim(),
         };
       });
-  
+
       return responseHandler(
         res,
         200,
@@ -306,7 +301,7 @@ exports.getAllUsers = async (req, res) => {
         mappedData,
         totalCount
       );
-    }else{
+    } else {
       const totalCount = await User.countDocuments();
       const data = await User.find()
         .populate("college course")
@@ -315,9 +310,7 @@ exports.getAllUsers = async (req, res) => {
 
       const csvData = data.map((user) => {
         return {
-          Name: `${user?.name?.first} ${user?.name?.middle || ""} ${
-            user?.name?.last || ""
-          }`.trim(),
+          Name: user.fullName,
           MembershipID: user.memberId,
           Email: user.email,
           Mobile: user.phone,
@@ -358,11 +351,8 @@ exports.fetchUser = async (req, res) => {
     const findUser = await User.findById(id).populate("college course").lean();
 
     if (findUser) {
-      // Fields to consider for profile completion
       const fieldsToCheck = [
-        findUser.name?.first,
-        findUser.name?.middle,
-        findUser.name?.last,
+        findUser.fullName,
         findUser.college,
         findUser.course,
         findUser.batch,
@@ -389,10 +379,8 @@ exports.fetchUser = async (req, res) => {
         ...(findUser.certificates?.map((cert) => cert.link) || []),
       ];
 
-      // Calculate the number of non-empty fields
       const filledFields = fieldsToCheck.filter((field) => field).length;
 
-      // Calculate the profile completion percentage
       const totalFields = fieldsToCheck.length;
       const profileCompletionPercentage = Math.round(
         (filledFields / totalFields) * 100
@@ -758,11 +746,9 @@ exports.requestNFC = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
 
-    const fullName = `${findUser.name.first} ${findUser.name.middle} ${findUser.name.last}`;
-
     const data = {
       from: findUser.email,
-      subject: `Request for NFC from ${fullName}`,
+      subject: `Request for NFC from ${findUser.fullName}`,
       text: `Hi from ${fullName} with AKCAF member ID ${findUser.memberId},\n\n
         I would like to request for NFC. Please contact me on ${findUser.phone} or email me at ${findUser.email}.\n
         Thank you.

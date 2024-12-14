@@ -93,11 +93,7 @@ exports.editPromotionSchema = Joi.object({
 });
 
 exports.createUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string().required(),
-    middle: Joi.string(),
-    last: Joi.string().required(),
-  }),
+  fullName: Joi.string().required(),
   college: Joi.string().required(),
   course: Joi.string(),
   batch: Joi.number(),
@@ -110,11 +106,7 @@ exports.createUserSchema = Joi.object({
 });
 
 exports.editUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string(),
-    middle: Joi.string(),
-    last: Joi.string(),
-  }),
+  fullName: Joi.string(),
   college: Joi.string(),
   course: Joi.string(),
   batch: Joi.number(),
@@ -127,11 +119,7 @@ exports.editUserSchema = Joi.object({
 });
 
 exports.updateUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string(),
-    middle: Joi.string().allow(""),
-    last: Joi.string(),
-  }),
+  fullName: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
   address: Joi.string().allow(""),

@@ -10,11 +10,8 @@ const linkSchema = new mongoose.Schema(
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      first: { type: String, trim: true },
-      middle: { type: String, trim: true },
-      last: { type: String, trim: true },
-    },
+    fullName: { type: String },
+    emiratesID: { type: String },
     uid: { type: String },
     memberId: { type: String },
     college: {
@@ -37,7 +34,14 @@ const userSchema = new mongoose.Schema(
     bio: { type: String },
     status: {
       type: String,
-      enum: ["active", "inactive", "suspended", "deleted", "blocked", "awaiting_payment"],
+      enum: [
+        "active",
+        "inactive",
+        "suspended",
+        "deleted",
+        "blocked",
+        "awaiting_payment",
+      ],
       default: "inactive",
     },
     address: { type: String },

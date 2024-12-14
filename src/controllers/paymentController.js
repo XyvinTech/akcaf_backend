@@ -209,32 +209,18 @@ exports.getAllPayment = async (req, res) => {
       filter.status = status;
     }
     const payment = await Payment.find(filter)
-      .populate("user", "name")
+      .populate("user", "fullName")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
     const totalCount = await Payment.countDocuments(filter);
 
-    const mappedData = payment.map((item) => {
-      let fullName = item.user.name.first;
-      if (item.user.name.middle) {
-        fullName += ` ${item.user.name.middle}`;
-      }
-      if (item.user.name.last) {
-        fullName += ` ${item.user.name.last}`;
-      }
-      return {
-        ...item,
-        fullName,
-      };
-    });
-
     return responseHandler(
       res,
       200,
       `Payment found successfully..!`,
-      mappedData,
+      payment,
       totalCount
     );
   } catch (error) {

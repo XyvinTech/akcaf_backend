@@ -94,11 +94,11 @@ exports.sendMessage = async (req, res) => {
     } else {
       const receiverSocketId = getReceiverSocketId(to);
       const toUser = await User.findById(to).select("fcm");
-      const fromUser = await User.findById(from).select("name");
+      const fromUser = await User.findById(from).select("fullName");
       const fcmUser = [toUser.fcm];
       await sendInAppNotification(
         fcmUser,
-        `New Message ${fromUser.name.first}`,
+        `New Message ${fromUser.fullName}`,
         content
       );
       if (receiverSocketId) {
@@ -153,7 +153,7 @@ exports.getBetweenUsers = async (req, res) => {
 exports.getChats = async (req, res) => {
   try {
     const chats = await Chat.find({ participants: req.userId, isGroup: false })
-      .populate("participants", "name image")
+      .populate("participants", "fullName image")
       .populate("lastMessage")
       .sort({ lastMessage: -1, _id: 1 })
       .exec();
@@ -208,7 +208,7 @@ exports.getGroupMessage = async (req, res) => {
       to: id,
     })
       .sort({ createdAt: 1, _id: 1 })
-      .populate("from", "name image");
+      .populate("from", "fullName image");
 
     if (!messages.length) {
       return responseHandler(res, 404, "No messages found in this group.");
@@ -314,7 +314,7 @@ exports.getGroupDetails = async (req, res) => {
     }
 
     const group = await Chat.findById(id)
-      .populate("participants", "name phone batch college memberId")
+      .populate("participants", "fullName phone batch college memberId")
       .populate({
         path: "participants",
         populate: { path: "college" },
@@ -330,16 +330,9 @@ exports.getGroupDetails = async (req, res) => {
     };
 
     const participantsData = group.participants.map((item) => {
-      let fullName = item.name.first;
-      if (item.name.middle) {
-        fullName += ` ${item.name.middle}`;
-      }
-      if (item.name.last) {
-        fullName += ` ${item.name.last}`;
-      }
       return {
         _id: item._id,
-        name: fullName,
+        name: item.fullName,
         phone: item.phone,
         batch: item.batch,
         college: item.college.collegeName,

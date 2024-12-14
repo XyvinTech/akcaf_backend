@@ -46,7 +46,12 @@ exports.getFeeds = async (req, res) => {
 
     const findFeeds = await Feeds.findById(id);
     if (findFeeds) {
-      return responseHandler(res, 200, `Feeds found successfully..!`, findFeeds);
+      return responseHandler(
+        res,
+        200,
+        `Feeds found successfully..!`,
+        findFeeds
+      );
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -94,7 +99,7 @@ exports.getAllFeeds = async (req, res) => {
     const data = await Feeds.find(filter)
       .populate({
         path: "comment.user",
-        select: "name image",
+        select: "fullName image",
       })
       .skip(skipCount)
       .limit(limit)
@@ -126,28 +131,21 @@ exports.getAllFeedsForAdmin = async (req, res) => {
     }
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
-      .populate("author", "name")
+      .populate("author", "fullName")
       .populate({
         path: "comment.user",
-        select: "name image",
+        select: "fullName image",
       })
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
 
-    const mappedData = data.map((item) => {
-      return {
-        ...item,
-        fullName: `${item.author.name.first} ${item.author.name.middle} ${item.author.name.last}`,
-      };
-    });
-
     return responseHandler(
       res,
       200,
       `Feeds found successfully..!`,
-      mappedData,
+      data,
       totalCount
     );
   } catch (error) {
@@ -192,20 +190,20 @@ exports.likeFeed = async (req, res) => {
     );
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
-    const fromUser = await User.findById(req.userId).select("name");
+    const fromUser = await User.findById(req.userId).select("fullName");
     const fcmUser = [toUser.fcm];
 
     if (req.userId !== String(updateFeeds.author)) {
       await sendInAppNotification(
         fcmUser,
-        `${fromUser.name.first} Liked Your Post`,
-        `${fromUser.name.first} Liked Your ${updateFeeds.content}`
+        `${fromUser.fullName} Liked Your Post`,
+        `${fromUser.fullName} Liked Your ${updateFeeds.content}`
       );
 
       await Notification.create({
         users: toUser._id,
-        subject: `${fromUser.name.first} Liked Your Post`,
-        content: `${fromUser.name.first} Liked Your ${updateFeeds.content}`,
+        subject: `${fromUser.fullName} Liked Your Post`,
+        content: `${fromUser.fullName} Liked Your ${updateFeeds.content}`,
         type: "in-app",
       });
     }
@@ -242,20 +240,20 @@ exports.commentFeed = async (req, res) => {
     );
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
-    const fromUser = await User.findById(req.userId).select("name");
+    const fromUser = await User.findById(req.userId).select("fullName");
     const fcmUser = [toUser.fcm];
 
     if (req.userId !== String(updateFeeds.author)) {
       await sendInAppNotification(
         fcmUser,
-        `${fromUser.name.first} Commented Your Post`,
-        `${fromUser.name.first} Commented Your ${updateFeeds.content}`
+        `${fromUser.fullName} Commented Your Post`,
+        `${fromUser.fullName} Commented Your ${updateFeeds.content}`
       );
 
       await Notification.create({
         users: toUser._id,
-        subject: `${fromUser.name.first} Commented Your Post`,
-        content: `${fromUser.name.first} Commented Your ${updateFeeds.content}`,
+        subject: `${fromUser.fullName} Commented Your Post`,
+        content: `${fromUser.fullName} Commented Your ${updateFeeds.content}`,
         type: "in-app",
       });
     }
@@ -353,7 +351,7 @@ exports.getMyFeeds = async (req, res) => {
   try {
     const findFeeds = await Feeds.find({ author: req.userId }).populate(
       "comment.user",
-      "name image"
+      "fullName image"
     );
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
@@ -400,7 +398,11 @@ exports.interestedPosts = async (req, res) => {
     if (!interested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(res, 200, `Feeds not interest removed successfullyy`);
+    return responseHandler(
+      res,
+      200,
+      `Feeds not interest removed successfullyy`
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

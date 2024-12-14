@@ -12,6 +12,7 @@ const paymentSchema = mongoose.Schema(
     attempts: { type: Number },
     receipt: { type: String },
     status: { type: String },
+    expiryDate: { type: Date },
   },
   { timestamps: true }
 );

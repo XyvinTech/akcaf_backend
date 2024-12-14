@@ -268,9 +268,7 @@ exports.getApprovals = async (req, res) => {
       filter.$or = [
         { phone: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
-        { "name.first": { $regex: search, $options: "i" } },
-        { "name.middle": { $regex: search, $options: "i" } },
-        { "name.last": { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
       ];
     }
     const totalCount = await User.countDocuments(filter);
@@ -285,9 +283,6 @@ exports.getApprovals = async (req, res) => {
         ...item,
         college: item?.college?.collegeName,
         course: item?.course?.courseName,
-        fullName: `${item.name?.first || ""} ${item.name?.middle || ""} ${
-          item.name?.last || ""
-        }`.trim(),
       };
     });
     return responseHandler(
@@ -376,18 +371,10 @@ exports.getDropdown = async (req, res) => {
     });
 
     const mappedData = users.map((user) => {
-      let fullName = user.name.first;
-      if (user.name.middle) {
-        fullName += ` ${user.name.middle}`;
-      }
-      if (user.name.last) {
-        fullName += ` ${user.name.last}`;
-      }
-
       return {
         _id: user._id,
         email: user.email,
-        name: fullName,
+        name: user.fullName,
       };
     });
 
