@@ -1,10 +1,25 @@
 const responseHandler = require("../helpers/responseHandler");
 const Booking = require("../models/bookingModel");
 const Time = require("../models/timeModel");
+const User = require("../models/userModel");
 const validations = require("../validations");
 
 exports.createHallBooking = async (req, res) => {
   try {
+    const { userId } = req;
+    const fetchUser = await User.findById(userId);
+    if (!fetchUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (fetchUser.role === "member") {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { error } = validations.createBooking.validate(req.body, {
       abortEarly: true,
     });
