@@ -21,9 +21,6 @@ const sendInAppNotification = async (
         notification: {
           ...(media && { imageUrl: media }),
         },
-        data: {
-          ...(deepLink && { deepLinkUrl: deepLink }),
-        },
       },
       apns: {
         payload: {
@@ -34,9 +31,6 @@ const sendInAppNotification = async (
         fcm_options: {
           ...(media && { image: media }),
         },
-      },
-      data: {
-        ...(deepLink && { deepLinkUrl: deepLink }),
       },
     };
 
