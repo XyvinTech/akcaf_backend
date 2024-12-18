@@ -6,6 +6,21 @@ const validations = require("../validations");
 
 exports.createHallBooking = async (req, res) => {
   try {
+    const { userId } = req;
+
+    const fetchUser = await User.findById(userId);
+    if (!fetchUser) {
+      return responseHandler(res, 404, "User not found");
+    }
+
+    if (fetchUser.role === "member") {
+      return responseHandler(
+        res,
+        403,
+        "You don't have permission to perform this action"
+      );
+    }
+
     const { error } = validations.createBooking.validate(req.body, {
       abortEarly: true,
     });
@@ -13,14 +28,34 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { day, time } = req.body;
+    const { day, time, hall } = req.body;
 
     const bookingStartTime = new Date(`1970-01-01T${time.start}:00Z`);
     const bookingEndTime = new Date(`1970-01-01T${time.end}:00Z`);
 
-    const allBookings = await Booking.find({ day });
+    if (bookingStartTime >= bookingEndTime) {
+      return responseHandler(res, 400, "Start time must be before end time");
+    }
 
-    for (let booking of allBookings) {
+    const findTime = await Time.findOne({ day });
+    if (!findTime) {
+      return responseHandler(res, 400, "Time not found for the selected day");
+    }
+
+    const hallStartTime = new Date(findTime.start);
+    const hallEndTime = new Date(findTime.end);
+
+    if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
+      return responseHandler(
+        res,
+        400,
+        "Booking time not within available hall hours"
+      );
+    }
+
+    const existingBookings = await Booking.find({ day, hall });
+
+    for (let booking of existingBookings) {
       const existingStartTime = new Date(booking.time.start);
       const existingEndTime = new Date(booking.time.end);
 
@@ -49,33 +84,21 @@ exports.createHallBooking = async (req, res) => {
       }
     }
 
-    const findTime = await Time.findOne({ day });
-    if (!findTime) {
-      return responseHandler(res, 400, "Time not found for the selected day");
-    }
-
-    if (findTime.start > bookingStartTime || findTime.end < bookingEndTime) {
-      return responseHandler(res, 400, "Time not available for booking");
-    }
-
-    req.body.user = req.userId;
-
     const newHallBooking = await Booking.create({
       ...req.body,
+      user: userId,
       time: {
         start: bookingStartTime.toISOString(),
         end: bookingEndTime.toISOString(),
       },
     });
 
-    if (newHallBooking) {
-      return responseHandler(
-        res,
-        201,
-        "Hall booking created successfully",
-        newHallBooking
-      );
-    }
+    return responseHandler(
+      res,
+      201,
+      "Hall booking created successfully",
+      newHallBooking
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
