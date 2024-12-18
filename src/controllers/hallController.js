@@ -27,7 +27,7 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { day, time } = req.body;
+    const { day, time, hall } = req.body;
 
     const bookingStartTime = new Date(`1970-01-01T${time.start}Z`);
     const bookingEndTime = new Date(`1970-01-01T${time.end}Z`);
