@@ -45,6 +45,9 @@ const BookingSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    reason: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
