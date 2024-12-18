@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const responseHandler = require("../helpers/responseHandler");
 const Feeds = require("../models/feedsModel");
 const User = require("../models/userModel");
@@ -120,18 +121,31 @@ exports.getAllFeeds = async (req, res) => {
 
 exports.getAllFeedsForAdmin = async (req, res) => {
   try {
-    const { pageNo = 1, status, limit = 10, search } = req.query;
+    const { pageNo = 1, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
 
     const filter = {
       status: "unpublished",
     };
+
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+      filter["author.college"] = new mongoose.Types.ObjectId(findUser.college);
+    }
+
     if (search) {
       filter.$or = [{ type: { $regex: search, $options: "i" } }];
     }
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
-      .populate("author", "fullName")
+      .populate("author", "fullName college")
       .populate({
         path: "comment.user",
         select: "fullName image",
