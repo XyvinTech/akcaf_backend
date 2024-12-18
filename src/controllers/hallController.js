@@ -6,20 +6,6 @@ const validations = require("../validations");
 
 exports.createHallBooking = async (req, res) => {
   try {
-    const { userId } = req;
-    const fetchUser = await User.findById(userId);
-    if (!fetchUser) {
-      return responseHandler(res, 404, "User not found");
-    }
-
-    if (fetchUser.role === "member") {
-      return responseHandler(
-        res,
-        403,
-        "You don't have permission to perform this action"
-      );
-    }
-
     const { error } = validations.createBooking.validate(req.body, {
       abortEarly: true,
     });
@@ -27,45 +13,26 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { day, time, hall } = req.body;
+    const { day, time } = req.body;
 
-    const bookingStartTime = new Date(`1970-01-01T${time.start}Z`);
-    const bookingEndTime = new Date(`1970-01-01T${time.end}Z`);
-
-    const findBooking = await Booking.findOne({
-      hall,
-      day,
-      "time.start": bookingStartTime.toISOString(),
-      "time.end": bookingEndTime.toISOString(),
-    });
-
-    if (findBooking) {
-      return responseHandler(res, 400, "Booking already exists");
-    }
-
-    const findTime = await Time.findOne({ day });
-    if (!findTime) {
-      return responseHandler(res, 400, "Time not found");
-    }
-
-    const hallStartTime = new Date(`1970-01-01T${findTime.start}Z`);
-    const hallEndTime = new Date(`1970-01-01T${findTime.end}Z`);
-
-    if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
-      return responseHandler(res, 400, "Time not available");
-    }
+    const bookingStartTime = new Date(`1970-01-01T${time.start}:00Z`);
+    const bookingEndTime = new Date(`1970-01-01T${time.end}:00Z`);
 
     const allBookings = await Booking.find({ day });
-    for (let booking of allBookings) {
-      const existingStartTime = new Date(`1970-01-01T${booking.time.start}Z`);
-      const existingEndTime = new Date(`1970-01-01T${booking.time.end}Z`);
 
-      if (
+    for (let booking of allBookings) {
+      const existingStartTime = new Date(booking.time.start);
+      const existingEndTime = new Date(booking.time.end);
+
+      const isOverlap =
         (bookingStartTime >= existingStartTime &&
           bookingStartTime < existingEndTime) ||
         (bookingEndTime > existingStartTime &&
-          bookingEndTime <= existingEndTime)
-      ) {
+          bookingEndTime <= existingEndTime) ||
+        (bookingStartTime <= existingStartTime &&
+          bookingEndTime >= existingEndTime);
+
+      if (isOverlap) {
         const suggestedStartTime = new Date(
           existingEndTime.getTime() + 30 * 60000
         );
@@ -73,12 +40,22 @@ exports.createHallBooking = async (req, res) => {
           .toISOString()
           .split("T")[1]
           .slice(0, 5);
+
         return responseHandler(
           res,
           400,
           `Booking time overlaps with an existing booking. Please add 30 minutes for preparation. Suggested start time: ${suggestedStartTimeFormatted}`
         );
       }
+    }
+
+    const findTime = await Time.findOne({ day });
+    if (!findTime) {
+      return responseHandler(res, 400, "Time not found for the selected day");
+    }
+
+    if (findTime.start > bookingStartTime || findTime.end < bookingEndTime) {
+      return responseHandler(res, 400, "Time not available for booking");
     }
 
     req.body.user = req.userId;
@@ -95,12 +72,12 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(
         res,
         201,
-        "Hall Booking created successfully",
+        "Hall booking created successfully",
         newHallBooking
       );
     }
   } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
 
