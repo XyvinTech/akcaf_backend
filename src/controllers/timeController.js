@@ -18,9 +18,31 @@ exports.createTime = async (req, res) => {
       if (!start && !end) {
         await Time.findOneAndDelete({ day });
       } else {
+        if (!start || !end) {
+          return responseHandler(
+            res,
+            400,
+            `Both start and end times are required for ${day}`
+          );
+        }
+
+        const formattedStart = new Date(`1970-01-01T${start}:00Z`);
+        const formattedEnd = new Date(`1970-01-01T${end}:00Z`);
+
+        if (formattedStart >= formattedEnd) {
+          return responseHandler(
+            res,
+            400,
+            `Start time must be before end time for ${day}`
+          );
+        }
+
         await Time.findOneAndUpdate(
           { day },
-          { start, end },
+          {
+            start: formattedStart.toISOString(),
+            end: formattedEnd.toISOString(),
+          },
           { new: true, upsert: true }
         );
       }
