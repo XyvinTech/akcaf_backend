@@ -16,7 +16,7 @@ const adminSchema = mongoose.Schema(
     },
     status: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   { timestamps: true }
