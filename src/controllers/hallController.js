@@ -1,5 +1,6 @@
 const responseHandler = require("../helpers/responseHandler");
 const Booking = require("../models/bookingModel");
+const Time = require("../models/timeModel");
 const validations = require("../validations");
 
 exports.createHallBooking = async (req, res) => {
@@ -12,19 +13,73 @@ exports.createHallBooking = async (req, res) => {
     }
 
     const { day, time } = req.body;
-    const findBooking = await Booking.findOne({ day, time });
+
+    const bookingStartTime = new Date(`1970-01-01T${time.start}Z`);
+    const bookingEndTime = new Date(`1970-01-01T${time.end}Z`);
+
+    const findBooking = await Booking.findOne({
+      day,
+      "time.start": bookingStartTime.toISOString(),
+      "time.end": bookingEndTime.toISOString(),
+    });
+
     if (findBooking) {
       return responseHandler(res, 400, "Booking already exists");
     }
 
+    const findTime = await Time.findOne({ day });
+    if (!findTime) {
+      return responseHandler(res, 400, "Time not found");
+    }
+
+    const hallStartTime = new Date(`1970-01-01T${findTime.start}Z`);
+    const hallEndTime = new Date(`1970-01-01T${findTime.end}Z`);
+
+    if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
+      return responseHandler(res, 400, "Time not available");
+    }
+
+    const allBookings = await Booking.find({ day });
+    for (let booking of allBookings) {
+      const existingStartTime = new Date(`1970-01-01T${booking.time.start}Z`);
+      const existingEndTime = new Date(`1970-01-01T${booking.time.end}Z`);
+
+      if (
+        (bookingStartTime >= existingStartTime &&
+          bookingStartTime < existingEndTime) ||
+        (bookingEndTime > existingStartTime &&
+          bookingEndTime <= existingEndTime)
+      ) {
+        const suggestedStartTime = new Date(
+          existingEndTime.getTime() + 30 * 60000
+        );
+        const suggestedStartTimeFormatted = suggestedStartTime
+          .toISOString()
+          .split("T")[1]
+          .slice(0, 5);
+        return responseHandler(
+          res,
+          400,
+          `Booking time overlaps with an existing booking. Please add 30 minutes for preparation. Suggested start time: ${suggestedStartTimeFormatted}`
+        );
+      }
+    }
+
     req.body.user = req.userId;
 
-    const newHallBooking = await Booking.create(req.body);
+    const newHallBooking = await Booking.create({
+      ...req.body,
+      time: {
+        start: bookingStartTime.toISOString(),
+        end: bookingEndTime.toISOString(),
+      },
+    });
+
     if (newHallBooking) {
       return responseHandler(
         res,
         201,
-        "Hall Booking created successfullyy",
+        "Hall Booking created successfully",
         newHallBooking
       );
     }

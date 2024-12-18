@@ -10,4 +10,6 @@ timeRoute
   .post(timeController.createTime)
   .get(timeController.getTimes);
 
+timeRoute.get("/bookings", timeController.getBookingByDate);
+
 module.exports = timeRoute;

@@ -15,10 +15,10 @@ const timeSchema = new mongoose.Schema(
       ],
     },
     start: {
-      type: String,
+      type: Date,
     },
     end: {
-      type: String,
+      type: Date,
     },
   },
   { timestamps: true }
