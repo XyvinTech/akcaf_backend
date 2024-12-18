@@ -33,6 +33,7 @@ exports.createHallBooking = async (req, res) => {
     const bookingEndTime = new Date(`1970-01-01T${time.end}Z`);
 
     const findBooking = await Booking.findOne({
+      hall,
       day,
       "time.start": bookingStartTime.toISOString(),
       "time.end": bookingEndTime.toISOString(),
@@ -141,6 +142,22 @@ exports.editHallBooking = async (req, res) => {
         updateBooking
       );
     }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getHallBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Id is required");
+    }
+    const findBooking = await Booking.findById(id);
+    if (!findBooking) {
+      return responseHandler(res, 404, "Booking not found");
+    }
+    return responseHandler(res, 200, "Booking found", findBooking);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

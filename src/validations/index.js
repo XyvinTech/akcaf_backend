@@ -275,7 +275,6 @@ exports.createBooking = Joi.object({
     start: Joi.string().required(),
     end: Joi.string().required(),
   }),
-  status: Joi.string().required(),
   hall: Joi.string().required(),
   date: Joi.date().required(),
   eventName: Joi.string().required(),
