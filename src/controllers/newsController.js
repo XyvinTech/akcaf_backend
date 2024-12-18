@@ -4,6 +4,7 @@ const News = require("../models/newsModel");
 const validations = require("../validations");
 const checkAccess = require("../helpers/checkAccess");
 const User = require("../models/userModel");
+const sendInAppNotification = require("../utils/sendInAppNotification");
 
 exports.createNews = async (req, res) => {
   try {
