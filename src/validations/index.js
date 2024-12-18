@@ -256,8 +256,8 @@ exports.createReport = Joi.object({
 
 exports.addTimeSchema = Joi.object({
   day: Joi.string().required(),
-  start: Joi.string().required(),
-  end: Joi.string().required(),
+  start: Joi.string(),
+  end: Joi.string(),
 });
 
 exports.bulKaddTimeSchema = Joi.object({
