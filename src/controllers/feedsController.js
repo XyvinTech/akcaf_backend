@@ -301,6 +301,17 @@ exports.getUserFeeds = async (req, res) => {
 
 exports.updateFeeds = async (req, res) => {
   try {
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+    }
+
     const { id, action } = req.params;
     if (!id) {
       return responseHandler(res, 400, "Feeds with this Id is required");
