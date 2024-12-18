@@ -251,3 +251,32 @@ exports.createReport = Joi.object({
   content: Joi.string().required(),
   reportType: Joi.string().valid("Post", "Chat", "User", "Message").required(),
 });
+
+exports.addTimeSchema = Joi.object({
+  day: Joi.string().required(),
+  times: Joi.array(),
+});
+
+exports.editTimeSchema = Joi.object({
+  day: Joi.string(),
+  times: Joi.array(),
+});
+
+exports.createBooking = Joi.object({
+  day: Joi.string().required(),
+  time: Joi.object({
+    start: Joi.string().required(),
+    end: Joi.string().required(),
+  }),
+  status: Joi.string().required(),
+  hall: Joi.string().required(),
+  date: Joi.date().required(),
+  eventName: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
+exports.editBooking = Joi.object({
+  status: Joi.string(),
+  eventName: Joi.string(),
+  description: Joi.string(),
+});
