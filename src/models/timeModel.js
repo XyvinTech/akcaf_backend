@@ -1,19 +1,5 @@
 const mongoose = require("mongoose");
 
-const timeIntervalSchema = new mongoose.Schema(
-  {
-    start: {
-      type: String,
-      required: true,
-    },
-    end: {
-      type: String,
-      required: true,
-    },
-  },
-  { _id: false }
-);
-
 const timeSchema = new mongoose.Schema(
   {
     day: {
@@ -28,8 +14,11 @@ const timeSchema = new mongoose.Schema(
         "Sunday",
       ],
     },
-    times: {
-      type: [timeIntervalSchema],
+    start: {
+      type: String,
+    },
+    end: {
+      type: String,
     },
   },
   { timestamps: true }

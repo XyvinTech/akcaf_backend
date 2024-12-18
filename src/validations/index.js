@@ -93,7 +93,7 @@ exports.editPromotionSchema = Joi.object({
 });
 
 exports.createUserSchema = Joi.object({
-  emiratesID:Joi.string().required(),
+  emiratesID: Joi.string().required(),
   fullName: Joi.string().required(),
   college: Joi.string().required(),
   course: Joi.string(),
@@ -121,7 +121,7 @@ exports.editUserSchema = Joi.object({
 
 exports.updateUserSchema = Joi.object({
   fullName: Joi.string(),
-  emiratesID:Joi.string(),
+  emiratesID: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
   address: Joi.string().allow(""),
@@ -256,7 +256,12 @@ exports.createReport = Joi.object({
 
 exports.addTimeSchema = Joi.object({
   day: Joi.string().required(),
-  times: Joi.array(),
+  start: Joi.string().required(),
+  end: Joi.string().required(),
+});
+
+exports.bulKaddTimeSchema = Joi.object({
+  addTimeSchema: Joi.array().items(exports.addTimeSchema).required(),
 });
 
 exports.editTimeSchema = Joi.object({
