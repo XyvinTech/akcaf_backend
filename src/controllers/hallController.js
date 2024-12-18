@@ -45,6 +45,9 @@ exports.createHallBooking = async (req, res) => {
     const hallStartTime = new Date(findTime.start);
     const hallEndTime = new Date(findTime.end);
 
+    hallStartTime.setFullYear(1970, 0, 1);
+    hallEndTime.setFullYear(1970, 0, 1);
+
     if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
       return responseHandler(
         res,
