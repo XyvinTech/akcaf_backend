@@ -121,12 +121,16 @@ exports.getAllFeeds = async (req, res) => {
 
 exports.getAllFeedsForAdmin = async (req, res) => {
   try {
-    const { pageNo = 1, limit = 10, search } = req.query;
+    const { pageNo = 1, limit = 10, search, status } = req.query;
     const skipCount = 10 * (pageNo - 1);
 
     const filter = {
       status: "unpublished",
     };
+
+    if (status) {
+      filter.status = status;
+    }
 
     if (req.role === "user") {
       const findUser = await User.findById(req.userId);
