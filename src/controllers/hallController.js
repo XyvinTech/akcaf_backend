@@ -28,7 +28,7 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    const { day, time, hall } = req.body;
+    const { day, time, hall, date, eventName, description } = req.body;
 
     const bookingStartTime = new Date(`1970-01-01T${time.start}:00Z`);
     const bookingEndTime = new Date(`1970-01-01T${time.end}:00Z`);
@@ -44,9 +44,8 @@ exports.createHallBooking = async (req, res) => {
 
     const hallStartTime = new Date(findTime.start);
     const hallEndTime = new Date(findTime.end);
-
-    hallStartTime.setFullYear(1970, 0, 1);
-    hallEndTime.setFullYear(1970, 0, 1);
+    hallStartTime.setUTCFullYear(1970, 0, 1);
+    hallEndTime.setUTCFullYear(1970, 0, 1);
 
     if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
       return responseHandler(
@@ -59,8 +58,12 @@ exports.createHallBooking = async (req, res) => {
     const existingBookings = await Booking.find({ day, hall });
 
     for (let booking of existingBookings) {
-      const existingStartTime = new Date(booking.time.start);
-      const existingEndTime = new Date(booking.time.end);
+      const existingStartTime = new Date(
+        `1970-01-01T${booking.time.start.split("T")[1]}`
+      );
+      const existingEndTime = new Date(
+        `1970-01-01T${booking.time.end.split("T")[1]}`
+      );
 
       const isOverlap =
         (bookingStartTime >= existingStartTime &&
@@ -88,7 +91,11 @@ exports.createHallBooking = async (req, res) => {
     }
 
     const newHallBooking = await Booking.create({
-      ...req.body,
+      day,
+      hall,
+      date,
+      eventName,
+      description,
       user: userId,
       time: {
         start: bookingStartTime.toISOString(),
