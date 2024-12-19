@@ -5,7 +5,7 @@ exports.createAdminSchema = Joi.object({
   email: Joi.string().required(),
   phone: Joi.string().required(),
   college: Joi.string().required(),
-  password: Joi.string().required(),
+  password: Joi.string(),
   role: Joi.string().required(),
   status: Joi.boolean(),
 });
