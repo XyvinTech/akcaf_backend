@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema(
         "deleted",
         "blocked",
         "awaiting_payment",
+        "subscription_expired",
       ],
       default: "inactive",
     },
