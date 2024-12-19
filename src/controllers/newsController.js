@@ -200,10 +200,17 @@ exports.getAllNews = async (req, res) => {
 
 exports.getUserNews = async (req, res) => {
   try {
+    const { pageNo = 1, limit = 10 } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+
     const filter = {
       status: "published",
     };
-    const data = await News.find(filter).sort({ createdAt: -1 }).lean();
+    const data = await News.find(filter)
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean();
 
     return responseHandler(res, 200, `News found successfully..!`, data);
   } catch (error) {

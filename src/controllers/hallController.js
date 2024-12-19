@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const responseHandler = require("../helpers/responseHandler");
 const Booking = require("../models/bookingModel");
 const Time = require("../models/timeModel");
@@ -117,9 +118,48 @@ exports.createHallBooking = async (req, res) => {
 
 exports.getHallBookings = async (req, res) => {
   try {
-    const findBookings = await Booking.find();
-    if (findBookings) {
-      return responseHandler(res, 200, "Bookings found", findBookings);
+    const filter = {};
+    const { pageNo = 1, limit = 10, status } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+      filter["user"] = new mongoose.Types.ObjectId(findUser._id);
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    const findBookings = await Booking.find(filter)
+      .populate("user")
+      .skip(skipCount)
+      .limit(limit);
+
+    const totalCount = await Booking.countDocuments(filter);
+
+    const mappedData = findBookings.map((booking) => {
+      return {
+        ...booking._doc,
+        user: booking.user.name,
+      };
+    });
+
+    if (mappedData) {
+      return responseHandler(
+        res,
+        200,
+        "Bookings found",
+        mappedData,
+        totalCount
+      );
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
