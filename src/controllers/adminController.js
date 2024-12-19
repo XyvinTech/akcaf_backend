@@ -8,6 +8,7 @@ const { comparePasswords, hashPassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
 const sendMail = require("../utils/sendMail");
+const { generateRandomPassword } = require("../utils/generateRandomPassword");
 
 exports.loginAdmin = async (req, res) => {
   try {
@@ -65,7 +66,9 @@ exports.createAdmin = async (req, res) => {
         `Admin with this email or phone already exists`
       );
 
-    const hashedPassword = await hashPassword(req.body.password);
+    const generatedPassword = generateRandomPassword();
+
+    const hashedPassword = await hashPassword(generatedPassword);
     req.body.password = hashedPassword;
 
     const data = {
@@ -73,7 +76,7 @@ exports.createAdmin = async (req, res) => {
       subject: "Admin Registration Notification",
       text: `Hello, ${req.body.name}. 
       You have been registered as an admin on the platform. 
-      Please use the following credentials to log in: Email: ${req.body.email} Password: ${req.body.password} 
+      Please use the following credentials to log in: Email: ${req.body.email} Password: ${generatedPassword} 
       Thank you for joining us! 
       Best regards, The Admin Team`,
     };
