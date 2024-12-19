@@ -30,8 +30,10 @@ exports.createHallBooking = async (req, res) => {
 
     const { day, time, hall, date, eventName, description } = req.body;
 
-    const bookingStartTime = new Date(`1970-01-01T${time.start}:00Z`);
-    const bookingEndTime = new Date(`1970-01-01T${time.end}:00Z`);
+    const today = new Date().toISOString().split("T")[0];
+
+    const bookingStartTime = new Date(`${today}T${time.start}:00Z`);
+    const bookingEndTime = new Date(`${today}T${time.end}:00Z`);
 
     if (bookingStartTime >= bookingEndTime) {
       return responseHandler(res, 400, "Start time must be before end time");
@@ -44,8 +46,6 @@ exports.createHallBooking = async (req, res) => {
 
     const hallStartTime = new Date(findTime.start);
     const hallEndTime = new Date(findTime.end);
-    hallStartTime.setUTCFullYear(1970, 0, 1);
-    hallEndTime.setUTCFullYear(1970, 0, 1);
 
     if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
       return responseHandler(
@@ -59,24 +59,25 @@ exports.createHallBooking = async (req, res) => {
 
     for (let booking of existingBookings) {
       const existingStartTime = new Date(
-        `1970-01-01T${booking.time.start.split("T")[1]}`
+        `${today}T${booking.time.start.split("T")[1]}`
       );
       const existingEndTime = new Date(
-        `1970-01-01T${booking.time.end.split("T")[1]}`
+        `${today}T${booking.time.end.split("T")[1]}`
       );
+
+      // Add 30-minute preparation buffer to existing bookings
+      const bufferEndTime = new Date(existingEndTime.getTime() + 30 * 60000);
 
       const isOverlap =
         (bookingStartTime >= existingStartTime &&
-          bookingStartTime < existingEndTime) ||
+          bookingStartTime < bufferEndTime) ||
         (bookingEndTime > existingStartTime &&
-          bookingEndTime <= existingEndTime) ||
+          bookingEndTime <= bufferEndTime) ||
         (bookingStartTime <= existingStartTime &&
-          bookingEndTime >= existingEndTime);
+          bookingEndTime >= bufferEndTime);
 
       if (isOverlap) {
-        const suggestedStartTime = new Date(
-          existingEndTime.getTime() + 30 * 60000
-        );
+        const suggestedStartTime = new Date(bufferEndTime.getTime());
         const suggestedStartTimeFormatted = suggestedStartTime
           .toISOString()
           .split("T")[1]

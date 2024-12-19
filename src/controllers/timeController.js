@@ -18,31 +18,9 @@ exports.createTime = async (req, res) => {
       if (!start && !end) {
         await Time.findOneAndDelete({ day });
       } else {
-        if (!start || !end) {
-          return responseHandler(
-            res,
-            400,
-            `Both start and end times are required for ${day}`
-          );
-        }
-
-        const formattedStart = new Date(`1970-01-01T${start}:00Z`);
-        const formattedEnd = new Date(`1970-01-01T${end}:00Z`);
-
-        if (formattedStart >= formattedEnd) {
-          return responseHandler(
-            res,
-            400,
-            `Start time must be before end time for ${day}`
-          );
-        }
-
         await Time.findOneAndUpdate(
           { day },
-          {
-            start: formattedStart.toISOString(),
-            end: formattedEnd.toISOString(),
-          },
+          { start, end },
           { new: true, upsert: true }
         );
       }
@@ -80,8 +58,18 @@ exports.getBookingByDate = async (req, res) => {
       date: { $gte: startOfDay, $lte: endOfDay },
     });
 
+    const mappedData = findBooking.map((booking) => {
+      return {
+        eventName: booking.eventName,
+        time: {
+          start: booking.time.start,
+          end: booking.time.end,
+        },
+      };
+    });
+
     if (findBooking.length > 0) {
-      return responseHandler(res, 200, "Booking found", findBooking);
+      return responseHandler(res, 200, "Booking found", mappedData);
     }
 
     return responseHandler(res, 404, "Booking not found");
