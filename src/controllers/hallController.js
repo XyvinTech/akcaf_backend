@@ -148,7 +148,7 @@ exports.getHallBookings = async (req, res) => {
     const mappedData = findBookings.map((booking) => {
       return {
         ...booking._doc,
-        user: booking.user.name,
+        user: booking.user.fullName || "N/A",
       };
     });
 

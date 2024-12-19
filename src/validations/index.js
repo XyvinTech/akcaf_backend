@@ -285,4 +285,5 @@ exports.editBooking = Joi.object({
   status: Joi.string(),
   eventName: Joi.string(),
   description: Joi.string(),
+  reason: Joi.string(),
 });

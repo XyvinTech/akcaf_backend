@@ -45,4 +45,6 @@ userRoute.patch("/admin/unblock-user/:id", userController.adminUserUnblock);
 
 userRoute.post("/request-nfc", userController.requestNFC);
 
+userRoute.get("/subscription/:id", userController.getSubscription);
+
 module.exports = userRoute;

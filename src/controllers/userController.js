@@ -9,6 +9,7 @@ const validations = require("../validations");
 const Setting = require("../models/settingsModel");
 const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
 const sendSelfMail = require("../utils/sendSelfMail");
+const Payment = require("../models/paymentModel");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -758,6 +759,36 @@ exports.requestNFC = async (req, res) => {
     await sendSelfMail(data);
 
     return responseHandler(res, 200, "NFC Request sent successfullyy");
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getSubscription = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const payment = await Payment.findOne({
+      user: id,
+      status: ["completed", "expired"],
+    })
+      .sort({ updatedAt: -1 })
+      .populate("user");
+    if (!payment) {
+      return responseHandler(res, 404, "Payment not found");
+    }
+
+    const mappedData ={
+      _id: payment._id,
+      amount: payment.amount,
+      lastRenewed: payment.updatedAt,
+      expiryDate: payment.expiryDate,
+      status: payment.status,
+    }
+
+    return responseHandler(res, 200, "Payment found successfullyy", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
