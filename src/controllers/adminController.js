@@ -7,6 +7,7 @@ const User = require("../models/userModel");
 const { comparePasswords, hashPassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
+const sendMail = require("../utils/sendMail");
 
 exports.loginAdmin = async (req, res) => {
   try {
@@ -66,6 +67,18 @@ exports.createAdmin = async (req, res) => {
 
     const hashedPassword = await hashPassword(req.body.password);
     req.body.password = hashedPassword;
+
+    const data = {
+      to: req.body.email,
+      subject: "Admin Registration Notification",
+      text: `Hello, ${req.body.name}. 
+      You have been registered as an admin on the platform. 
+      Please use the following credentials to log in: Email: ${req.body.email} Password: ${req.body.password} 
+      Thank you for joining us! 
+      Best regards, The Admin Team`,
+    };
+
+    await sendMail(data);
 
     const newAdmin = await Admin.create(req.body);
 
