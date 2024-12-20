@@ -9,6 +9,12 @@ const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
 const sendMail = require("../utils/sendMail");
 const { generateRandomPassword } = require("../utils/generateRandomPassword");
+const College = require("../models/collegeModel");
+const Payment = require("../models/paymentModel");
+const Event = require("../models/eventModel");
+const News = require("../models/newsModel");
+const Promotion = require("../models/promotionModel");
+const Feeds = require("../models/feedsModel");
 
 exports.loginAdmin = async (req, res) => {
   try {
@@ -400,6 +406,58 @@ exports.getDropdown = async (req, res) => {
       "Dropdown found successfullyy",
       mappedData
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.getDashboard = async (req, res) => {
+  try {
+    const [
+      totalMembers,
+      totalColleges,
+      totalRevenue,
+      activeUsers,
+      inactiveUsers,
+      suspendedUsers,
+      deletedUsers,
+      awaitingPaymentUsers,
+      eventsCount,
+      newsCount,
+      feedsCount,
+      promotionCount,
+    ] = await Promise.all([
+      User.countDocuments(),
+      College.countDocuments(),
+      Payment.aggregate([
+        { $match: { status: "completed" } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]),
+      User.countDocuments({ status: "active" }),
+      User.countDocuments({ status: "inactive" }),
+      User.countDocuments({ status: "suspended" }),
+      User.countDocuments({ status: "deleted" }),
+      User.countDocuments({ status: "awaiting_payment" }),
+      Event.countDocuments(),
+      News.countDocuments({ status: "published" }),
+      Feeds.countDocuments(),
+      Promotion.countDocuments(),
+    ]);
+
+    return responseHandler(res, 200, "Dashboard found successfullyy", {
+      totalMembers,
+      totalColleges,
+      totalRevenue: totalRevenue[0]?.total || 0,
+      activeUsers,
+      inactiveUsers,
+      suspendedUsers,
+      deletedUsers,
+      awaitingPaymentUsers,
+      eventsCount,
+      newsCount,
+      feedsCount,
+      promotionCount,
+    });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
