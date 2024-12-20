@@ -142,7 +142,7 @@ exports.getAllAdmins = async (req, res) => {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
-      _id: { $ne: "66cef136282563d7bb086e30" },
+      _id: { $ne: "66cef136282563d7bb086e30", $ne: req.userId },
     };
     const totalCount = await Admin.countDocuments(filter);
     const data = await Admin.find(filter)
@@ -413,6 +413,8 @@ exports.getDropdown = async (req, res) => {
 
 exports.getDashboard = async (req, res) => {
   try {
+    const { type = "month" } = req.query;
+
     const [
       totalMembers,
       totalColleges,
@@ -444,6 +446,95 @@ exports.getDashboard = async (req, res) => {
       Promotion.countDocuments(),
     ]);
 
+    let totalMemberGraph, totalRevenueGraph, graphData;
+
+    if (type === "month") {
+      totalMemberGraph = await User.aggregate([
+        { $match: { status: "active" } },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: 1 },
+          },
+        },
+      ]);
+
+      totalRevenueGraph = await Payment.aggregate([
+        { $match: { status: "completed" } },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
+
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const data = monthNames.map((name, index) => {
+        const memberEntry = totalMemberGraph.find(
+          (item) => item._id === index + 1
+        );
+        const revenueEntry = totalRevenueGraph.find(
+          (item) => item._id === index + 1
+        );
+
+        return {
+          name,
+          memberCount: memberEntry ? memberEntry.total : 0,
+          revenue: revenueEntry ? revenueEntry.total : 0,
+        };
+      });
+
+      graphData = data;
+    } else if (type === "year") {
+      totalMemberGraph = await User.aggregate([
+        { $match: { status: "active" } },
+        {
+          $group: {
+            _id: { $year: "$createdAt" },
+            total: { $sum: 1 },
+          },
+        },
+      ]);
+
+      totalRevenueGraph = await Payment.aggregate([
+        { $match: { status: "completed" } },
+        {
+          $group: {
+            _id: { $year: "$createdAt" },
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
+      const data = totalMemberGraph.map((memberEntry) => {
+        const revenueEntry = totalRevenueGraph.find(
+          (item) => item._id === memberEntry._id
+        );
+
+        return {
+          name: memberEntry._id,
+          memberCount: memberEntry.total,
+          revenue: revenueEntry ? revenueEntry.total : 0,
+        };
+      });
+
+      graphData = data;
+    }
+
     return responseHandler(res, 200, "Dashboard found successfullyy", {
       totalMembers,
       totalColleges,
@@ -457,6 +548,7 @@ exports.getDashboard = async (req, res) => {
       newsCount,
       feedsCount,
       promotionCount,
+      graphData,
     });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
