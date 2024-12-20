@@ -446,7 +446,7 @@ exports.getDashboard = async (req, res) => {
       Promotion.countDocuments(),
     ]);
 
-    let totalMemberGraph, totalRevenueGraph, graphData;
+    let totalMemberGraph, totalRevenueGraph, memberGraph, revenueGraph;
 
     if (type === "month") {
       totalMemberGraph = await User.aggregate([
@@ -499,7 +499,19 @@ exports.getDashboard = async (req, res) => {
         };
       });
 
-      graphData = data;
+      memberGraph = data.map((item) => {
+        return {
+          name: item.name,
+          memberCount: item.memberCount,
+        };
+      });
+
+      revenueGraph = data.map((item) => {
+        return {
+          name: item.name,
+          revenue: item.revenue,
+        };
+      });
     } else if (type === "year") {
       totalMemberGraph = await User.aggregate([
         { $match: { status: "active" } },
@@ -532,7 +544,19 @@ exports.getDashboard = async (req, res) => {
         };
       });
 
-      graphData = data;
+      memberGraph = data.map((item) => {
+        return {
+          name: item.name,
+          memberCount: item.memberCount,
+        };
+      });
+
+      revenueGraph = data.map((item) => {
+        return {
+          name: item.name,
+          revenue: item.revenue,
+        };
+      });
     }
 
     return responseHandler(res, 200, "Dashboard found successfullyy", {
@@ -548,7 +572,8 @@ exports.getDashboard = async (req, res) => {
       newsCount,
       feedsCount,
       promotionCount,
-      graphData,
+      memberGraph,
+      revenueGraph,
     });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
