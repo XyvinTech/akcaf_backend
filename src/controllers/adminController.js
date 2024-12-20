@@ -502,14 +502,14 @@ exports.getDashboard = async (req, res) => {
       memberGraph = data.map((item) => {
         return {
           name: item.name,
-          memberCount: item.memberCount,
+          count: item.memberCount,
         };
       });
 
       revenueGraph = data.map((item) => {
         return {
           name: item.name,
-          revenue: item.revenue,
+          count: item.revenue,
         };
       });
     } else if (type === "year") {
@@ -540,14 +540,14 @@ exports.getDashboard = async (req, res) => {
         return {
           name: memberEntry._id,
           memberCount: memberEntry.total,
-          revenue: revenueEntry ? revenueEntry.total : 0,
+          count: revenueEntry ? revenueEntry.total : 0,
         };
       });
 
       memberGraph = data.map((item) => {
         return {
           name: item.name,
-          memberCount: item.memberCount,
+          count: item.memberCount,
         };
       });
 
