@@ -4,7 +4,6 @@ const authVerify = require("../middlewares/authVerify");
 const adminRoute = express.Router();
 
 adminRoute.post("/login", adminController.loginAdmin);
-adminRoute.get("/dashboard", adminController.getDashboard);
 
 adminRoute.use(authVerify);
 
@@ -23,4 +22,5 @@ adminRoute.get("/list", adminController.getAllAdmins);
 adminRoute.get("/approvals", adminController.getApprovals);
 adminRoute.put("/approval/:id", adminController.approveUser);
 adminRoute.get("/dropdown", adminController.getDropdown);
+adminRoute.get("/dashboard", adminController.getDashboard);
 module.exports = adminRoute;
