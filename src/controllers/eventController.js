@@ -133,7 +133,12 @@ exports.getSingleEvent = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().populate().sort({ createdAt: -1, _id: 1 });
+    const filter = {
+      status: { $ne: "completed" },
+    };
+    const events = await Event.find(filter)
+      .populate()
+      .sort({ createdAt: -1, _id: 1 });
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
