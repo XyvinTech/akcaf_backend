@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const eventSchema = mongoose.Schema(
   {
-    eventName: { type: String },
-    description: { type: String },
+    eventName: { type: String, trim: true },
+    description: { type: String, trim: true },
     type: {
       type: String,
       enum: ["Online", "Offline"],
@@ -13,20 +13,21 @@ const eventSchema = mongoose.Schema(
     startTime: { type: Date },
     endDate: { type: Date },
     endTime: { type: Date },
-    platform: { type: String },
-    link: { type: String },
-    venue: { type: String },
-    organiserName: { type: String },
+    platform: { type: String, trim: true },
+    link: { type: String, trim: true },
+    venue: { type: String, trim: true },
+    organiserName: { type: String, trim: true },
     speakers: [
       {
-        name: { type: String },
-        designation: { type: String },
-        role: { type: String },
+        name: { type: String, trim: true },
+        designation: { type: String, trim: true },
+        role: { type: String, trim: true },
         image: { type: String },
       },
     ],
     status: {
       type: String,
+      trim: true,
       enum: ["pending", "live", "completed", "cancelled"],
       default: "pending",
     },

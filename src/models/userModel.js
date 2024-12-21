@@ -2,18 +2,18 @@ const mongoose = require("mongoose");
 
 const linkSchema = new mongoose.Schema(
   {
-    name: { type: String },
-    link: { type: String },
+    name: { type: String, trim: true },
+    link: { type: String, trim: true },
   },
   { _id: false }
 );
 
 const userSchema = new mongoose.Schema(
   {
-    fullName: { type: String },
-    emiratesID: { type: String },
-    uid: { type: String },
-    memberId: { type: String },
+    fullName: { type: String, trim: true },
+    emiratesID: { type: String, trim: true },
+    uid: { type: String, trim: true },
+    memberId: { type: String, trim: true },
     college: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "College",
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       default: "member",
     },
     image: { type: String },
-    email: { type: String },
+    email: { type: String, trim: true },
     phone: { type: String, trim: true },
     bio: { type: String },
     status: {
@@ -45,12 +45,12 @@ const userSchema = new mongoose.Schema(
       ],
       default: "inactive",
     },
-    address: { type: String },
+    address: { type: String, trim: true },
     company: {
-      name: { type: String },
-      designation: { type: String },
-      phone: { type: String },
-      address: { type: String },
+      name: { type: String, trim: true },
+      designation: { type: String, trim: true },
+      phone: { type: String, trim: true },
+      address: { type: String, trim: true },
       logo: { type: String },
     },
     social: [linkSchema],
@@ -58,13 +58,13 @@ const userSchema = new mongoose.Schema(
     awards: [
       {
         image: { type: String },
-        name: { type: String },
-        authority: { type: String },
+        name: { type: String, trim: true },
+        authority: { type: String, trim: true },
       },
     ],
     videos: [linkSchema],
     certificates: [linkSchema],
-    reason: { type: String },
+    reason: { type: String, trim: true },
     otp: { type: Number },
     fcm: { type: String },
     blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

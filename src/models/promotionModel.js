@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const promotionSchema = mongoose.Schema(
   {
-    title: { type: String },
-    description: { type: String },
+    title: { type: String, trim: true },
+    description: { type: String, trim: true },
     type: {
       type: String,
       enum: ["banner", "video", "poster", "notice"],

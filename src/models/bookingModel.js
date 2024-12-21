@@ -4,6 +4,7 @@ const BookingSchema = mongoose.Schema(
   {
     day: {
       type: String,
+      trim: true,
       enum: [
         "Monday",
         "Tuesday",
@@ -18,28 +19,34 @@ const BookingSchema = mongoose.Schema(
       type: {
         start: {
           type: String,
+          trim: true,
         },
         end: {
           type: String,
+          trim: true,
         },
       },
     },
     status: {
       type: String,
+      trim: true,
       enum: ["pending", "approved", "rejected", "cancelled"],
       default: "pending",
     },
     hall: {
       type: String,
+      trim: true,
     },
     date: {
       type: Date,
     },
     eventName: {
       type: String,
+      trim: true,
     },
     description: {
       type: String,
+      trim: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +54,7 @@ const BookingSchema = mongoose.Schema(
     },
     reason: {
       type: String,
+      trim: true,
     },
   },
   { timestamps: true }

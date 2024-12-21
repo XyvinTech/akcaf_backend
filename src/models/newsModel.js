@@ -4,6 +4,7 @@ const NewsSchema = mongoose.Schema(
   {
     category: {
       type: String,
+      trim: true,
       enum: [
         "Latest",
         "Current Affairs",
@@ -14,11 +15,12 @@ const NewsSchema = mongoose.Schema(
         "Events/ Programmes",
       ],
     },
-    title: { type: String },
-    content: { type: String },
+    title: { type: String, trim: true },
+    content: { type: String, trim: true },
     media: { type: String },
     status: {
       type: String,
+      trim: true,
       enum: ["published", "unpublished"],
       default: "unpublished",
     },
