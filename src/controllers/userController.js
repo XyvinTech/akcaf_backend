@@ -266,7 +266,15 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, fullUser, limit = 10, search } = req.query;
+    const {
+      pageNo = 1,
+      fullUser,
+      limit = 10,
+      search,
+      status,
+      installed,
+      college,
+    } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
@@ -276,6 +284,24 @@ exports.getAllUsers = async (req, res) => {
         { email: { $regex: search, $options: "i" } },
         { fullName: { $regex: search, $options: "i" } },
       ];
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    if (installed == true) {
+      filter.fcm = {
+        $nin: [null, ""],
+      };
+    } else if (installed == false) {
+      filter.fcm = {
+        $in: [null, ""],
+      };
+    }
+
+    if (college) {
+      filter["college.collegeName"] = college;
     }
 
     if (!fullUser) {
@@ -780,13 +806,13 @@ exports.getSubscription = async (req, res) => {
       return responseHandler(res, 404, "Payment not found");
     }
 
-    const mappedData ={
+    const mappedData = {
       _id: payment._id,
       amount: payment.amount,
       lastRenewed: payment.updatedAt,
       expiryDate: payment.expiryDate,
       status: payment.status,
-    }
+    };
 
     return responseHandler(res, 200, "Payment found successfullyy", mappedData);
   } catch (error) {
