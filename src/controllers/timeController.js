@@ -45,7 +45,7 @@ exports.getTimes = async (req, res) => {
 
 exports.getBookingByDate = async (req, res) => {
   try {
-    const { date } = req.query;
+    const { date, hall } = req.query;
 
     if (!date) {
       return responseHandler(res, 400, "Date parameter is required");
@@ -56,6 +56,7 @@ exports.getBookingByDate = async (req, res) => {
 
     const findBooking = await Booking.find({
       date: { $gte: startOfDay, $lte: endOfDay },
+      hall: hall,
     });
 
     const mappedData = findBooking.map((booking) => {
