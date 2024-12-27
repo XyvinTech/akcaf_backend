@@ -214,13 +214,19 @@ exports.getAllPayment = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
+      const mappedData = payment.map((item) => {
+        return {
+          ...item,
+          fullName: item.user.fullName,
+        };
+      })
     const totalCount = await Payment.countDocuments(filter);
 
     return responseHandler(
       res,
       200,
       `Payment found successfully..!`,
-      payment,
+      mappedData,
       totalCount
     );
   } catch (error) {
