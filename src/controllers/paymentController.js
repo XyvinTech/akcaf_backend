@@ -227,3 +227,41 @@ exports.getAllPayment = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.createPayment = async (req, res) => {
+  try {
+    const { user, expiryDate } = req.body;
+    if (!user) {
+      return responseHandler(res, 400, "User is required");
+    }
+
+    if (!expiryDate) {
+      return responseHandler(res, 400, "Expiry Date is required");
+    }
+
+    const dateRandom = new Date().getTime();
+    const paymentData = {
+      user: user,
+      gatewayId: "admin",
+      entity: "order",
+      amount: 10,
+      amountDue: 10,
+      amountPaid: 0,
+      currency: "AED",
+      status: "created",
+      receipt: `order_id${dateRandom}`,
+      attempts: 1,
+      expiryDate: expiryDate,
+    };
+    const payment = await Payment.create(paymentData);
+
+    return responseHandler(
+      res,
+      200,
+      `Payment created successfully..!`,
+      payment
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
