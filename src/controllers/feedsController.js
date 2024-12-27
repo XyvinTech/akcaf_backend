@@ -122,94 +122,108 @@ exports.getAllFeeds = async (req, res) => {
 exports.getAllFeedsForAdmin = async (req, res) => {
   try {
     const { pageNo = 1, limit = 10, search, status } = req.query;
-    const skipCount = (pageNo - 1) * limit;
+    const skipCount = 10 * (pageNo - 1);
 
-    const filter = {};
+    const filter = {
+      status: "unpublished",
+    };
 
     if (status) {
       filter.status = status;
     }
-
-    if (req.role === "user") {
-      const findUser = await User.findById(req.userId);
-      if (!findUser || findUser.role === "member") {
-        return responseHandler(
-          res,
-          403,
-          "You don't have permission to perform this action"
-        );
-      }
-      filter["author.college"] = findUser.college;
-    }
-
     if (search) {
       filter.$or = [{ type: { $regex: search, $options: "i" } }];
     }
 
-    const pipeline = [
-      {
-        $match: filter,
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "author",
-          foreignField: "_id",
-          as: "author",
-        },
-      },
-      {
-        $unwind: "$author",
-      },
-      {
-        $match: {
-          ...(filter["author.college"] && {
-            "author.college": new mongoose.Types.ObjectId(filter["author.college"]),
-          }),
-        },
-      },
-      {
-        $lookup: {
-          from: "colleges",
-          localField: "author.college",
-          foreignField: "_id",
-          as: "author.collegeDetails",
-        },
-      },
-      {
-        $project: {
-          author: {
-            fullName: 1,
-            college: 1,
-            collegeDetails: { $arrayElemAt: ["$author.collegeDetails", 0] },
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+      const collegeFilter = findUser.college;
+      const totalCount = await Feeds.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "authorDetails",
           },
-          type: 1,
-          media: 1,
-          link: 1,
-          content: 1,
-          status: 1,
-          createdAt: 1,
         },
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $skip: skipCount,
-      },
-      {
-        $limit: Number(limit),
-      },
-    ];
-
-    const data = await Feeds.aggregate(pipeline);
+        { $unwind: "$authorDetails" },
+        {
+          $match: {
+            ...filter,
+            "authorDetails.college": collegeFilter,
+          },
+        },
+        { $count: "total" },
+      ]);
+      const data = await Feeds.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "authorDetails",
+          },
+        },
+        { $unwind: "$authorDetails" },
+        {
+          $match: {
+            ...filter,
+            "authorDetails.college": collegeFilter,
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            type: 1,
+            status: 1,
+            createdAt: 1,
+            media: 1,
+            link: 1,
+            content: 1,
+            author: {
+              fullName: "$authorDetails.fullName",
+              college: "$authorDetails.college",
+            },
+            comment: 1,
+          },
+        },
+        { $skip: Number(skipCount) },
+        { $limit: Number(limit) },
+        { $sort: { createdAt: -1, _id: 1 } },
+      ]);
+      return responseHandler(
+        res,
+        200,
+        "Feeds found successfully..!",
+        data,
+        totalCount[0]?.total || 0
+      );
+    }
 
     const totalCount = await Feeds.countDocuments(filter);
+    const data = await Feeds.find(filter)
+      .populate("author", "fullName college")
+      .populate({
+        path: "comment.user",
+        select: "fullName image",
+      })
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
+      .lean();
 
     return responseHandler(
       res,
       200,
-      `Feeds found successfully..!`,
+      "Feeds found successfully..!",
       data,
       totalCount
     );
