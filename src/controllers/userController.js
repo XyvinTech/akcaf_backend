@@ -90,6 +90,7 @@ exports.createUser = async (req, res) => {
     }
     const uniqueMemberId = await generateUniqueDigit();
     req.body.memberId = `AKCAF-${uniqueMemberId}`;
+    req.body.status = "awaiting_payment";
     const newUser = await User.create(req.body);
 
     if (newUser)
