@@ -223,11 +223,18 @@ exports.getAllFeedsForAdmin = async (req, res) => {
       .sort({ createdAt: -1, _id: 1 })
       .lean();
 
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        authorName: item.author.fullName,
+      };
+    });
+
     return responseHandler(
       res,
       200,
       "Feeds found successfully..!",
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {
