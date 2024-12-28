@@ -98,7 +98,7 @@ exports.getAllFeeds = async (req, res) => {
     };
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
-      .populate("author", "fullName college image memberId")
+      .populate("author", "fullName college image memberId company")
       .populate({
         path: "comment.user",
         select: "fullName image",
@@ -195,6 +195,7 @@ exports.getAllFeedsForAdmin = async (req, res) => {
               college: "$authorDetails.college",
               image: "$authorDetails.image",
               memberId: "$authorDetails.memberId",
+              company: "$authorDetails.company",
             },
             comment: 1,
           },
