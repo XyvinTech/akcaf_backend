@@ -254,12 +254,19 @@ exports.createPayment = async (req, res) => {
       amountDue: 10,
       amountPaid: 0,
       currency: "AED",
-      status: "created",
+      status: "completed",
       receipt: `order_id${dateRandom}`,
       attempts: 1,
       expiryDate: expiryDate,
     };
+
     const payment = await Payment.create(paymentData);
+
+    await User.findByIdAndUpdate(
+      user,
+      { status: "active" },
+      { new: true }
+    );
 
     return responseHandler(
       res,
