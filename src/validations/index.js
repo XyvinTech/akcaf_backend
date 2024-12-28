@@ -108,6 +108,7 @@ exports.createUserSchema = Joi.object({
 
 exports.editUserSchema = Joi.object({
   fullName: Joi.string(),
+  emiratesID: Joi.string(),
   college: Joi.string(),
   course: Joi.string(),
   batch: Joi.number(),
