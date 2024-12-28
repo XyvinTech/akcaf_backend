@@ -111,7 +111,7 @@ exports.getAllFeeds = async (req, res) => {
     const mappedData = data.map((item) => {
       return {
         ...item,
-        company: item.author.company.name,
+        company: item.author.company?.name,
       };
     });
 
