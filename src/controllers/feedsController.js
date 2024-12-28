@@ -82,7 +82,7 @@ exports.deletefeeds = async (req, res) => {
 
 exports.getAllFeeds = async (req, res) => {
   try {
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status = "published", limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const currentUser = await User.findById(req.userId).select(
       "blockedUsers notInterestedPosts"
@@ -91,7 +91,7 @@ exports.getAllFeeds = async (req, res) => {
     const notInterestedUsersList = currentUser.notInterestedPosts;
 
     const filter = {
-      status: "published",
+      status: status,
       author: {
         $nin: [...blockedUsersList, ...notInterestedUsersList],
       },
