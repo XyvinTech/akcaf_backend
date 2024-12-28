@@ -26,6 +26,8 @@ const chatRoute = require("./src/routes/chat");
 const paymentRoute = require("./src/routes/payment");
 const reportRoute = require("./src/routes/report");
 const rateLimit = require("express-rate-limit");
+const timeRoute = require("./src/routes/time");
+const hallRoute = require("./src/routes/hall");
 
 app.use(express.static("views"));
 
@@ -104,6 +106,8 @@ app.use(`${BASE_PATH}/notification`, notificationRoute);
 app.use(`${BASE_PATH}/chat`, chatRoute);
 app.use(`${BASE_PATH}/payment`, paymentRoute);
 app.use(`${BASE_PATH}/report`, reportRoute);
+app.use(`${BASE_PATH}/time`, timeRoute);
+app.use(`${BASE_PATH}/booking`, hallRoute);
 
 //* Handle undefined routes
 app.all("*", (req, res) => {

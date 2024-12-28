@@ -9,6 +9,7 @@ const validations = require("../validations");
 const Setting = require("../models/settingsModel");
 const { generateUniqueDigit } = require("../utils/generateUniqueDigit");
 const sendSelfMail = require("../utils/sendSelfMail");
+const Payment = require("../models/paymentModel");
 
 exports.sendOtp = async (req, res) => {
   try {
@@ -89,6 +90,7 @@ exports.createUser = async (req, res) => {
     }
     const uniqueMemberId = await generateUniqueDigit();
     req.body.memberId = `AKCAF-${uniqueMemberId}`;
+    req.body.status = "awaiting_payment";
     const newUser = await User.create(req.body);
 
     if (newUser)
@@ -265,7 +267,15 @@ exports.getAllUsers = async (req, res) => {
         "You don't have permission to perform this action"
       );
     }
-    const { pageNo = 1, fullUser, limit = 10, search } = req.query;
+    const {
+      pageNo = 1,
+      fullUser,
+      limit = 10,
+      search,
+      status,
+      installed,
+      college,
+    } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {};
     if (search) {
@@ -273,10 +283,26 @@ exports.getAllUsers = async (req, res) => {
         { status: { $regex: search, $options: "i" } },
         { phone: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
-        { "name.first": { $regex: search, $options: "i" } },
-        { "name.middle": { $regex: search, $options: "i" } },
-        { "name.last": { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
       ];
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    if (installed == true) {
+      filter.fcm = {
+        $nin: [null, ""],
+      };
+    } else if (installed == false) {
+      filter.fcm = {
+        $in: [null, ""],
+      };
+    }
+
+    if (college) {
+      filter["college.collegeName"] = college;
     }
 
     if (!fullUser) {
@@ -287,18 +313,15 @@ exports.getAllUsers = async (req, res) => {
         .limit(limit)
         .sort({ createdAt: -1, _id: 1 })
         .lean();
-  
+
       const mappedData = data.map((user) => {
         return {
           ...user,
           college: user.college?.collegeName,
           course: user.course?.courseName,
-          fullName: `${user.name?.first || ""} ${user.name?.middle || ""} ${
-            user.name?.last || ""
-          }`.trim(),
         };
       });
-  
+
       return responseHandler(
         res,
         200,
@@ -306,7 +329,7 @@ exports.getAllUsers = async (req, res) => {
         mappedData,
         totalCount
       );
-    }else{
+    } else {
       const totalCount = await User.countDocuments();
       const data = await User.find()
         .populate("college course")
@@ -315,9 +338,7 @@ exports.getAllUsers = async (req, res) => {
 
       const csvData = data.map((user) => {
         return {
-          Name: `${user?.name?.first} ${user?.name?.middle || ""} ${
-            user?.name?.last || ""
-          }`.trim(),
+          Name: user.fullName,
           MembershipID: user.memberId,
           Email: user.email,
           Mobile: user.phone,
@@ -358,11 +379,8 @@ exports.fetchUser = async (req, res) => {
     const findUser = await User.findById(id).populate("college course").lean();
 
     if (findUser) {
-      // Fields to consider for profile completion
       const fieldsToCheck = [
-        findUser.name?.first,
-        findUser.name?.middle,
-        findUser.name?.last,
+        findUser.fullName,
         findUser.college,
         findUser.course,
         findUser.batch,
@@ -389,10 +407,8 @@ exports.fetchUser = async (req, res) => {
         ...(findUser.certificates?.map((cert) => cert.link) || []),
       ];
 
-      // Calculate the number of non-empty fields
       const filledFields = fieldsToCheck.filter((field) => field).length;
 
-      // Calculate the profile completion percentage
       const totalFields = fieldsToCheck.length;
       const profileCompletionPercentage = Math.round(
         (filledFields / totalFields) * 100
@@ -758,11 +774,9 @@ exports.requestNFC = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
 
-    const fullName = `${findUser.name.first} ${findUser.name.middle} ${findUser.name.last}`;
-
     const data = {
       from: findUser.email,
-      subject: `Request for NFC from ${fullName}`,
+      subject: `Request for NFC from ${findUser.fullName}`,
       text: `Hi from ${fullName} with AKCAF member ID ${findUser.memberId},\n\n
         I would like to request for NFC. Please contact me on ${findUser.phone} or email me at ${findUser.email}.\n
         Thank you.
@@ -772,6 +786,36 @@ exports.requestNFC = async (req, res) => {
     await sendSelfMail(data);
 
     return responseHandler(res, 200, "NFC Request sent successfullyy");
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getSubscription = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "User ID is required");
+    }
+    const payment = await Payment.findOne({
+      user: id,
+      status: ["completed", "expired"],
+    })
+      .sort({ updatedAt: -1 })
+      .populate("user");
+    if (!payment) {
+      return responseHandler(res, 404, "Payment not found");
+    }
+
+    const mappedData = {
+      _id: payment._id,
+      amount: payment.amount,
+      lastRenewed: payment.updatedAt,
+      expiryDate: payment.expiryDate,
+      status: payment.status,
+    };
+
+    return responseHandler(res, 200, "Payment found successfullyy", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

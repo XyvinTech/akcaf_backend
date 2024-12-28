@@ -104,21 +104,14 @@ exports.getSingleEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate(
       "rsvp",
-      "name phone memberId"
+      "fullName phone memberId"
     );
     const mappedData = {
       ...event._doc,
       rsvpCount: event.rsvp.length,
       rsvp: event.rsvp.map((rsvp) => {
-        let fullName = rsvp.name.first;
-        if (rsvp.name.middle) {
-          fullName += ` ${rsvp.name.middle}`;
-        }
-        if (rsvp.name.last) {
-          fullName += ` ${rsvp.name.last}`;
-        }
         return {
-          name: fullName,
+          name: rsvp.fullName,
           phone: rsvp.phone,
           memberId: rsvp.memberId,
         };
@@ -140,7 +133,12 @@ exports.getSingleEvent = async (req, res) => {
 
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().populate().sort({ createdAt: -1, _id: 1 });
+    const filter = {
+      status: { $ne: "completed" },
+    };
+    const events = await Event.find(filter)
+      .populate()
+      .sort({ createdAt: -1, _id: 1 });
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
@@ -162,7 +160,7 @@ exports.getAllEventsForAdmin = async (req, res) => {
       filter.status = status;
     }
     const events = await Event.find(filter)
-      .populate("rsvp", "name phone memberId")
+      .populate("rsvp", "fullName phone memberId")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
@@ -174,7 +172,7 @@ exports.getAllEventsForAdmin = async (req, res) => {
         rsvp: event.rsvp.map((rsvp) => {
           return {
             _id: rsvp._id,
-            name: `${rsvp.name?.first} ${rsvp.name?.middle} ${rsvp.name?.last}`,
+            name: rsvp.fullName,
             memberId: rsvp.memberId,
           };
         }),

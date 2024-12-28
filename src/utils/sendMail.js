@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { NODE_EMAIL_ID, NODE_PASS = "aooa ipwd cqts uyoz" } = process.env;
+const { NODE_EMAIL_ID, NODE_PASS } = process.env;
 const nodemailer = require("nodemailer");
 
 const sendMail = async (data) => {

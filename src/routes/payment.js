@@ -13,4 +13,6 @@ paymentRoute.post("/make-payment", paymentController.makePayment);
 
 paymentRoute.get("/list", paymentController.getAllPayment);
 
+paymentRoute.post("/create", paymentController.createPayment);
+
 module.exports = paymentRoute;

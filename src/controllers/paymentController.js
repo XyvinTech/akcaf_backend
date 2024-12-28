@@ -209,26 +209,18 @@ exports.getAllPayment = async (req, res) => {
       filter.status = status;
     }
     const payment = await Payment.find(filter)
-      .populate("user", "name")
+      .populate("user", "fullName")
       .skip(skipCount)
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
+      const mappedData = payment.map((item) => {
+        return {
+          ...item,
+          fullName: item.user.fullName,
+        };
+      })
     const totalCount = await Payment.countDocuments(filter);
-
-    const mappedData = payment.map((item) => {
-      let fullName = item.user.name.first;
-      if (item.user.name.middle) {
-        fullName += ` ${item.user.name.middle}`;
-      }
-      if (item.user.name.last) {
-        fullName += ` ${item.user.name.last}`;
-      }
-      return {
-        ...item,
-        fullName,
-      };
-    });
 
     return responseHandler(
       res,
@@ -236,6 +228,51 @@ exports.getAllPayment = async (req, res) => {
       `Payment found successfully..!`,
       mappedData,
       totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.createPayment = async (req, res) => {
+  try {
+    const { user, expiryDate } = req.body;
+    if (!user) {
+      return responseHandler(res, 400, "User is required");
+    }
+
+    if (!expiryDate) {
+      return responseHandler(res, 400, "Expiry Date is required");
+    }
+
+    const dateRandom = new Date().getTime();
+    const paymentData = {
+      user: user,
+      gatewayId: "admin",
+      entity: "order",
+      amount: 10,
+      amountDue: 10,
+      amountPaid: 0,
+      currency: "AED",
+      status: "completed",
+      receipt: `order_id${dateRandom}`,
+      attempts: 1,
+      expiryDate: expiryDate,
+    };
+
+    const payment = await Payment.create(paymentData);
+
+    await User.findByIdAndUpdate(
+      user,
+      { status: "active" },
+      { new: true }
+    );
+
+    return responseHandler(
+      res,
+      200,
+      `Payment created successfully..!`,
+      payment
     );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);

@@ -7,6 +7,14 @@ const User = require("../models/userModel");
 const { comparePasswords, hashPassword } = require("../utils/bcrypt");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
+const sendMail = require("../utils/sendMail");
+const { generateRandomPassword } = require("../utils/generateRandomPassword");
+const College = require("../models/collegeModel");
+const Payment = require("../models/paymentModel");
+const Event = require("../models/eventModel");
+const News = require("../models/newsModel");
+const Promotion = require("../models/promotionModel");
+const Feeds = require("../models/feedsModel");
 
 exports.loginAdmin = async (req, res) => {
   try {
@@ -64,8 +72,22 @@ exports.createAdmin = async (req, res) => {
         `Admin with this email or phone already exists`
       );
 
-    const hashedPassword = await hashPassword(req.body.password);
+    const generatedPassword = generateRandomPassword();
+
+    const hashedPassword = await hashPassword(generatedPassword);
     req.body.password = hashedPassword;
+
+    const data = {
+      to: req.body.email,
+      subject: "Admin Registration Notification",
+      text: `Hello, ${req.body.name}. 
+      You have been registered as an admin on the platform. 
+      Please use the following credentials to log in: Email: ${req.body.email} Password: ${generatedPassword} 
+      Thank you for joining us! 
+      Best regards, The Admin Team`,
+    };
+
+    await sendMail(data);
 
     const newAdmin = await Admin.create(req.body);
 
@@ -120,7 +142,7 @@ exports.getAllAdmins = async (req, res) => {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
-      _id: { $ne: "66cef136282563d7bb086e30" },
+      _id: { $ne: "66cef136282563d7bb086e30", $ne: req.userId },
     };
     const totalCount = await Admin.countDocuments(filter);
     const data = await Admin.find(filter)
@@ -268,9 +290,7 @@ exports.getApprovals = async (req, res) => {
       filter.$or = [
         { phone: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
-        { "name.first": { $regex: search, $options: "i" } },
-        { "name.middle": { $regex: search, $options: "i" } },
-        { "name.last": { $regex: search, $options: "i" } },
+        { fullName: { $regex: search, $options: "i" } },
       ];
     }
     const totalCount = await User.countDocuments(filter);
@@ -285,9 +305,6 @@ exports.getApprovals = async (req, res) => {
         ...item,
         college: item?.college?.collegeName,
         course: item?.course?.courseName,
-        fullName: `${item.name?.first || ""} ${item.name?.middle || ""} ${
-          item.name?.last || ""
-        }`.trim(),
       };
     });
     return responseHandler(
@@ -376,18 +393,10 @@ exports.getDropdown = async (req, res) => {
     });
 
     const mappedData = users.map((user) => {
-      let fullName = user.name.first;
-      if (user.name.middle) {
-        fullName += ` ${user.name.middle}`;
-      }
-      if (user.name.last) {
-        fullName += ` ${user.name.last}`;
-      }
-
       return {
         _id: user._id,
         email: user.email,
-        name: fullName,
+        name: user.fullName,
       };
     });
 
@@ -397,6 +406,175 @@ exports.getDropdown = async (req, res) => {
       "Dropdown found successfullyy",
       mappedData
     );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
+
+exports.getDashboard = async (req, res) => {
+  try {
+    const { type = "month" } = req.query;
+
+    const [
+      totalMembers,
+      totalColleges,
+      totalRevenue,
+      activeUsers,
+      inactiveUsers,
+      suspendedUsers,
+      deletedUsers,
+      awaitingPaymentUsers,
+      eventsCount,
+      newsCount,
+      feedsCount,
+      promotionCount,
+    ] = await Promise.all([
+      User.countDocuments(),
+      College.countDocuments(),
+      Payment.aggregate([
+        { $match: { status: "completed" } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]),
+      User.countDocuments({ status: "active" }),
+      User.countDocuments({ status: "inactive" }),
+      User.countDocuments({ status: "suspended" }),
+      User.countDocuments({ status: "deleted" }),
+      User.countDocuments({ status: "awaiting_payment" }),
+      Event.countDocuments(),
+      News.countDocuments({ status: "published" }),
+      Feeds.countDocuments(),
+      Promotion.countDocuments(),
+    ]);
+
+    let totalMemberGraph, totalRevenueGraph, memberGraph, revenueGraph;
+
+    if (type === "month") {
+      totalMemberGraph = await User.aggregate([
+        { $match: { status: "active" } },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: 1 },
+          },
+        },
+      ]);
+
+      totalRevenueGraph = await Payment.aggregate([
+        { $match: { status: "completed" } },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
+
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const data = monthNames.map((name, index) => {
+        const memberEntry = totalMemberGraph.find(
+          (item) => item._id === index + 1
+        );
+        const revenueEntry = totalRevenueGraph.find(
+          (item) => item._id === index + 1
+        );
+
+        return {
+          name,
+          memberCount: memberEntry ? memberEntry.total : 0,
+          revenue: revenueEntry ? revenueEntry.total : 0,
+        };
+      });
+
+      memberGraph = data.map((item) => {
+        return {
+          name: item.name,
+          count: item.memberCount,
+        };
+      });
+
+      revenueGraph = data.map((item) => {
+        return {
+          name: item.name,
+          count: item.revenue,
+        };
+      });
+    } else if (type === "year") {
+      totalMemberGraph = await User.aggregate([
+        { $match: { status: "active" } },
+        {
+          $group: {
+            _id: { $year: "$createdAt" },
+            total: { $sum: 1 },
+          },
+        },
+      ]);
+
+      totalRevenueGraph = await Payment.aggregate([
+        { $match: { status: "completed" } },
+        {
+          $group: {
+            _id: { $year: "$createdAt" },
+            total: { $sum: "$amount" },
+          },
+        },
+      ]);
+      const data = totalMemberGraph.map((memberEntry) => {
+        const revenueEntry = totalRevenueGraph.find(
+          (item) => item._id === memberEntry._id
+        );
+
+        return {
+          name: memberEntry._id,
+          memberCount: memberEntry.total,
+          count: revenueEntry ? revenueEntry.total : 0,
+        };
+      });
+
+      memberGraph = data.map((item) => {
+        return {
+          name: item.name,
+          count: item.memberCount,
+        };
+      });
+
+      revenueGraph = data.map((item) => {
+        return {
+          name: item.name,
+          revenue: item.revenue,
+        };
+      });
+    }
+
+    return responseHandler(res, 200, "Dashboard found successfullyy", {
+      totalMembers,
+      totalColleges,
+      totalRevenue: totalRevenue[0]?.total || 0,
+      activeUsers,
+      inactiveUsers,
+      suspendedUsers,
+      deletedUsers,
+      awaitingPaymentUsers,
+      eventsCount,
+      newsCount,
+      feedsCount,
+      promotionCount,
+      memberGraph,
+      revenueGraph,
+    });
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }

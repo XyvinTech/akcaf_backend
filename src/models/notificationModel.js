@@ -8,8 +8,8 @@ const notificationSchema = mongoose.Schema(
         read: { type: Boolean, default: false },
       },
     ],
-    subject: { type: String },
-    content: { type: String },
+    subject: { type: String, trim: true },
+    content: { type: String, trim: true },
     media: { type: String },
     link: { type: String },
     type: {

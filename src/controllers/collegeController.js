@@ -385,13 +385,6 @@ exports.getBatchWise = async (req, res) => {
           batch: parseInt(batch),
         },
       },
-      {
-        $addFields: {
-          fullName: {
-            $concat: ["$name.first", " ", "$name.middle", " ", "$name.last"],
-          },
-        },
-      },
       { $sort: { _id: 1 } },
       { $skip: skipCount },
       { $limit: parseInt(limit) },

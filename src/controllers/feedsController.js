@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const responseHandler = require("../helpers/responseHandler");
 const Feeds = require("../models/feedsModel");
 const User = require("../models/userModel");
@@ -46,7 +47,12 @@ exports.getFeeds = async (req, res) => {
 
     const findFeeds = await Feeds.findById(id);
     if (findFeeds) {
-      return responseHandler(res, 200, `Feeds found successfully..!`, findFeeds);
+      return responseHandler(
+        res,
+        200,
+        `Feeds found successfully..!`,
+        findFeeds
+      );
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -76,7 +82,7 @@ exports.deletefeeds = async (req, res) => {
 
 exports.getAllFeeds = async (req, res) => {
   try {
-    const { pageNo = 1, status, limit = 10 } = req.query;
+    const { pageNo = 1, status = "published", limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const currentUser = await User.findById(req.userId).select(
       "blockedUsers notInterestedPosts"
@@ -85,51 +91,17 @@ exports.getAllFeeds = async (req, res) => {
     const notInterestedUsersList = currentUser.notInterestedPosts;
 
     const filter = {
-      status: "published",
+      status: status,
       author: {
         $nin: [...blockedUsersList, ...notInterestedUsersList],
       },
     };
     const totalCount = await Feeds.countDocuments(filter);
     const data = await Feeds.find(filter)
+      .populate("author", "fullName college image memberId company")
       .populate({
         path: "comment.user",
-        select: "name image",
-      })
-      .skip(skipCount)
-      .limit(limit)
-      .sort({ createdAt: -1, _id: 1 })
-      .lean();
-
-    return responseHandler(
-      res,
-      200,
-      `Feeds found successfully..!`,
-      data,
-      totalCount
-    );
-  } catch (error) {
-    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
-  }
-};
-
-exports.getAllFeedsForAdmin = async (req, res) => {
-  try {
-    const { pageNo = 1, status, limit = 10, search } = req.query;
-    const skipCount = 10 * (pageNo - 1);
-
-    const filter = {
-      status: "unpublished",
-    };
-    if (search) {
-      filter.$or = [{ type: { $regex: search, $options: "i" } }];
-    }
-    const totalCount = await Feeds.countDocuments(filter);
-    const data = await Feeds.find(filter)
-      .populate("author", "name")
-      .populate({
-        path: "comment.user",
-        select: "name image",
+        select: "fullName image",
       })
       .skip(skipCount)
       .limit(limit)
@@ -139,7 +111,7 @@ exports.getAllFeedsForAdmin = async (req, res) => {
     const mappedData = data.map((item) => {
       return {
         ...item,
-        fullName: `${item.author.name.first} ${item.author.name.middle} ${item.author.name.last}`,
+        company: item.author.company?.name,
       };
     });
 
@@ -147,6 +119,130 @@ exports.getAllFeedsForAdmin = async (req, res) => {
       res,
       200,
       `Feeds found successfully..!`,
+      mappedData,
+      totalCount
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getAllFeedsForAdmin = async (req, res) => {
+  try {
+    const { pageNo = 1, limit = 10, search, status } = req.query;
+    const skipCount = 10 * (pageNo - 1);
+
+    const filter = {
+      status: "unpublished",
+    };
+
+    if (status) {
+      filter.status = status;
+    }
+    if (search) {
+      filter.$or = [{ type: { $regex: search, $options: "i" } }];
+    }
+
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+      const collegeFilter = findUser.college;
+      const totalCount = await Feeds.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "authorDetails",
+          },
+        },
+        { $unwind: "$authorDetails" },
+        {
+          $match: {
+            ...filter,
+            "authorDetails.college": collegeFilter,
+          },
+        },
+        { $count: "total" },
+      ]);
+      const data = await Feeds.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "authorDetails",
+          },
+        },
+        { $unwind: "$authorDetails" },
+        {
+          $match: {
+            ...filter,
+            "authorDetails.college": collegeFilter,
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            type: 1,
+            status: 1,
+            createdAt: 1,
+            media: 1,
+            link: 1,
+            content: 1,
+            author: {
+              _id: "$authorDetails._id",
+              fullName: "$authorDetails.fullName",
+              college: "$authorDetails.college",
+              image: "$authorDetails.image",
+              memberId: "$authorDetails.memberId",
+              company: "$authorDetails.company.name",
+            },
+            comment: 1,
+          },
+        },
+        { $skip: Number(skipCount) },
+        { $limit: Number(limit) },
+        { $sort: { createdAt: -1, _id: 1 } },
+      ]);
+      return responseHandler(
+        res,
+        200,
+        "Feeds found successfully..!",
+        data,
+        totalCount[0]?.total || 0
+      );
+    }
+
+    const totalCount = await Feeds.countDocuments(filter);
+    const data = await Feeds.find(filter)
+      .populate("author", "fullName college")
+      .populate({
+        path: "comment.user",
+        select: "fullName image",
+      })
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ createdAt: -1, _id: 1 })
+      .lean();
+
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        authorName: item.author.fullName,
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      "Feeds found successfully..!",
       mappedData,
       totalCount
     );
@@ -192,20 +288,20 @@ exports.likeFeed = async (req, res) => {
     );
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
-    const fromUser = await User.findById(req.userId).select("name");
+    const fromUser = await User.findById(req.userId).select("fullName");
     const fcmUser = [toUser.fcm];
 
     if (req.userId !== String(updateFeeds.author)) {
       await sendInAppNotification(
         fcmUser,
-        `${fromUser.name.first} Liked Your Post`,
-        `${fromUser.name.first} Liked Your ${updateFeeds.content}`
+        `${fromUser.fullName} Liked Your Post`,
+        `${fromUser.fullName} Liked Your ${updateFeeds.content}`
       );
 
       await Notification.create({
         users: toUser._id,
-        subject: `${fromUser.name.first} Liked Your Post`,
-        content: `${fromUser.name.first} Liked Your ${updateFeeds.content}`,
+        subject: `${fromUser.fullName} Liked Your Post`,
+        content: `${fromUser.fullName} Liked Your ${updateFeeds.content}`,
         type: "in-app",
       });
     }
@@ -242,20 +338,20 @@ exports.commentFeed = async (req, res) => {
     );
 
     const toUser = await User.findById(updateFeeds.author).select("fcm");
-    const fromUser = await User.findById(req.userId).select("name");
+    const fromUser = await User.findById(req.userId).select("fullName");
     const fcmUser = [toUser.fcm];
 
     if (req.userId !== String(updateFeeds.author)) {
       await sendInAppNotification(
         fcmUser,
-        `${fromUser.name.first} Commented Your Post`,
-        `${fromUser.name.first} Commented Your ${updateFeeds.content}`
+        `${fromUser.fullName} Commented Your Post`,
+        `${fromUser.fullName} Commented Your ${updateFeeds.content}`
       );
 
       await Notification.create({
         users: toUser._id,
-        subject: `${fromUser.name.first} Commented Your Post`,
-        content: `${fromUser.name.first} Commented Your ${updateFeeds.content}`,
+        subject: `${fromUser.fullName} Commented Your Post`,
+        content: `${fromUser.fullName} Commented Your ${updateFeeds.content}`,
         type: "in-app",
       });
     }
@@ -289,6 +385,17 @@ exports.getUserFeeds = async (req, res) => {
 
 exports.updateFeeds = async (req, res) => {
   try {
+    if (req.role === "user") {
+      const findUser = await User.findById(req.userId);
+      if (findUser.role === "member") {
+        return responseHandler(
+          res,
+          404,
+          "You don't have permission to perform this action"
+        );
+      }
+    }
+
     const { id, action } = req.params;
     if (!id) {
       return responseHandler(res, 400, "Feeds with this Id is required");
@@ -353,7 +460,7 @@ exports.getMyFeeds = async (req, res) => {
   try {
     const findFeeds = await Feeds.find({ author: req.userId }).populate(
       "comment.user",
-      "name image"
+      "fullName image"
     );
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
@@ -400,7 +507,11 @@ exports.interestedPosts = async (req, res) => {
     if (!interested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(res, 200, `Feeds not interest removed successfullyy`);
+    return responseHandler(
+      res,
+      200,
+      `Feeds not interest removed successfullyy`
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

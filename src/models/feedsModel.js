@@ -4,11 +4,12 @@ const feedsSchema = mongoose.Schema(
   {
     type: {
       type: String,
+      trim: true,
       enum: ["Information", "Job", "Funding", "Requirement"],
     },
     media: { type: String },
-    link: { type: String },
-    content: { type: String },
+    link: { type: String, trim: true },
+    content: { type: String, trim: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     like: [
       {
@@ -25,6 +26,7 @@ const feedsSchema = mongoose.Schema(
     ],
     status: {
       type: String,
+      trim: true,
       enum: ["published", "unpublished", "rejected"],
       default: "unpublished",
     },

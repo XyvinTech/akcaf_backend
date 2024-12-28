@@ -5,7 +5,7 @@ exports.createAdminSchema = Joi.object({
   email: Joi.string().required(),
   phone: Joi.string().required(),
   college: Joi.string().required(),
-  password: Joi.string().required(),
+  password: Joi.string(),
   role: Joi.string().required(),
   status: Joi.boolean(),
 });
@@ -93,11 +93,8 @@ exports.editPromotionSchema = Joi.object({
 });
 
 exports.createUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string().required(),
-    middle: Joi.string(),
-    last: Joi.string().required(),
-  }),
+  emiratesID: Joi.string().required(),
+  fullName: Joi.string().required(),
   college: Joi.string().required(),
   course: Joi.string(),
   batch: Joi.number(),
@@ -110,11 +107,8 @@ exports.createUserSchema = Joi.object({
 });
 
 exports.editUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string(),
-    middle: Joi.string(),
-    last: Joi.string(),
-  }),
+  fullName: Joi.string(),
+  emiratesID: Joi.string(),
   college: Joi.string(),
   course: Joi.string(),
   batch: Joi.number(),
@@ -127,11 +121,8 @@ exports.editUserSchema = Joi.object({
 });
 
 exports.updateUserSchema = Joi.object({
-  name: Joi.object({
-    first: Joi.string(),
-    middle: Joi.string().allow(""),
-    last: Joi.string(),
-  }),
+  fullName: Joi.string(),
+  emiratesID: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
   address: Joi.string().allow(""),
@@ -262,4 +253,43 @@ exports.editGroupSchema = Joi.object({
 exports.createReport = Joi.object({
   content: Joi.string().required(),
   reportType: Joi.string().valid("Post", "Chat", "User", "Message").required(),
+});
+
+exports.addTimeSchema = Joi.object({
+  day: Joi.string().required(),
+  start: Joi.string(),
+  end: Joi.string(),
+});
+
+exports.bulKaddTimeSchema = Joi.object({
+  addTimeSchema: Joi.array().items(exports.addTimeSchema).required(),
+});
+
+exports.editTimeSchema = Joi.object({
+  day: Joi.string(),
+  times: Joi.array(),
+});
+
+exports.createBooking = Joi.object({
+  day: Joi.string().required(),
+  time: Joi.object({
+    start: Joi.string().required(),
+    end: Joi.string().required(),
+  }),
+  hall: Joi.string().required(),
+  date: Joi.date().required(),
+  eventName: Joi.string().required(),
+  description: Joi.string().required(),
+});
+
+exports.editBooking = Joi.object({
+  status: Joi.string(),
+  eventName: Joi.string(),
+  description: Joi.string(),
+  reason: Joi.string(),
+});
+
+exports.createHall = Joi.object({
+  name: Joi.string().required(),
+  status: Joi.boolean(),
 });
