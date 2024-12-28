@@ -238,7 +238,7 @@ exports.createHall = async (req, res) => {
 
 exports.getDropdown = async (req, res) => {
   try {
-    const halls = await Hall.find();
+    const halls = await Hall.find({ status: true });
     return responseHandler(res, 200, "Dropdown found successfullyy", halls);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
