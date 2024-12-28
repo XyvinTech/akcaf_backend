@@ -108,11 +108,18 @@ exports.getAllFeeds = async (req, res) => {
       .sort({ createdAt: -1, _id: 1 })
       .lean();
 
+    const mappedData = data.map((item) => {
+      return {
+        ...item,
+        company: item.author.company.name,
+      };
+    });
+
     return responseHandler(
       res,
       200,
       `Feeds found successfully..!`,
-      data,
+      mappedData,
       totalCount
     );
   } catch (error) {
@@ -195,7 +202,7 @@ exports.getAllFeedsForAdmin = async (req, res) => {
               college: "$authorDetails.college",
               image: "$authorDetails.image",
               memberId: "$authorDetails.memberId",
-              company: "$authorDetails.company",
+              company: "$authorDetails.company.name",
             },
             comment: 1,
           },
