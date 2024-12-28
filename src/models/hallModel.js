@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const hallSchema = mongoose.Schema(
   {
     name: { type: String, trim: true },
+    address: { type: String, trim: true },
     status: {
       type: Boolean,
       default: true,
