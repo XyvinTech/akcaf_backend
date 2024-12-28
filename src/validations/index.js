@@ -288,3 +288,8 @@ exports.editBooking = Joi.object({
   description: Joi.string(),
   reason: Joi.string(),
 });
+
+exports.createHall = Joi.object({
+  name: Joi.string().required(),
+  status: Joi.boolean(),
+});

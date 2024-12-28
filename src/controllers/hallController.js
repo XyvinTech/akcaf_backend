@@ -4,6 +4,7 @@ const Booking = require("../models/bookingModel");
 const Time = require("../models/timeModel");
 const User = require("../models/userModel");
 const validations = require("../validations");
+const Hall = require("../models/hallModel");
 
 exports.createHallBooking = async (req, res) => {
   try {
@@ -209,6 +210,36 @@ exports.getHallBooking = async (req, res) => {
       return responseHandler(res, 404, "Booking not found");
     }
     return responseHandler(res, 200, "Booking found", findBooking);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.createHall = async (req, res) => {
+  try {
+    const { error } = validations.createHall.validate(req.body, {
+      abortEarly: true,
+    });
+    if (error) {
+      return responseHandler(res, 400, `Invalid input: ${error.message}`);
+    }
+    const findHall = await Hall.findOne({ name: req.body.name });
+    if (findHall) {
+      return responseHandler(res, 400, "Hall already exists");
+    }
+    const newHall = await Hall.create(req.body);
+    if (newHall) {
+      return responseHandler(res, 201, "Hall created successfully", newHall);
+    }
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getDropdown = async (req, res) => {
+  try {
+    const halls = await Hall.find();
+    return responseHandler(res, 200, "Dropdown found successfullyy", halls);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
