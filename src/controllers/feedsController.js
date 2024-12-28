@@ -189,8 +189,11 @@ exports.getAllFeedsForAdmin = async (req, res) => {
             link: 1,
             content: 1,
             author: {
+              _id: "$authorDetails._id",
               fullName: "$authorDetails.fullName",
               college: "$authorDetails.college",
+              image: "$authorDetails.image",
+              memberId: "$authorDetails.memberId",
             },
             comment: 1,
           },
