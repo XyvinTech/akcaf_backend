@@ -140,6 +140,7 @@ exports.getHallBookings = async (req, res) => {
     }
 
     const findBookings = await Booking.find(filter)
+      .populate("hall")
       .populate("user")
       .skip(skipCount)
       .limit(limit);
@@ -150,6 +151,7 @@ exports.getHallBookings = async (req, res) => {
       return {
         ...booking._doc,
         user: booking.user.fullName || "N/A",
+        hall: booking.hall.name || "N/A",
       };
     });
 
