@@ -34,8 +34,8 @@ const BookingSchema = mongoose.Schema(
       default: "pending",
     },
     hall: {
-      type: String,
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Hall",
     },
     date: {
       type: Date,
