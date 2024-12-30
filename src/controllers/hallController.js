@@ -46,8 +46,24 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, "Time not found for the selected day");
     }
 
-    const hallStartTime = new Date(findTime.start);
-    const hallEndTime = new Date(findTime.end);
+    // Align hall's start and end times to today's date
+    const todayDate = new Date(today);
+
+    const hallStartTime = new Date(todayDate);
+    hallStartTime.setHours(
+      new Date(findTime.start).getUTCHours(),
+      new Date(findTime.start).getUTCMinutes(),
+      0,
+      0
+    );
+
+    const hallEndTime = new Date(todayDate);
+    hallEndTime.setHours(
+      new Date(findTime.end).getUTCHours(),
+      new Date(findTime.end).getUTCMinutes(),
+      0,
+      0
+    );
 
     if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
       return responseHandler(
