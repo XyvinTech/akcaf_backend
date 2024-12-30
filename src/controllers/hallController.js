@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment-timezone");
 const responseHandler = require("../helpers/responseHandler");
 const Booking = require("../models/bookingModel");
 const Time = require("../models/timeModel");
@@ -148,11 +149,21 @@ exports.getHallBookings = async (req, res) => {
     const totalCount = await Booking.countDocuments(filter);
 
     const mappedData = findBookings.map((booking) => {
+      const formattedStart = booking.time?.start
+      ? moment.tz(booking.time.start, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata").format("hh:mm A")
+      : "N/A";
+    const formattedEnd = booking.time?.end
+      ? moment.tz(booking.time.end, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata").format("hh:mm A")
+      : "N/A";
       return {
         ...booking._doc,
         user: booking.user.fullName || "N/A",
         userName: booking.user.fullName || "N/A",
         hall: booking.hall.name || "N/A",
+        time: {
+          start: formattedStart,
+          end: formattedEnd,
+        },
       };
     });
 
