@@ -32,10 +32,31 @@ exports.createHallBooking = async (req, res) => {
 
     const { day, time, hall, date, eventName, description } = req.body;
 
+    //? Convert time from IST to UTC
+    const IST_OFFSET = 5.5 * 60 * 60 * 1000;
     const today = new Date().toISOString().split("T")[0];
 
-    const bookingStartTime = new Date(`${today}T${time.start}:00Z`);
-    const bookingEndTime = new Date(`${today}T${time.end}:00Z`);
+    const [startHour, startMinute] = time.start.split(":").map(Number);
+    const [endHour, endMinute] = time.end.split(":").map(Number);
+
+    const istStartTime = new Date(
+      new Date(today).getFullYear(),
+      new Date(today).getMonth(),
+      new Date(today).getDate(),
+      startHour,
+      startMinute
+    );
+
+    const istEndTime = new Date(
+      new Date(today).getFullYear(),
+      new Date(today).getMonth(),
+      new Date(today).getDate(),
+      endHour,
+      endMinute
+    );
+
+    const bookingStartTime = new Date(istStartTime.getTime() - IST_OFFSET);
+    const bookingEndTime = new Date(istEndTime.getTime() - IST_OFFSET);
 
     if (bookingStartTime >= bookingEndTime) {
       return responseHandler(res, 400, "Start time must be before end time");
@@ -46,24 +67,8 @@ exports.createHallBooking = async (req, res) => {
       return responseHandler(res, 400, "Time not found for the selected day");
     }
 
-    // Align hall's start and end times to today's date
-    const todayDate = new Date(today);
-
-    const hallStartTime = new Date(todayDate);
-    hallStartTime.setHours(
-      new Date(findTime.start).getUTCHours(),
-      new Date(findTime.start).getUTCMinutes(),
-      0,
-      0
-    );
-
-    const hallEndTime = new Date(todayDate);
-    hallEndTime.setHours(
-      new Date(findTime.end).getUTCHours(),
-      new Date(findTime.end).getUTCMinutes(),
-      0,
-      0
-    );
+    const hallStartTime = new Date(findTime.start);
+    const hallEndTime = new Date(findTime.end);
 
     if (hallStartTime > bookingStartTime || hallEndTime < bookingEndTime) {
       return responseHandler(
@@ -76,14 +81,9 @@ exports.createHallBooking = async (req, res) => {
     const existingBookings = await Booking.find({ day, hall });
 
     for (let booking of existingBookings) {
-      const existingStartTime = new Date(
-        `${today}T${booking.time.start.split("T")[1]}`
-      );
-      const existingEndTime = new Date(
-        `${today}T${booking.time.end.split("T")[1]}`
-      );
+      const existingStartTime = new Date(booking.time.start);
+      const existingEndTime = new Date(booking.time.end);
 
-      // Add 30-minute preparation buffer to existing bookings
       const bufferEndTime = new Date(existingEndTime.getTime() + 30 * 60000);
 
       const isOverlap =
