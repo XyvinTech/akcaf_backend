@@ -46,7 +46,7 @@ exports.getReports = async (req, res) => {
     const mappedData = data.map((item) => {
       let content = "";
 
-      if (item.reportType === "Feeds") {
+      if (item.reportType === "Post") {
         content = item.content?.content || "";
       } else if (item.reportType === "User") {
         content = `${item.content?.fullName || ""}`;
