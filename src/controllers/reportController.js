@@ -48,10 +48,10 @@ exports.getReports = async (req, res) => {
 
       if (item.reportType === "Feeds") {
         content = item.content?.content || "";
-      } else if (item.reportType === "Users") {
+      } else if (item.reportType === "User") {
         content = `${item.content?.fullName || ""}`;
-      } else if (item.reportType === "Messages") {
-        content = item.content?.content || "Chats";
+      } else if (item.reportType === "Message") {
+        content = item.content?.content || "Chat";
       }
 
       return {
