@@ -252,7 +252,7 @@ exports.editGroupSchema = Joi.object({
 
 exports.createReport = Joi.object({
   content: Joi.string().required(),
-  reportType: Joi.string().valid("Feed", "Chat", "User", "Message").required(),
+  reportType: Joi.string(),
 });
 
 exports.addTimeSchema = Joi.object({

@@ -46,12 +46,12 @@ exports.getReports = async (req, res) => {
     const mappedData = data.map((item) => {
       let content = "";
 
-      if (item.reportType === "Feed") {
+      if (item.reportType === "Feeds") {
         content = item.content?.content || "";
-      } else if (item.reportType === "User") {
+      } else if (item.reportType === "Users") {
         content = `${item.content?.fullName || ""}`;
-      } else if (item.reportType === "Message") {
-        content = item.content?.content || "Chat";
+      } else if (item.reportType === "Messages") {
+        content = item.content?.content || "Chats";
       }
 
       return {
