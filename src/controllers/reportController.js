@@ -58,7 +58,7 @@ exports.getReports = async (req, res) => {
         _id: item._id,
         content: content,
         reportType: item.reportType,
-        reportBy: `${item.reportBy?.name?.first || ""}`,
+        reportBy: `${item.reportBy?.fullName || ""}`,
       };
     });
 
