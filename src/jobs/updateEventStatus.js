@@ -36,21 +36,6 @@ cron.schedule("* * * * *", async () => {
           title: `Event ${event.name} is now live!`,
           body: `The event ${event.name} has started. Join now!`,
         },
-        android: {
-          notification: {
-            imageUrl: event.image,
-          },
-        },
-        apns: {
-          payload: {
-            aps: {
-              "mutable-content": 1,
-            },
-          },
-          fcm_options: {
-            image: event.image,
-          },
-        },
         topic: topic,
       };
 
@@ -92,21 +77,6 @@ cron.schedule("* * * * *", async () => {
         notification: {
           title: `Event ${event.name} is now completed!`,
           body: `The event ${event.name} has ended. Thank you for participating!`,
-        },
-        android: {
-          notification: {
-            imageUrl: event.image,
-          },
-        },
-        apns: {
-          payload: {
-            aps: {
-              "mutable-content": 1,
-            },
-          },
-          fcm_options: {
-            image: event.image,
-          },
         },
         topic: topic,
       };
@@ -150,21 +120,6 @@ cron.schedule("* * * * *", async () => {
         notification: {
           title: `Event ${event.name} is now live!`,
           body: `The event ${event.name} has started. Join now!`,
-        },
-        android: {
-          notification: {
-            imageUrl: event.image,
-          },
-        },
-        apns: {
-          payload: {
-            aps: {
-              "mutable-content": 1,
-            },
-          },
-          fcm_options: {
-            image: event.image,
-          },
         },
         topic: topic,
       };
