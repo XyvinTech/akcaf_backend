@@ -28,6 +28,18 @@ cron.schedule("0 0 * * *", async () => {
       await exp.save();
     }
     console.log(`Deactivated ${expiring.length} promotions`);
+
+    const reActive = await Promotion.find({
+      endDate: { $gte: now.toDate() },
+      status: "expired",
+    });
+
+    for (const act of reActive) {
+      act.status = "active";
+      await act.save();
+    }
+    console.log(`Activated ${active.length} promotions`);
+
   } catch (err) {
     console.error("Error updating promotions:", err);
   }

@@ -33,16 +33,12 @@ cron.schedule("* * * * *", async () => {
       const topic = `event_${event._id}`;
       const message = {
         notification: {
-          title: `Event ${event.eventName} is now live!`,
-          body: `The event ${event.eventName} has started. Join now!`,
+          title: `Event ${event.name} is now live!`,
+          body: `The event ${event.name} has started. Join now!`,
         },
-        topic: topic,
         android: {
           notification: {
             imageUrl: event.image,
-          },
-          data: {
-            deepLinkUrl: "https://akcaf.page.link/my_events",
           },
         },
         apns: {
@@ -52,12 +48,10 @@ cron.schedule("* * * * *", async () => {
             },
           },
           fcm_options: {
-            imageUrl: event.image,
+            image: event.image,
           },
         },
-        data: {
-          deepLinkUrl: "https://akcaf.page.link/my_events",
-        },
+        topic: topic,
       };
 
       try {
@@ -96,13 +90,25 @@ cron.schedule("* * * * *", async () => {
       const topic = `event_${event._id}`;
       const message = {
         notification: {
-          title: `Event ${event.eventName} is now completed!`,
-          body: `The event ${event.eventName} has ended. Thank you for participating!`,
+          title: `Event ${event.name} is now completed!`,
+          body: `The event ${event.name} has ended. Thank you for participating!`,
+        },
+        android: {
+          notification: {
+            imageUrl: event.image,
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              "mutable-content": 1,
+            },
+          },
+          fcm_options: {
+            image: event.image,
+          },
         },
         topic: topic,
-        data: {
-          deepLinkUrl: "https://akcaf.page.link/my_events",
-        },
       };
 
       try {
@@ -117,6 +123,64 @@ cron.schedule("* * * * *", async () => {
     }
 
     console.log(`Updated ${doneEvents.length} events to completed`);
+
+    //* Update events from "pending" to "live" and send notification
+    const reActiveEvents = await Event.find({
+      status: "completed",
+      endDate: { $gte: now.toDate() },
+    });
+
+    for (const event of reActiveEvents) {
+      event.status = "live";
+      await event.save();
+      const data = event.rsvp.map((rsvp) => ({
+        user: rsvp._id,
+        read: false,
+      }));
+      await Notification.create({
+        users: data,
+        subject: `Event ${event.eventName} is now live!`,
+        content: `The event ${event.eventName} has started. Join now!`,
+        link: event.type === "Online" ? event.link : event.venue,
+        type: "in-app",
+      });
+
+      const topic = `event_${event._id}`;
+      const message = {
+        notification: {
+          title: `Event ${event.name} is now live!`,
+          body: `The event ${event.name} has started. Join now!`,
+        },
+        android: {
+          notification: {
+            imageUrl: event.image,
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              "mutable-content": 1,
+            },
+          },
+          fcm_options: {
+            image: event.image,
+          },
+        },
+        topic: topic,
+      };
+
+      try {
+        await getMessaging().send(message);
+        console.log(`Notification sent for event ${event.eventName}`);
+      } catch (err) {
+        console.error(
+          `Failed to send notification for event ${event.eventName}:`,
+          err
+        );
+      }
+    }
+
+    console.log(`Updated ${progressEvents.length} events to live`);
   } catch (err) {
     console.error("Error updating events:", err);
   }
