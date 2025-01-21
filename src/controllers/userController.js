@@ -437,7 +437,10 @@ exports.loginUser = async (req, res) => {
       .auth()
       .verifyIdToken(id)
       .then(async (decodedToken) => {
-        user = await User.findOne({ phone: decodedToken.phone_number });
+        user = await User.findOne({
+          phone: decodedToken.phone_number,
+          status: { $ne: "deleted" },
+        });
         if (!user) {
           const uniqueMemberId = await generateUniqueDigit();
           const newUser = await User.create({
