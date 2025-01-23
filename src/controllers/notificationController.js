@@ -15,13 +15,27 @@ exports.createNotification = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
 
-    let { users, media } = req.body;
-
-    if (users[0].user === "*") {
-      const allUsers = await User.find({
-        status: { $in: ["active", "awaiting_payment"] },
-      }).select("_id fcm");
-      users = allUsers.map((user) => user._id);
+    let { users, media, sendTo } = req.body;
+    if (sendTo === "user") {
+      if (users[0].user === "*") {
+        const allUsers = await User.find({
+          status: { $in: ["active", "awaiting_payment"] },
+        }).select("_id fcm");
+        users = allUsers.map((user) => user._id);
+      }
+    } else if (sendTo === "college") {
+      if (users[0].user === "*") {
+        const allUsers = await User.find({
+          status: { $in: ["active", "awaiting_payment"] },
+        }).select("_id fcm");
+        users = allUsers.map((user) => user._id);
+      } else {
+        const allUsers = await User.find({
+          status: { $in: ["active", "awaiting_payment"] },
+          college: { $in: users.map((user) => user.user) },
+        }).select("_id fcm");
+        users = allUsers.map((user) => user._id);
+      }
     }
 
     if (req.body.type === "email") {

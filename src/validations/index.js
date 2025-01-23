@@ -230,6 +230,7 @@ exports.createCourseSchema = Joi.object({
 });
 
 exports.createNotificationSchema = Joi.object({
+  sendTo: Joi.string().required(),
   users: Joi.array().required(),
   subject: Joi.string().required(),
   content: Joi.string().required(),
