@@ -150,11 +150,15 @@ exports.getHallBookings = async (req, res) => {
 
     const mappedData = findBookings.map((booking) => {
       const formattedStart = booking.time?.start
-      ? moment.tz(booking.time.start, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata").format("hh:mm A")
-      : "N/A";
-    const formattedEnd = booking.time?.end
-      ? moment.tz(booking.time.end, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata").format("hh:mm A")
-      : "N/A";
+        ? moment
+            .tz(booking.time.start, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata")
+            .format("hh:mm A")
+        : "N/A";
+      const formattedEnd = booking.time?.end
+        ? moment
+            .tz(booking.time.end, "YYYY-MM-DDTHH:mm:ss", "Asia/Kolkata")
+            .format("hh:mm A")
+        : "N/A";
       return {
         ...booking._doc,
         user: booking.user.fullName || "N/A",
@@ -254,6 +258,34 @@ exports.getDropdown = async (req, res) => {
   try {
     const halls = await Hall.find({ status: true });
     return responseHandler(res, 200, "Dropdown found successfullyy", halls);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.getCalendar = async (req, res) => {
+  try {
+    let { month } = req.params;
+
+    if (!month) {
+      const currentDate = new Date();
+      month = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    const findBookings = await Booking.find({
+      date: {
+        $gte: new Date(`${month}-01`),
+        $lt: new Date(`${month}-31`),
+      },
+    });
+
+    if (findBookings.length > 0) {
+      return responseHandler(res, 200, "Bookings found", findBookings);
+    } else {
+      return responseHandler(res, 404, "No bookings found for this month");
+    }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

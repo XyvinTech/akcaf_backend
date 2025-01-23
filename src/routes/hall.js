@@ -11,4 +11,5 @@ hallRoute.get("/list", hallController.getHallBookings);
 hallRoute.put("/edit/:id", hallController.editHallBooking);
 hallRoute.post("/new", hallController.createHall);
 hallRoute.get("/dropdown", hallController.getDropdown);
+hallRoute.get("/calendar/:month", hallController.getCalendar);
 module.exports = hallRoute;
