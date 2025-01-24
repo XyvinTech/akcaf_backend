@@ -62,6 +62,7 @@ exports.createNewsSchema = Joi.object({
   content: Joi.string().required(),
   media: Joi.string().required(),
   status: Joi.string(),
+  pdf: Joi.string(),
 });
 
 exports.editNewsSchema = Joi.object({
@@ -70,6 +71,7 @@ exports.editNewsSchema = Joi.object({
   content: Joi.string(),
   media: Joi.string(),
   status: Joi.string(),
+  pdf: Joi.string(),
 });
 
 exports.createPromotionSchema = Joi.object({

@@ -24,6 +24,7 @@ const NewsSchema = mongoose.Schema(
       enum: ["published", "unpublished"],
       default: "unpublished",
     },
+    pdf: { type: String },
   },
   { timestamps: true }
 );
