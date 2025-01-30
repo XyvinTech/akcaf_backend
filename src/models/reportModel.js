@@ -12,6 +12,11 @@ const reportSchema = mongoose.Schema(
       enum: ["Feeds", "Chat", "User", "Message"],
     },
     description: { type: String, trim: true },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
