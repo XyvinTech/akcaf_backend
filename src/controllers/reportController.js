@@ -126,7 +126,21 @@ exports.getReport = async (req, res) => {
     if (!report) {
       return responseHandler(res, 404, `Report not found`);
     }
-    return responseHandler(res, 200, `Report found successfully`, report);
+
+    let author = "";
+    if (report.reportType === "Feeds") {
+      const user = await User.findById(report.content);
+      if (user) {
+        author = user.fullName;
+      }
+    }
+
+    const data = {
+      ...report._doc,
+      author: author,
+    };
+
+    return responseHandler(res, 200, `Report found successfully`, data);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
