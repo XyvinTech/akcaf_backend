@@ -10,7 +10,8 @@ feedsRoute.post("/", feedsController.createFeeds);
 feedsRoute
   .route("/single/:id")
   .get(feedsController.getFeeds)
-  .delete(feedsController.deletefeeds);
+  .delete(feedsController.deletefeeds)
+  .patch(feedsController.reportFeed);
 
 feedsRoute.get("/list", feedsController.getAllFeeds);
 feedsRoute.get("/admin/list", feedsController.getAllFeedsForAdmin);

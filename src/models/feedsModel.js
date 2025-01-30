@@ -27,7 +27,7 @@ const feedsSchema = mongoose.Schema(
     status: {
       type: String,
       trim: true,
-      enum: ["published", "unpublished", "rejected"],
+      enum: ["published", "unpublished", "rejected", "reported"],
       default: "unpublished",
     },
     reason: { type: String },
