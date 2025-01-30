@@ -101,7 +101,7 @@ exports.updateReport = async (req, res) => {
       } else if (report.reportType === "User") {
         const user = await User.findById(report.content);
         if (user) {
-          user.status = "reported";
+          user.status = "blocked";
           await user.save();
         }
       }
