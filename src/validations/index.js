@@ -256,6 +256,7 @@ exports.editGroupSchema = Joi.object({
 exports.createReport = Joi.object({
   content: Joi.string().required(),
   reportType: Joi.string(),
+  description: Joi.string(),
 });
 
 exports.addTimeSchema = Joi.object({
