@@ -129,7 +129,7 @@ exports.getReport = async (req, res) => {
 
     let author = "";
     if (report.reportType === "Feeds") {
-      const user = await User.findById(report.content);
+      const user = await User.findById(report.content._id);
       if (user) {
         author = user.fullName;
       }
