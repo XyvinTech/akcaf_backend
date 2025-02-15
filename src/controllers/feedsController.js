@@ -491,7 +491,7 @@ exports.getMyFeeds = async (req, res) => {
 
     const mappedData = findFeeds.map((item) => {
       return {
-        ...item,
+        ...item._doc,
         company: item.author.company?.name,
       };
     });
