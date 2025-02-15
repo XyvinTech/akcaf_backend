@@ -156,9 +156,28 @@ exports.getChats = async (req, res) => {
       .populate("participants", "fullName image")
       .populate("lastMessage")
       .sort({ lastMessage: -1, _id: 1 })
+      .lean()
       .exec();
 
-    return responseHandler(res, 200, "Chat retrieved successfullyy!", chats);
+    const mappedData = chats.map((item) => {
+      return {
+        ...item,
+        participants: item.participants.map((participant) => {
+          return {
+            _id: participant._id,
+            name: participant.fullName,
+            image: participant.image,
+          };
+        }),
+      };
+    });
+
+    return responseHandler(
+      res,
+      200,
+      "Chat retrieved successfullyy!",
+      mappedData
+    );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
