@@ -144,7 +144,8 @@ exports.getHallBookings = async (req, res) => {
       .populate("hall")
       .populate("user")
       .skip(skipCount)
-      .limit(limit);
+      .limit(limit)
+      .sort({ _id: -1 });
 
     const totalCount = await Booking.countDocuments(filter);
 
