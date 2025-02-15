@@ -481,14 +481,22 @@ exports.updateFeeds = async (req, res) => {
 
 exports.getMyFeeds = async (req, res) => {
   try {
-    const findFeeds = await Feeds.find({ author: req.userId }).populate(
-      "comment.user",
-      "fullName image"
-    );
+    const findFeeds = await Feeds.find({ author: req.userId })
+      .populate("comment.user", "fullName image")
+      .populate("author", "fullName college image memberId company");
+
     if (!findFeeds) {
       return responseHandler(res, 404, "Feeds not found");
     }
-    return responseHandler(res, 200, "Feeds found successfully..!", findFeeds);
+
+    const mappedData = findFeeds.map((item) => {
+      return {
+        ...item,
+        company: item.author.company?.name,
+      };
+    });
+
+    return responseHandler(res, 200, "Feeds found successfully..!", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
