@@ -424,7 +424,7 @@ exports.pstCheck = async (req, res) => {
     const users = await User.find({
       college: id,
       role: { $ne: "member" },
-    }).select("role");
+    }).select("-_id role");
 
     return responseHandler(res, 200, `Users found successfully..!`, users);
   } catch (error) {
