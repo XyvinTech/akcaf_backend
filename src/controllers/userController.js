@@ -834,6 +834,7 @@ exports.getSubscription = async (req, res) => {
       lastRenewed: payment.updatedAt,
       expiryDate: payment.expiryDate,
       status: payment.status,
+      currency: payment.currency,
     };
 
     return responseHandler(res, 200, "Payment found successfullyy", mappedData);
