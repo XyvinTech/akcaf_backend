@@ -104,10 +104,16 @@ exports.createNotification = async (req, res) => {
 
 exports.getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find().populate(
-      "users.user",
-      "fullName"
-    );
+    const { pageNo = 1, limit = 10 } = req.query;
+
+    const skipCount = limit * (pageNo - 1);
+
+    const notifications = await Notification.find()
+      .populate("users.user", "fullName")
+      .skip(skipCount)
+      .limit(limit)
+      .sort({ _id: 1 })
+      .lean();
     return responseHandler(
       res,
       200,
