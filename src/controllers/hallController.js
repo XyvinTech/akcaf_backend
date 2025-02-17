@@ -38,6 +38,15 @@ exports.createHallBooking = async (req, res) => {
     const bookingStartTime = new Date(`${today}T${time.start}:00Z`);
     const bookingEndTime = new Date(`${today}T${time.end}:00Z`);
 
+    const bookingStartTimeOnly = bookingStartTime
+      .toISOString()
+      .split("T")[1]
+      .split("Z")[0];
+    const bookingEndTimeOnly = bookingEndTime
+      .toISOString()
+      .split("T")[1]
+      .split("Z")[0];
+
     if (bookingStartTime >= bookingEndTime) {
       return responseHandler(res, 400, "Start time must be before end time");
     }
@@ -50,7 +59,13 @@ exports.createHallBooking = async (req, res) => {
     const hallStartTime = new Date(findTime.start);
     const hallEndTime = new Date(findTime.end);
 
-    if (hallStartTime > bookingStartTime || hallEndTime > bookingEndTime) {
+    const hallStartTimeIST = convertToIST(hallStartTime);
+    const hallEndTimeIST = convertToIST(hallEndTime);
+
+    if (
+      bookingStartTimeOnly < hallStartTimeIST ||
+      bookingEndTimeOnly > hallEndTimeIST
+    ) {
       return responseHandler(
         res,
         400,
@@ -310,3 +325,10 @@ exports.getCalendar = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+function convertToIST(date) {
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(date.getTime() + istOffset);
+
+  return istDate.toISOString().split("T")[1].split("Z")[0];
+}

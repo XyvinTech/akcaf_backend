@@ -5,96 +5,86 @@ const { getMessaging } = require("firebase-admin/messaging");
 const Notification = require("../models/notificationModel");
 require("dotenv").config();
 
-cron.schedule("* * * * *", async () => {
-  const now = moment().tz("Asia/Kolkata");
+cron.schedule("*/5 * * * *", async () => {
   const nowUTC = moment.utc().toDate();
 
   try {
-    //* Update events from "pending" to "live" and send notification
+    //* Update "pending" events to "live" and send notifications
     const progressEvents = await Event.find({
       status: "pending",
-      startTime: { $lte: now.toDate() },
+      startTime: { $lte: nowUTC },
     });
 
-    for (const event of progressEvents) {
-      event.status = "live";
-      await event.save();
-      const data = event.rsvp.map((rsvp) => ({
-        user: rsvp._id,
-        read: false,
-      }));
-      await Notification.create({
-        users: data,
-        subject: `Event ${event.eventName} is now live!`,
-        content: `The event ${event.eventName} has started. Join now!`,
-        link: event.type === "Online" ? event.link : event.venue,
-        type: "in-app",
-      });
+    if (progressEvents.length > 0) {
+      await Promise.all(
+        progressEvents.map(async (event) => {
+          event.status = "live";
+          await event.save();
 
-      const topic = `event_${event._id}`;
-      const message = {
+          const data = event.rsvp.map((rsvp) => ({
+            user: rsvp._id,
+            read: false,
+          }));
+
+          await Notification.create({
+            users: data,
+            subject: `Event ${event.eventName} is now live!`,
+            content: `The event ${event.eventName} has started. Join now!`,
+            link: event.type === "Online" ? event.link : event.venue,
+            type: "in-app",
+          });
+        })
+      );
+
+      const liveNotifications = progressEvents.map((event) => ({
         notification: {
-          title: `Event ${event.name} is now live!`,
-          body: `The event ${event.name} has started. Join now!`,
+          title: `Event ${event.eventName} is now live!`,
+          body: `The event ${event.eventName} has started. Join now!`,
         },
-        topic: topic,
-      };
+        topic: `event_${event._id}`,
+      }));
 
-      try {
-        await getMessaging().send(message);
-        console.log(`Notification sent for event ${event.eventName}`);
-      } catch (err) {
-        console.error(
-          `Failed to send notification for event ${event.eventName}:`,
-          err
-        );
-      }
+      await getMessaging().sendEach(liveNotifications);
+      console.log(`Updated ${progressEvents.length} events to live`);
     }
 
-    console.log(`Updated ${progressEvents.length} events to live`);
-
-    //* Update events from "live" to "completed" and send notification
+    //* Update "live" events to "completed" and send notifications
     const doneEvents = await Event.find({
       status: "live",
       endDate: { $lte: nowUTC },
     });
-    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
 
-    for (const event of doneEvents) {
-      event.status = "completed";
-      await event.save();
-      const data = event.rsvp.map((rsvp) => ({
-        user: rsvp._id,
-        read: false,
-      }));
-      await Notification.create({
-        users: data,
-        subject: `Event ${event.eventName} is now completed!`,
-        content: `The event ${event.eventName} has ended. Thank you for participating!`,
-        type: "in-app",
-      });
+    if (doneEvents.length > 0) {
+      await Promise.all(
+        doneEvents.map(async (event) => {
+          event.status = "completed";
+          await event.save();
 
-      const topic = `event_${event._id}`;
-      const message = {
+          const data = event.rsvp.map((rsvp) => ({
+            user: rsvp._id,
+            read: false,
+          }));
+
+          await Notification.create({
+            users: data,
+            subject: `Event ${event.eventName} is now completed!`,
+            content: `The event ${event.eventName} has ended. Thank you for participating!`,
+            type: "in-app",
+          });
+        })
+      );
+
+      const completedNotifications = doneEvents.map((event) => ({
         notification: {
-          title: `Event ${event.name} is now completed!`,
-          body: `The event ${event.name} has ended. Thank you for participating!`,
+          title: `Event ${event.eventName} is now completed!`,
+          body: `The event ${event.eventName} has ended. Thank you for participating!`,
         },
-        topic: topic,
-      };
+        topic: `event_${event._id}`,
+      }));
 
-      try {
-        await getMessaging().send(message);
-        console.log(`Notification sent for completed event ${event.eventName}`);
-      } catch (err) {
-        console.error(
-          `Failed to send notification for event ${event.eventName}:`,
-          err
-        );
-      }
+      await getMessaging().sendEach(completedNotifications);
+      console.log(`Updated ${doneEvents.length} events to completed`);
     }
-
-    console.log(`Updated ${doneEvents.length} events to completed`);
   } catch (err) {
     console.error("Error updating events:", err);
   }
