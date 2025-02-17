@@ -25,5 +25,6 @@ collegeRoute.get(
 );
 
 collegeRoute.get("/bulk", collegeController.createCollegeBulk);
+collegeRoute.get("/pst-check/:id", collegeController.pstCheck);
 
 module.exports = collegeRoute;

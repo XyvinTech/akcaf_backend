@@ -407,7 +407,26 @@ exports.createCollegeBulk = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
     const colleges = await College.create(req.body);
-    return responseHandler(res, 201, "Colleges created successfullyy", colleges);
+    return responseHandler(
+      res,
+      201,
+      "Colleges created successfullyy",
+      colleges
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
+
+exports.pstCheck = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const users = await User.find({
+      college: id,
+      role: { $ne: "member" },
+    }).select("role");
+
+    return responseHandler(res, 200, `Users found successfully..!`, users);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
