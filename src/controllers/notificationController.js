@@ -104,7 +104,10 @@ exports.createNotification = async (req, res) => {
 
 exports.getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find();
+    const notifications = await Notification.find().populate(
+      "users.user",
+      "fullName"
+    );
     return responseHandler(
       res,
       200,
