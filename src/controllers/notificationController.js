@@ -176,3 +176,21 @@ exports.getUserNotifications = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getSingleNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const notification = await Notification.findById(id).populate(
+      "users.user",
+      "fullName"
+    );
+    return responseHandler(
+      res,
+      200,
+      `Notification fetched successfullyy..!`,
+      notification
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};

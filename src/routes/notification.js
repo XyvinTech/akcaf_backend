@@ -12,4 +12,6 @@ notificationRoute
 
 notificationRoute.get("/user", notificationController.getUserNotifications);
 
+notificationRoute.get("/:id", notificationController.getSingleNotification);
+
 module.exports = notificationRoute;
