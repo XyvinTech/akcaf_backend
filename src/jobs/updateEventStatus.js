@@ -7,6 +7,7 @@ require("dotenv").config();
 
 cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
+  const nowUTC = moment.utc().toDate();
 
   try {
     //* Update events from "pending" to "live" and send notification
@@ -55,7 +56,7 @@ cron.schedule("* * * * *", async () => {
     //* Update events from "live" to "completed" and send notification
     const doneEvents = await Event.find({
       status: "live",
-      endDate: { $lte: now.toDate() },
+      endDate: { $lte: nowUTC },
     });
 
     for (const event of doneEvents) {
