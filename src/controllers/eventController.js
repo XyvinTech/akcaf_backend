@@ -181,11 +181,13 @@ exports.getAllEventsForAdmin = async (req, res) => {
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
+    const totalCount = await Event.countDocuments(filter);
     return responseHandler(
       res,
       200,
       "Events retrieved successfullyy",
-      mappedEvents
+      mappedEvents,
+      totalCount
     );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
