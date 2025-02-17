@@ -115,13 +115,20 @@ exports.getNotifications = async (req, res) => {
       .sort({ _id: 1 })
       .lean();
 
+    const mappedData = notifications.map((item) => {
+      return {
+        ...item,
+        userCount: item.users.length,
+      };
+    });
+
     const totalCount = await Notification.countDocuments();
 
     return responseHandler(
       res,
       200,
       `Notifications fetched successfullyy..!`,
-      notifications,
+      mappedData,
       totalCount
     );
   } catch (error) {
