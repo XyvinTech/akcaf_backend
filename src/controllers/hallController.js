@@ -121,7 +121,14 @@ exports.createHallBooking = async (req, res) => {
 exports.getHallBookings = async (req, res) => {
   try {
     const filter = {};
-    const { pageNo = 1, limit = 10, status } = req.query;
+    const {
+      pageNo = 1,
+      limit = 10,
+      status,
+      hall,
+      userName,
+      eventName,
+    } = req.query;
     const skipCount = 10 * (pageNo - 1);
 
     if (req.role === "user") {
@@ -138,6 +145,18 @@ exports.getHallBookings = async (req, res) => {
 
     if (status) {
       filter.status = status;
+    }
+
+    if (eventName) {
+      filter.$or = [{ eventName: { $regex: eventName, $options: "i" } }];
+    }
+
+    if (userName) {
+      filter.$or = [{ "user.fullName": { $regex: userName, $options: "i" } }];
+    }
+
+    if (hall) {
+      filter.hall = new mongoose.Types.ObjectId(hall);
     }
 
     const findBookings = await Booking.find(filter)
