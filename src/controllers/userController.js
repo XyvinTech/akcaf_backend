@@ -275,6 +275,9 @@ exports.getAllUsers = async (req, res) => {
       search,
       status,
       installed,
+      fullName,
+      memberId,
+      companyName,
       college,
     } = req.query;
     const skipCount = 10 * (pageNo - 1);
@@ -302,8 +305,22 @@ exports.getAllUsers = async (req, res) => {
       };
     }
 
+    if (fullName) {
+      filter.$or = [{ fullName: { $regex: fullName, $options: "i" } }];
+    }
+
     if (college) {
       filter["college.collegeName"] = college;
+    }
+
+    if (memberId) {
+      filter.$or = [{ memberId: { $regex: memberId, $options: "i" } }];
+    }
+
+    if (companyName) {
+      filter.$or = [
+        { "company.companyName": { $regex: companyName, $options: "i" } },
+      ];
     }
 
     if (!fullUser) {
