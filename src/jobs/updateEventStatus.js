@@ -58,6 +58,7 @@ cron.schedule("* * * * *", async () => {
       status: "live",
       endDate: { $lte: nowUTC },
     });
+    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
 
     for (const event of doneEvents) {
       event.status = "completed";
