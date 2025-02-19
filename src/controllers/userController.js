@@ -78,14 +78,10 @@ exports.createUser = async (req, res) => {
     }
 
     const checkExist = await User.findOne({
-      $or: [
-        { email: req.body.email },
-        { phone: req.body.phone },
-        { status: { $ne: "deleted" } },
-      ],
+      $or: [{ email: req.body.email }, { phone: req.body.phone }],
     });
 
-    if (checkExist) {
+    if (checkExist.status !== "deleted") {
       return responseHandler(
         res,
         409,
