@@ -288,7 +288,26 @@ exports.deletePayment = async (req, res) => {
     if (!payment) {
       return responseHandler(res, 404, "Payment not found");
     }
-    await User.findByIdAndUpdate(payment.user, { status: "awaiting_payment" });
+
+    const payments = await Payment.find({
+      user: payment.user,
+    });
+
+    if (payments.length === 0) {
+      await User.findByIdAndUpdate(payment.user, {
+        status: "awaiting_payment",
+      });
+    } else {
+      payments.map(async (item) => {
+        if (item.status === "completed") {
+          await User.findByIdAndUpdate(payment.user, { status: "active" });
+        } else {
+          await User.findByIdAndUpdate(payment.user, {
+            status: "awaiting_payment",
+          });
+        }
+      });
+    }
 
     return responseHandler(
       res,
