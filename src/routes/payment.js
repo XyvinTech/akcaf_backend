@@ -15,4 +15,6 @@ paymentRoute.get("/list", paymentController.getAllPayment);
 
 paymentRoute.post("/create", paymentController.createPayment);
 
+paymentRoute.route("/:id").delete(paymentController.deletePayment);
+
 module.exports = paymentRoute;

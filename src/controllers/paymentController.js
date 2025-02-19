@@ -277,3 +277,26 @@ exports.createPayment = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
 };
+
+exports.deletePayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return responseHandler(res, 400, "Payment ID is required");
+    }
+    const payment = await Payment.findByIdAndDelete(id);
+    if (!payment) {
+      return responseHandler(res, 404, "Payment not found");
+    }
+    await User.findByIdAndUpdate(payment.user, { status: "awaiting_payment" });
+
+    return responseHandler(
+      res,
+      200,
+      `Payment deleted successfully..!`,
+      payment
+    );
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
+  }
+};
