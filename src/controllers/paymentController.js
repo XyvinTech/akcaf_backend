@@ -52,6 +52,9 @@ exports.makePayment = async (req, res) => {
         status: "created",
         receipt: `order_id${dateRandom}`,
         attempts: 1,
+        expiryDate: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        ),
       };
       await Payment.create(paymentData);
       return responseHandler(
@@ -214,12 +217,12 @@ exports.getAllPayment = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1, _id: 1 })
       .lean();
-      const mappedData = payment.map((item) => {
-        return {
-          ...item,
-          fullName: item.user.fullName,
-        };
-      })
+    const mappedData = payment.map((item) => {
+      return {
+        ...item,
+        fullName: item.user.fullName,
+      };
+    });
     const totalCount = await Payment.countDocuments(filter);
 
     return responseHandler(
@@ -262,11 +265,7 @@ exports.createPayment = async (req, res) => {
 
     const payment = await Payment.create(paymentData);
 
-    await User.findByIdAndUpdate(
-      user,
-      { status: "active" },
-      { new: true }
-    );
+    await User.findByIdAndUpdate(user, { status: "active" }, { new: true });
 
     return responseHandler(
       res,
