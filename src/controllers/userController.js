@@ -22,12 +22,12 @@ exports.sendOtp = async (req, res) => {
     if (checkExist) {
       checkExist.otp = otp;
       checkExist.save();
-      return responseHandler(res, 200, "OTP sent successfullyy", otp);
+      return responseHandler(res, 200, "OTP sent successfully", otp);
     }
     // TODO: Send OTP with firebase function call after success otp send -> create user
     req.body.otp = otp;
     const user = await User.create(req.body);
-    if (user) return responseHandler(res, 200, "OTP sent successfullyy", otp);
+    if (user) return responseHandler(res, 200, "OTP sent successfully", otp);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -53,7 +53,7 @@ exports.verifyUser = async (req, res) => {
     await user.save();
     const token = generateToken(user._id);
 
-    return responseHandler(res, 200, "User verified successfullyy", token);
+    return responseHandler(res, 200, "User verified successfully", token);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -139,7 +139,7 @@ exports.editUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User updated successfullyy`, editUser);
+    return responseHandler(res, 200, `User updated successfully`, editUser);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -219,7 +219,7 @@ exports.deleteUser = async (req, res) => {
       }
     );
     if (deleteUser) {
-      return responseHandler(res, 200, `User deleted successfullyy..!`);
+      return responseHandler(res, 200, `User deleted successfully..!`);
     }
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
@@ -259,7 +259,7 @@ exports.updateUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User updated successfullyy`, editUser);
+    return responseHandler(res, 200, `User updated successfully`, editUser);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -441,7 +441,7 @@ exports.fetchUser = async (req, res) => {
 
       findUser.profileCompletion = `${profileCompletionPercentage}%`;
 
-      return responseHandler(res, 200, "User found successfullyy..!", findUser);
+      return responseHandler(res, 200, "User found successfully..!", findUser);
     } else {
       return responseHandler(res, 404, "User not found");
     }
@@ -478,7 +478,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfullyy",
+            "User logged in successfully",
             token
           );
         } else if (user.uid && user.uid !== null) {
@@ -488,7 +488,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfullyy",
+            "User logged in successfully",
             token
           );
         } else {
@@ -499,7 +499,7 @@ exports.loginUser = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "User logged in successfullyy",
+            "User logged in successfully",
             token
           );
         }
@@ -516,7 +516,7 @@ exports.getVersion = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "App version fetched successfullyy",
+      "App version fetched successfully",
       settings
     );
   } catch (error) {
@@ -593,7 +593,7 @@ exports.approveUser = async (req, res) => {
       message = {
         notification: {
           title: `AKCAF Membership has been approved`,
-          body: `Your membership for AKCAF has been approved successfullyy. Please complete the payment process to continue.`,
+          body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
         },
         token: findUser.fcm,
       };
@@ -610,7 +610,7 @@ exports.approveUser = async (req, res) => {
     getMessaging()
       .send(message)
       .then((response) => {
-        console.log("successfullyy sent message:", response);
+        console.log("successfully sent message:", response);
       })
       .catch((error) => {
         console.log("Error sending message:", error);
@@ -619,7 +619,7 @@ exports.approveUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User ${status} successfullyy`);
+    return responseHandler(res, 200, `User ${status} successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -707,7 +707,7 @@ exports.blockUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User block failed...!`);
     }
-    return responseHandler(res, 200, `User blocked successfullyy`);
+    return responseHandler(res, 200, `User blocked successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
@@ -731,7 +731,7 @@ exports.unblockUser = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User unblock failed...!`);
     }
-    return responseHandler(res, 200, `User unblocked successfullyy`);
+    return responseHandler(res, 200, `User unblocked successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -762,7 +762,7 @@ exports.adminUserBlock = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User blocked successfullyy`);
+    return responseHandler(res, 200, `User blocked successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -788,7 +788,7 @@ exports.adminUserUnblock = async (req, res) => {
     if (!editUser) {
       return responseHandler(res, 400, `User update failed...!`);
     }
-    return responseHandler(res, 200, `User unblocked successfullyy`);
+    return responseHandler(res, 200, `User unblocked successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -813,7 +813,7 @@ exports.requestNFC = async (req, res) => {
 
     await sendSelfMail(data);
 
-    return responseHandler(res, 200, "NFC Request sent successfullyy");
+    return responseHandler(res, 200, "NFC Request sent successfully");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -844,7 +844,7 @@ exports.getSubscription = async (req, res) => {
       currency: payment.currency,
     };
 
-    return responseHandler(res, 200, "Payment found successfullyy", mappedData);
+    return responseHandler(res, 200, "Payment found successfully", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

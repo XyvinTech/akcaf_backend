@@ -19,7 +19,7 @@ exports.createReport = async (req, res) => {
       return responseHandler(
         res,
         201,
-        "Report created successfullyy",
+        "Report created successfully",
         newReport
       );
     }

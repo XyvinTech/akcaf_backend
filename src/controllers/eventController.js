@@ -71,7 +71,7 @@ exports.editEvent = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Event updated successfullyy!`,
+      `Event updated successfully!`,
       updatedEvent
     );
   } catch (error) {
@@ -94,7 +94,7 @@ exports.deleteEvent = async (req, res) => {
     if (!deletedEvent) {
       return responseHandler(res, 404, "Event not found");
     }
-    return responseHandler(res, 200, `Event deleted successfullyy`);
+    return responseHandler(res, 200, `Event deleted successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -123,7 +123,7 @@ exports.getSingleEvent = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Event retrieved successfullyy",
+      "Event retrieved successfully",
       mappedData
     );
   } catch (error) {
@@ -142,7 +142,7 @@ exports.getAllEvents = async (req, res) => {
     if (!events || events.length === 0) {
       return responseHandler(res, 404, "No events found");
     }
-    return responseHandler(res, 200, "Events retrieved successfullyy", events);
+    return responseHandler(res, 200, "Events retrieved successfully", events);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -185,7 +185,7 @@ exports.getAllEventsForAdmin = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Events retrieved successfullyy",
+      "Events retrieved successfully",
       mappedEvents,
       totalCount
     );
@@ -213,7 +213,7 @@ exports.addRSVP = async (req, res) => {
     const topic = `event_${id}`;
     const fcmToken = user.fcm;
     await getMessaging().subscribeToTopic(fcmToken, topic);
-    return responseHandler(res, 200, "RSVP added successfullyy");
+    return responseHandler(res, 200, "RSVP added successfully");
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -230,7 +230,7 @@ exports.getRegEvents = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Events retrieved successfullyy",
+      "Events retrieved successfully",
       regEvents
     );
   } catch (error) {

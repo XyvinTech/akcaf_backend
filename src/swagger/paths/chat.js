@@ -38,7 +38,7 @@
  *                   - "60d21b4667d0d8992e610c86"
  *     responses:
  *       201:
- *         description: Group chat created successfullyy
+ *         description: Group chat created successfully
  *       400:
  *         description: Invalid input data
  *       500:
@@ -55,7 +55,7 @@
  *       - Chat
  *     responses:
  *       200:
- *         description: Chat threads retrieved successfullyy
+ *         description: Chat threads retrieved successfully
  *       500:
  *         description: Internal Server Error
  */
@@ -78,7 +78,7 @@
  *         description: The ID of the group chat
  *     responses:
  *       200:
- *         description: Group messages retrieved successfullyy
+ *         description: Group messages retrieved successfully
  *       404:
  *         description: No messages found in this group
  *       500:
@@ -103,7 +103,7 @@
  *         description: The ID of the other user
  *     responses:
  *       200:
- *         description: Messages retrieved successfullyy
+ *         description: Messages retrieved successfully
  *       404:
  *         description: No messages found between the users
  *       500:
@@ -135,7 +135,7 @@
  *         description: Number of results per page.
  *     responses:
  *       200:
- *         description: successfullyy retrieved chat group list
+ *         description: successfully retrieved chat group list
  *       400:
  *         description: Bad request, invalid parameters
  *       500:
@@ -159,7 +159,7 @@
  *         description: ID of the chat group
  *     responses:
  *       200:
- *         description: successfullyy retrieved group details
+ *         description: successfully retrieved group details
  *       400:
  *         description: Bad request, group ID is missing
  *       404:
@@ -209,7 +209,7 @@
  *                 - "60d0fe4f5311236168a109cb"
  *     responses:
  *       200:
- *         description: successfullyy updated the group
+ *         description: successfully updated the group
  *       400:
  *         description: Bad request, invalid input or missing group ID
  *       404:
@@ -235,7 +235,7 @@
  *         description: ID of the chat group to be Get
  *     responses:
  *       200:
- *         description: successfullyy retrieved the group
+ *         description: successfully retrieved the group
  *       400:
  *         description: Bad request, invalid input or missing group ID
  *       404:
@@ -261,7 +261,7 @@
  *         description: ID of the chat group to be deleted
  *     responses:
  *       200:
- *         description: successfullyy deleted the group
+ *         description: successfully deleted the group
  *       400:
  *         description: Bad request, missing group ID
  *       404:
@@ -302,7 +302,7 @@
  *                 example: false
  *     responses:
  *       201:
- *         description: Message sent successfullyy
+ *         description: Message sent successfully
  *       400:
  *         description: Bad Request - Invalid input
  *       500:

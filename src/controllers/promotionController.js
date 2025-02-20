@@ -36,7 +36,7 @@ exports.createPromotion = async (req, res) => {
     return responseHandler(
       res,
       201,
-      `New Promotion created successfullyy..!`,
+      `New Promotion created successfully..!`,
       newPromotion
     );
   } catch (error) {

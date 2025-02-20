@@ -99,7 +99,7 @@
  *               - speakers
  *     responses:
  *       201:
- *         description: New event created successfullyy
+ *         description: New event created successfully
  *       400:
  *         description: Invalid input
  *       409:
@@ -125,7 +125,7 @@
  *         description: The event ID
  *     responses:
  *       200:
- *         description: Event retrieved successfullyy
+ *         description: Event retrieved successfully
  *       404:
  *         description: Event not found
  *       500:
@@ -239,7 +239,7 @@
  *                     image: "https://example.com/speaker2-image.jpg"
  *     responses:
  *       200:
- *         description: Event updated successfullyy
+ *         description: Event updated successfully
  *       400:
  *         description: Invalid input
  *       404:
@@ -265,7 +265,7 @@
  *         description: The event ID
  *     responses:
  *       200:
- *         description: Event deleted successfullyy
+ *         description: Event deleted successfully
  *       404:
  *         description: Event not found
  *       500:
@@ -282,7 +282,7 @@
  *       - Event
  *     responses:
  *       200:
- *         description: Events retrieved successfullyy
+ *         description: Events retrieved successfully
  *       404:
  *         description: No events found
  *       500:
@@ -299,7 +299,7 @@
  *       - Event
  *     responses:
  *       200:
- *         description: Events retrieved successfullyy
+ *         description: Events retrieved successfully
  *       404:
  *         description: No events found
  *       500:
@@ -323,7 +323,7 @@
  *         description: The ID of the event to which the RSVP is being added
  *     responses:
  *       200:
- *         description: RSVP added successfullyy
+ *         description: RSVP added successfully
  *       400:
  *         description: Bad Request - Event ID is required
  *       404:
@@ -342,7 +342,7 @@
  *       - Event
  *     responses:
  *       200:
- *         description: Events retrieved successfullyy
+ *         description: Events retrieved successfully
  *       404:
  *         description: No events found
  *       500:

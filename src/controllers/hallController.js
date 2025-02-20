@@ -243,7 +243,7 @@ exports.editHallBooking = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Booking updated successfullyy",
+        "Booking updated successfully",
         updateBooking
       );
     }
@@ -292,7 +292,7 @@ exports.createHall = async (req, res) => {
 exports.getDropdown = async (req, res) => {
   try {
     const halls = await Hall.find({ status: true });
-    return responseHandler(res, 200, "Dropdown found successfullyy", halls);
+    return responseHandler(res, 200, "Dropdown found successfully", halls);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }

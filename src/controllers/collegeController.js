@@ -215,7 +215,7 @@ exports.bulkCreateCollege = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New Colleges created successfullyy..!`,
+        `New Colleges created successfully..!`,
         newColleges
       );
     }
@@ -410,7 +410,7 @@ exports.createCollegeBulk = async (req, res) => {
     return responseHandler(
       res,
       201,
-      "Colleges created successfullyy",
+      "Colleges created successfully",
       colleges
     );
   } catch (error) {

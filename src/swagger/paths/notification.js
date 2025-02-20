@@ -58,7 +58,7 @@
  *                 example: "email"
  *     responses:
  *       200:
- *         description: Notification created successfullyy
+ *         description: Notification created successfully
  *       400:
  *         description: Invalid input data
  *       500:
@@ -75,7 +75,7 @@
  *       - Notification
  *     responses:
  *       200:
- *         description: successfullyy retrieved the list of Notification
+ *         description: successfully retrieved the list of Notification
  *       500:
  *         description: Internal Server Error
  */

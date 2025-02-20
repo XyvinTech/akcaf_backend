@@ -95,7 +95,7 @@ exports.createAdmin = async (req, res) => {
       return responseHandler(
         res,
         201,
-        `New Admin created successfullyy..!`,
+        `New Admin created successfully..!`,
         newAdmin
       );
     } else {
@@ -164,7 +164,7 @@ exports.getAllAdmins = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Admins found successfullyy..!`,
+      `Admins found successfully..!`,
       mappedData,
       totalCount
     );
@@ -239,7 +239,7 @@ exports.editAdmin = async (req, res) => {
     if (!editAdmin) {
       return responseHandler(res, 400, `Admin update failed...!`);
     }
-    return responseHandler(res, 200, `Admin updated successfullyy..!`);
+    return responseHandler(res, 200, `Admin updated successfully..!`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -267,7 +267,7 @@ exports.deleteAdmin = async (req, res) => {
     if (!deleteAdmin) {
       return responseHandler(res, 400, `Admin delete failed...!`);
     }
-    return responseHandler(res, 200, `Admin deleted successfullyy..!`);
+    return responseHandler(res, 200, `Admin deleted successfully..!`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -349,7 +349,7 @@ exports.approveUser = async (req, res) => {
       message = {
         notification: {
           title: `AKCAF Membership has been approved`,
-          body: `Your membership for AKCAF has been approved successfullyy. Please complete the payment process to continue.`,
+          body: `Your membership for AKCAF has been approved successfully. Please complete the payment process to continue.`,
         },
         token: findUser.fcm,
       };
@@ -365,13 +365,13 @@ exports.approveUser = async (req, res) => {
     getMessaging()
       .send(message)
       .then((response) => {
-        console.log("successfullyy sent message:", response);
+        console.log("successfully sent message:", response);
       })
       .catch((error) => {
         console.log("Error sending message:", error);
       });
 
-    return responseHandler(res, 200, `User ${status} successfullyy`);
+    return responseHandler(res, 200, `User ${status} successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -403,7 +403,7 @@ exports.getDropdown = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Dropdown found successfullyy",
+      "Dropdown found successfully",
       mappedData
     );
   } catch (error) {
@@ -559,7 +559,7 @@ exports.getDashboard = async (req, res) => {
       });
     }
 
-    return responseHandler(res, 200, "Dashboard found successfullyy", {
+    return responseHandler(res, 200, "Dashboard found successfully", {
       totalMembers,
       totalColleges,
       totalRevenue: totalRevenue[0]?.total || 0,

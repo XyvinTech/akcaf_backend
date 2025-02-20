@@ -43,7 +43,7 @@ cron.schedule("0 0 * * *", async () => {
       getMessaging()
         .send(message)
         .then((response) => {
-          console.log("successfullyy sent message:", response);
+          console.log("successfully sent message:", response);
         })
         .catch((error) => {
           console.log("Error sending message:", error);

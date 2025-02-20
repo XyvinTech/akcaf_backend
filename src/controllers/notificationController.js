@@ -94,7 +94,7 @@ exports.createNotification = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notification created successfullyy..!`,
+      `Notification created successfully..!`,
       createNotification
     );
   } catch (error) {
@@ -127,7 +127,7 @@ exports.getNotifications = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notifications fetched successfullyy..!`,
+      `Notifications fetched successfully..!`,
       mappedData,
       totalCount
     );
@@ -169,7 +169,7 @@ exports.getUserNotifications = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notifications fetched successfullyy..!`,
+      `Notifications fetched successfully..!`,
       notifications
     );
   } catch (error) {
@@ -187,7 +187,7 @@ exports.getSingleNotification = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Notification fetched successfullyy..!`,
+      `Notification fetched successfully..!`,
       notification
     );
   } catch (error) {

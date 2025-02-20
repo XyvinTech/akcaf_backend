@@ -60,7 +60,7 @@ exports.makePayment = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Payment created successfullyy",
+        "Payment created successfully",
         session.url
       );
     }
@@ -88,7 +88,7 @@ exports.makePayment = async (req, res) => {
         return responseHandler(
           res,
           200,
-          "Payment created successfullyy",
+          "Payment created successfully",
           newPayment
         );
       } else if (err) {
@@ -178,7 +178,7 @@ exports.razorpayCallback = async (req, res) => {
           return responseHandler(
             res,
             200,
-            "Payment updated successfullyy",
+            "Payment updated successfully",
             updatePayment
           );
         } else {

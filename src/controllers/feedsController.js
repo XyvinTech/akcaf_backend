@@ -71,7 +71,7 @@ exports.deletefeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds deleted successfullyy!",
+        "Feeds deleted successfully!",
         deleteFeeds
       );
     }
@@ -94,7 +94,7 @@ exports.reportFeed = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds reported successfullyy!",
+        "Feeds reported successfully!",
         reportFeeds
       );
     }
@@ -297,7 +297,7 @@ exports.likeFeed = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds unliked successfullyy",
+        "Feeds unliked successfully",
         updateFeeds
       );
     }
@@ -329,7 +329,7 @@ exports.likeFeed = async (req, res) => {
       });
     }
 
-    return responseHandler(res, 200, "Feeds liked successfullyy", updateFeeds);
+    return responseHandler(res, 200, "Feeds liked successfully", updateFeeds);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -382,7 +382,7 @@ exports.commentFeed = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Feeds commented successfullyy",
+      "Feeds commented successfully",
       updateFeeds
     );
   } catch (error) {
@@ -453,7 +453,7 @@ exports.updateFeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds accepted successfullyy",
+        "Feeds accepted successfully",
         updateFeeds
       );
     } else if (action === "reject") {
@@ -470,7 +470,7 @@ exports.updateFeeds = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Feeds rejected successfullyy",
+        "Feeds rejected successfully",
         updateFeeds
       );
     }
@@ -516,7 +516,7 @@ exports.notInterested = async (req, res) => {
     if (!notInterested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(res, 200, `Feeds not interest added successfullyy`);
+    return responseHandler(res, 200, `Feeds not interest added successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
@@ -541,7 +541,7 @@ exports.interestedPosts = async (req, res) => {
     return responseHandler(
       res,
       200,
-      `Feeds not interest removed successfullyy`
+      `Feeds not interest removed successfully`
     );
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);

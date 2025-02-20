@@ -70,7 +70,7 @@
  *                 example: "666c1a3895a6b176b7f2bcf7"
  *     responses:
  *       200:
- *         description: Admin created successfullyy
+ *         description: Admin created successfully
  *       400:
  *         description: Bad request
  *   get:
@@ -82,7 +82,7 @@
  *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: Admin retrieved successfullyy
+ *         description: Admin retrieved successfully
  *       404:
  *         description: Admin not found
  */
@@ -115,7 +115,7 @@
  *         description: The number of admins per page (defaults to 10)
  *     responses:
  *       200:
- *         description: successfullyy retrieved the list of admins
+ *         description: successfully retrieved the list of admins
  *       500:
  *         description: Internal Server Error
  */
@@ -138,7 +138,7 @@
  *           example: "6123abc456def7890ghi1234"
  *     responses:
  *       200:
- *         description: Admin found successfullyy
+ *         description: Admin found successfully
  *       400:
  *         description: Admin ID is missing
  *       403:
@@ -172,7 +172,7 @@
  *         description: The number of users per page (defaults to 10)
  *     responses:
  *       200:
- *         description: successfullyy retrieved the list of users awaiting approval
+ *         description: successfully retrieved the list of users awaiting approval
  *       403:
  *         description: Forbidden - User does not have permission to view approvals
  *       500:
@@ -208,7 +208,7 @@
  *                 example: "active"
  *     responses:
  *       200:
- *         description: User status updated successfullyy
+ *         description: User status updated successfully
  *       400:
  *         description: User ID is required or User update failed
  *       403:
@@ -229,7 +229,7 @@
  *       - Admin
  *     responses:
  *       200:
- *         description: Dropdown found successfullyy
+ *         description: Dropdown found successfully
  *       403:
  *         description: Forbidden - You don't have permission to perform this action
  *       500:

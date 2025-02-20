@@ -107,7 +107,7 @@ exports.sendMessage = async (req, res) => {
         console.log("Receiver is not online.");
       }
     }
-    return responseHandler(res, 201, "Message sent successfullyy!", newMessage);
+    return responseHandler(res, 201, "Message sent successfully!", newMessage);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
@@ -142,7 +142,7 @@ exports.getBetweenUsers = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Messages retrieved successfullyy!",
+      "Messages retrieved successfully!",
       messages
     );
   } catch (error) {
@@ -175,7 +175,7 @@ exports.getChats = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Chat retrieved successfullyy!",
+      "Chat retrieved successfully!",
       mappedData
     );
   } catch (error) {
@@ -210,7 +210,7 @@ exports.createGroup = async (req, res) => {
     return responseHandler(
       res,
       201,
-      "Group chat created successfullyy!",
+      "Group chat created successfully!",
       newChat
     );
   } catch (error) {
@@ -246,7 +246,7 @@ exports.getGroupMessage = async (req, res) => {
     return responseHandler(
       res,
       200,
-      "Group messages retrieved successfullyy!",
+      "Group messages retrieved successfully!",
       messages
     );
   } catch (error) {
@@ -397,7 +397,7 @@ exports.editGroup = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Group updated successfullyy!",
+        "Group updated successfully!",
         updateGroup
       );
     }
@@ -434,7 +434,7 @@ exports.deleteGroup = async (req, res) => {
       return responseHandler(
         res,
         200,
-        "Group deleted successfullyy!",
+        "Group deleted successfully!",
         deleteGroup
       );
     }

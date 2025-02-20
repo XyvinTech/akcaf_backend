@@ -15,7 +15,7 @@
  *       - Payment
  *     responses:
  *       200:
- *         description: Payment created successfullyy
+ *         description: Payment created successfully
  *       500:
  *         description: Internal Server Error
  */
@@ -58,7 +58,7 @@
  *               - razorpaySignature
  *     responses:
  *       200:
- *         description: Payment updated successfullyy
+ *         description: Payment updated successfully
  *       400:
  *         description: Invalid signature or request
  *       500:
@@ -96,7 +96,7 @@
  *         description: Payment status filter.
  *     responses:
  *       200:
- *         description: successfullyy retrieved payment list
+ *         description: successfully retrieved payment list
  *       400:
  *         description: Bad request, invalid parameters
  *       500:
@@ -125,7 +125,7 @@
  *                 example: "success"
  *     responses:
  *       200:
- *         description: Payment status updated successfullyy
+ *         description: Payment status updated successfully
  *       500:
  *         description: Internal server error
  */

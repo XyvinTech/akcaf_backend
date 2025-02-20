@@ -37,7 +37,7 @@
  *                 example: "Published"
  *     responses:
  *       201:
- *         description: New news created successfullyy
+ *         description: New news created successfully
  *       400:
  *         description: Invalid input
  *       500:
@@ -78,7 +78,7 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: News article updated successfullyy
+ *         description: News article updated successfully
  *       400:
  *         description: Invalid input
  *       404:
@@ -104,7 +104,7 @@
  *           type: string
  *     responses:
  *       200:
- *         description: News article retrieved successfullyy
+ *         description: News article retrieved successfully
  *       404:
  *         description: News article not found
  *       500:
@@ -128,7 +128,7 @@
  *           type: string
  *     responses:
  *       200:
- *         description: News article deleted successfullyy
+ *         description: News article deleted successfully
  *       404:
  *         description: News article not found
  *       500:
@@ -163,7 +163,7 @@
  *         description: The number of news per page (defaults to 10)
  *     responses:
  *       200:
- *         description: successfullyy retrieved the list of news
+ *         description: successfully retrieved the list of news
  *       500:
  *         description: Internal Server Error
  */
@@ -178,7 +178,7 @@
  *       - News
  *     responses:
  *       200:
- *         description: successfullyy retrieved the list of news
+ *         description: successfully retrieved the list of news
  *       500:
  *         description: Internal Server Error
  */

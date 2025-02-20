@@ -79,7 +79,7 @@ exports.editRole = async (req, res) => {
       return responseHandler(
         res,
         200,
-        `Role updated successfullyy..!`,
+        `Role updated successfully..!`,
         updateRole
       );
     } else {
@@ -142,7 +142,7 @@ exports.deleteRole = async (req, res) => {
 
     const deleteRole = await Role.findByIdAndDelete(id);
     if (deleteRole) {
-      return responseHandler(res, 200, `Role deleted successfullyy..!`);
+      return responseHandler(res, 200, `Role deleted successfully..!`);
     } else {
       return responseHandler(res, 400, `Role deletion failed...!`);
     }
