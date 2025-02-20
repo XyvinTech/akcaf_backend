@@ -142,7 +142,7 @@ exports.getAllAdmins = async (req, res) => {
     const { pageNo = 1, limit = 10 } = req.query;
     const skipCount = 10 * (pageNo - 1);
     const filter = {
-      _id: { $ne: "66cef136282563d7bb086e30", $ne: req.userId },
+      _id: { $nin: ["66cef136282563d7bb086e30", req.userId] },
     };
     const totalCount = await Admin.countDocuments(filter);
     const data = await Admin.find(filter)
@@ -400,12 +400,7 @@ exports.getDropdown = async (req, res) => {
       };
     });
 
-    return responseHandler(
-      res,
-      200,
-      "Dropdown found successfully",
-      mappedData
-    );
+    return responseHandler(res, 200, "Dropdown found successfully", mappedData);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error: ${error.message}`);
   }
