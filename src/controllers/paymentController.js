@@ -239,7 +239,7 @@ exports.getAllPayment = async (req, res) => {
 
 exports.createPayment = async (req, res) => {
   try {
-    const { user, expiryDate } = req.body;
+    const { user, expiryDate, amount = 10 } = req.body;
     if (!user) {
       return responseHandler(res, 400, "User is required");
     }
@@ -253,8 +253,8 @@ exports.createPayment = async (req, res) => {
       user: user,
       gatewayId: "admin",
       entity: "order",
-      amount: 10,
-      amountDue: 10,
+      amount: Number(amount),
+      amountDue: Number(amount),
       amountPaid: 0,
       currency: "AED",
       status: "completed",
