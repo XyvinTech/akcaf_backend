@@ -628,8 +628,9 @@ exports.approveUser = async (req, res) => {
 
 exports.listUsers = async (req, res) => {
   try {
-    const { pageNo = 1, limit = 10 } = req.query;
+    const { pageNo = 1, limit = 10, search } = req.query;
     const skipCount = 10 * (pageNo - 1);
+
     const currentUser = await User.findById(req.userId).select("blockedUsers");
     const blockedUsersList = currentUser.blockedUsers;
     const filter = {
@@ -639,6 +640,9 @@ exports.listUsers = async (req, res) => {
         $nin: blockedUsersList,
       },
     };
+    if (search) {
+      filter.$or = [{ fullName: { $regex: search, $options: "i" } }];
+    }
     const totalCount = await User.countDocuments(filter);
     const data = await User.find(filter)
       .populate("college course")
