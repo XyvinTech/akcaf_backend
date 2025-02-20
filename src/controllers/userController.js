@@ -245,7 +245,7 @@ exports.updateUser = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
 
-    const checkEmerite = await User.findOne({
+    const checkEmerite = await User.find({
       emiratesID: req.body.emiratesID,
     });
 
