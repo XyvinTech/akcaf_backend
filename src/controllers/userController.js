@@ -247,6 +247,7 @@ exports.updateUser = async (req, res) => {
 
     const checkEmerite = await User.find({
       emiratesID: req.body.emiratesID,
+      _id: { $ne: id },
     });
 
     if (checkEmerite.length > 0) {
