@@ -6,13 +6,13 @@ const Notification = require("../models/notificationModel");
 require("dotenv").config();
 
 cron.schedule("*/5 * * * *", async () => {
-  const nowUTC = moment.utc().toDate();
+  const now = moment().tz("Asia/Kolkata");
 
   try {
     //* Update "pending" events to "live" and send notifications
     const progressEvents = await Event.find({
-      status: "pending",
-      startTime: { $lte: nowUTC },
+      status: { $in: ["pending"] },
+      startTime: { $lte: now.toDate() },
     });
 
     if (progressEvents.length > 0) {
@@ -51,7 +51,7 @@ cron.schedule("*/5 * * * *", async () => {
     //* Update "live" events to "completed" and send notifications
     const doneEvents = await Event.find({
       status: "live",
-      endDate: { $lte: nowUTC },
+      endDate: { $lte: now.toDate() },
     });
 
     if (doneEvents.length > 0) {
