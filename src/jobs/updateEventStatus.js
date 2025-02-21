@@ -14,6 +14,7 @@ cron.schedule("* * * * *", async () => {
       status: { $in: ["pending"] },
       startTime: { $eq: now.toDate() },
     });
+    console.log("🚀 ~ cron.schedule ~ progressEvents:", progressEvents)
 
     if (progressEvents.length > 0) {
       await Promise.all(
@@ -53,6 +54,7 @@ cron.schedule("* * * * *", async () => {
       status: "live",
       endDate: { $eq: now.toDate() },
     });
+    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
 
     if (doneEvents.length > 0) {
       await Promise.all(
