@@ -5,7 +5,7 @@ const { getMessaging } = require("firebase-admin/messaging");
 const Notification = require("../models/notificationModel");
 require("dotenv").config();
 
-cron.schedule("*/5 * * * *", async () => {
+cron.schedule("* * * * *", async () => {
   const now = moment().tz("Asia/Kolkata");
 
   try {
