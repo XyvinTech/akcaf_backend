@@ -49,43 +49,42 @@ cron.schedule("* * * * *", async () => {
     }
 
     //* Update "live" events to "completed" and send notifications
-    const doneEvents = await Event.find({
-      status: "live",
-      endDate: { $lte: now.toDate() },
-    });
-    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
+    // const doneEvents = await Event.find({
+    //   status: "live",
+    //   endDate: { $lte: now.toDate() },
+    // });
 
-    if (doneEvents.length > 0) {
-      await Promise.all(
-        doneEvents.map(async (event) => {
-          event.status = "completed";
-          await event.save();
+    // if (doneEvents.length > 0) {
+    //   await Promise.all(
+    //     doneEvents.map(async (event) => {
+    //       event.status = "completed";
+    //       await event.save();
 
-          const data = event.rsvp.map((rsvp) => ({
-            user: rsvp._id,
-            read: false,
-          }));
+    //       const data = event.rsvp.map((rsvp) => ({
+    //         user: rsvp._id,
+    //         read: false,
+    //       }));
 
-          await Notification.create({
-            users: data,
-            subject: `Event ${event.eventName} is now completed!`,
-            content: `The event ${event.eventName} has ended. Thank you for participating!`,
-            type: "in-app",
-          });
-        })
-      );
+    //       await Notification.create({
+    //         users: data,
+    //         subject: `Event ${event.eventName} is now completed!`,
+    //         content: `The event ${event.eventName} has ended. Thank you for participating!`,
+    //         type: "in-app",
+    //       });
+    //     })
+    //   );
 
-      const completedNotifications = doneEvents.map((event) => ({
-        notification: {
-          title: `Event ${event.eventName} is now completed!`,
-          body: `The event ${event.eventName} has ended. Thank you for participating!`,
-        },
-        topic: `event_${event._id}`,
-      }));
+    //   const completedNotifications = doneEvents.map((event) => ({
+    //     notification: {
+    //       title: `Event ${event.eventName} is now completed!`,
+    //       body: `The event ${event.eventName} has ended. Thank you for participating!`,
+    //     },
+    //     topic: `event_${event._id}`,
+    //   }));
 
-      await getMessaging().sendEach(completedNotifications);
-      console.log(`Updated ${doneEvents.length} events to completed`);
-    }
+    //   await getMessaging().sendEach(completedNotifications);
+    //   console.log(`Updated ${doneEvents.length} events to completed`);
+    // }
   } catch (err) {
     console.error("Error updating events:", err);
   }
