@@ -74,7 +74,7 @@ const BASE_PATH = `/api/${API_VERSION}`;
 require("./src/helpers/connection");
 
 //* Apply the rate limiter to all API routes
-app.use(`${BASE_PATH}`, apiRateLimiter);
+// app.use(`${BASE_PATH}`, apiRateLimiter);
 
 //? Define a route for the API root
 app.get(BASE_PATH, (req, res) => {
