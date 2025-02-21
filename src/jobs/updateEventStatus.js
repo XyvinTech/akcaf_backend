@@ -53,6 +53,7 @@ cron.schedule("* * * * *", async () => {
       status: "live",
       endDate: { $lte: now.toDate() },
     });
+    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
 
     if (doneEvents.length > 0) {
       await Promise.all(
