@@ -155,9 +155,7 @@ exports.getAllFeedsForAdmin = async (req, res) => {
     const { pageNo = 1, limit = 10, search, status } = req.query;
     const skipCount = 10 * (pageNo - 1);
 
-    const filter = {
-      status: "unpublished",
-    };
+    const filter = {};
 
     if (status) {
       filter.status = status;
@@ -538,11 +536,7 @@ exports.interestedPosts = async (req, res) => {
     if (!interested) {
       return responseHandler(res, 400, `Feeds update failed...!`);
     }
-    return responseHandler(
-      res,
-      200,
-      `Feeds not interest removed successfully`
-    );
+    return responseHandler(res, 200, `Feeds not interest removed successfully`);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
