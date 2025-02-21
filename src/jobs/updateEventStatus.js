@@ -10,43 +10,43 @@ cron.schedule("* * * * *", async () => {
 
   try {
     //* Update "pending" events to "live" and send notifications
-    const progressEvents = await Event.find({
-      status: { $in: ["pending"] },
-      startTime: { $lte: now.toDate() },
-    });
+    // const progressEvents = await Event.find({
+    //   status: { $in: ["pending"] },
+    //   startTime: { $lte: now.toDate() },
+    // });
 
-    if (progressEvents.length > 0) {
-      await Promise.all(
-        progressEvents.map(async (event) => {
-          event.status = "live";
-          await event.save();
+    // if (progressEvents.length > 0) {
+    //   await Promise.all(
+    //     progressEvents.map(async (event) => {
+    //       event.status = "live";
+    //       await event.save();
 
-          const data = event.rsvp.map((rsvp) => ({
-            user: rsvp._id,
-            read: false,
-          }));
+    //       const data = event.rsvp.map((rsvp) => ({
+    //         user: rsvp._id,
+    //         read: false,
+    //       }));
 
-          await Notification.create({
-            users: data,
-            subject: `Event ${event.eventName} is now live!`,
-            content: `The event ${event.eventName} has started. Join now!`,
-            link: event.type === "Online" ? event.link : event.venue,
-            type: "in-app",
-          });
-        })
-      );
+    //       await Notification.create({
+    //         users: data,
+    //         subject: `Event ${event.eventName} is now live!`,
+    //         content: `The event ${event.eventName} has started. Join now!`,
+    //         link: event.type === "Online" ? event.link : event.venue,
+    //         type: "in-app",
+    //       });
+    //     })
+    //   );
 
-      const liveNotifications = progressEvents.map((event) => ({
-        notification: {
-          title: `Event ${event.eventName} is now live!`,
-          body: `The event ${event.eventName} has started. Join now!`,
-        },
-        topic: `event_${event._id}`,
-      }));
+    //   const liveNotifications = progressEvents.map((event) => ({
+    //     notification: {
+    //       title: `Event ${event.eventName} is now live!`,
+    //       body: `The event ${event.eventName} has started. Join now!`,
+    //     },
+    //     topic: `event_${event._id}`,
+    //   }));
 
-      await getMessaging().sendEach(liveNotifications);
-      console.log(`Updated ${progressEvents.length} events to live`);
-    }
+    //   await getMessaging().sendEach(liveNotifications);
+    //   console.log(`Updated ${progressEvents.length} events to live`);
+    // }
 
     //* Update "live" events to "completed" and send notifications
     // const doneEvents = await Event.find({
