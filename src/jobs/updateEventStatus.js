@@ -12,7 +12,7 @@ cron.schedule("* * * * *", async () => {
     //* Update "pending" events to "live" and send notifications
     const progressEvents = await Event.find({
       status: { $in: ["pending"] },
-      startTime: { $lte: now.toDate() },
+      startDate: { $lte: now.toDate() },
     });
     console.log("🚀 ~ cron.schedule ~ progressEvents:", progressEvents)
 
