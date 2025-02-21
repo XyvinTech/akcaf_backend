@@ -28,6 +28,20 @@ const reportRoute = require("./src/routes/report");
 const rateLimit = require("express-rate-limit");
 const timeRoute = require("./src/routes/time");
 const hallRoute = require("./src/routes/hall");
+const multer = require("multer");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { Upload } = require("@aws-sdk/lib-storage");
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY,
+  },
+});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 app.use(express.static("views"));
 
@@ -108,6 +122,35 @@ app.use(`${BASE_PATH}/payment`, paymentRoute);
 app.use(`${BASE_PATH}/report`, reportRoute);
 app.use(`${BASE_PATH}/time`, timeRoute);
 app.use(`${BASE_PATH}/booking`, hallRoute);
+
+app.post(`${BASE_PATH}/upload`, upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return responseHandler(res, 400, "No file uploaded");
+    }
+
+    // Upload to S3
+    const uploadParams = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `${Date.now()}_${req.file.originalname}`,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    };
+
+    const upload = new Upload({
+      client: s3,
+      params: uploadParams,
+    });
+
+    await upload.done();
+
+    const fileUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${uploadParams.Key}`;
+
+    return responseHandler(res, 200, "Upload successful", fileUrl);
+  } catch (error) {
+    return responseHandler(res, 500, `Upload Failed ${error.message}`);
+  }
+});
 
 //* Handle undefined routes
 app.all("*", (req, res) => {
