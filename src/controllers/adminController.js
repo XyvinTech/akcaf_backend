@@ -619,6 +619,7 @@ exports.bulkCreateUser = async (req, res) => {
     for (let user of users) {
       const uniqueMemberId = await generateUniqueDigit();
       user.memberId = `AKCAF-${uniqueMemberId}`;
+      user.status = "awaiting_payment";
     }
 
     const createdUsers = await User.insertMany(users);
