@@ -578,7 +578,7 @@ exports.getDashboard = async (req, res) => {
 
 exports.bulkCreateUser = async (req, res) => {
   try {
-    const { error } = bulkCreateUserSchema.validate(req.body, {
+    const { error } = validations.bulkCreateUserSchema.validate(req.body, {
       abortEarly: false,
     });
     if (error) {
