@@ -110,6 +110,16 @@ exports.createUserSchema = Joi.object({
   status: Joi.string(),
 });
 
+exports.bulkCreateUserSchema = Joi.array().items(
+  Joi.object({
+    emiratesID: Joi.string().required(),
+    fullName: Joi.string().required(),
+    role: Joi.string().required(),
+    email: Joi.string().required(),
+    phone: Joi.string().required(),
+  })
+);
+
 exports.editUserSchema = Joi.object({
   fullName: Joi.string(),
   emiratesID: Joi.string(),

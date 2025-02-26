@@ -23,4 +23,5 @@ adminRoute.get("/approvals", adminController.getApprovals);
 adminRoute.put("/approval/:id", adminController.approveUser);
 adminRoute.get("/dropdown", adminController.getDropdown);
 adminRoute.get("/dashboard", adminController.getDashboard);
+adminRoute.post("/user-bulk", adminController.bulkCreateUser);
 module.exports = adminRoute;
