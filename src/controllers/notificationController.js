@@ -86,7 +86,6 @@ exports.createNotification = async (req, res) => {
         req.body.subject,
         req.body.content,
         media,
-        "https://akcaf.page.link/notifications_page"
       );
     }
 
