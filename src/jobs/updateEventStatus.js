@@ -14,7 +14,7 @@ cron.schedule("* * * * *", async () => {
       status: { $in: ["pending"] },
       startDate: { $lte: now.toDate() },
     });
-    console.log("🚀 ~ cron.schedule ~ progressEvents:", progressEvents)
+    console.log("🚀 ~ cron.schedule ~ progressEvents:", progressEvents);
 
     if (progressEvents.length > 0) {
       await Promise.all(
@@ -43,6 +43,22 @@ cron.schedule("* * * * *", async () => {
           body: `The event ${event.eventName} has started. Join now!`,
         },
         topic: `event_${event._id}`,
+        android: {
+          notification: {
+            clickAction: "FLUTTER_NOTIFICATION_CLICK", // Important for handling clicks
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              "mutable-content": 1,
+            },
+          },
+        },
+        data: {
+          screen: "event",
+          id: event._id.toString(),
+        },
       }));
 
       await getMessaging().sendEach(liveNotifications);
@@ -54,7 +70,7 @@ cron.schedule("* * * * *", async () => {
       status: "live",
       endDate: { $lte: now.toDate() },
     });
-    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents)
+    console.log("🚀 ~ cron.schedule ~ doneEvents:", doneEvents);
 
     if (doneEvents.length > 0) {
       await Promise.all(
@@ -82,6 +98,22 @@ cron.schedule("* * * * *", async () => {
           body: `The event ${event.eventName} has ended. Thank you for participating!`,
         },
         topic: `event_${event._id}`,
+        android: {
+          notification: {
+            clickAction: "FLUTTER_NOTIFICATION_CLICK", // Important for handling clicks
+          },
+        },
+        apns: {
+          payload: {
+            aps: {
+              "mutable-content": 1,
+            },
+          },
+        },
+        data: {
+          screen: "event",
+          id: event._id.toString(),
+        },
       }));
 
       await getMessaging().sendEach(completedNotifications);

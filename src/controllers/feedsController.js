@@ -434,7 +434,8 @@ exports.updateFeeds = async (req, res) => {
       fcmUser,
       `Your Feed request has been ${action}`,
       `Your Feed request has been ${action} for ${findFeeds.content}`,
-      "https://akcaf.page.link/my_posts"
+      null,
+      "my_feeds"
     );
 
     if (action === "accept") {
