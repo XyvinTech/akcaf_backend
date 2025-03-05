@@ -90,6 +90,9 @@ exports.sendMessage = async (req, res) => {
         fcmTokens,
         `New Message ${chat.groupName}`,
         content,
+        null,
+        "group_chat",
+        chat._id
       );
     } else {
       const receiverSocketId = getReceiverSocketId(to);
