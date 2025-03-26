@@ -94,6 +94,16 @@ exports.sendMessage = async (req, res) => {
         "group_chat",
         chat._id
       );
+      for (const user of allUsers) {
+        const receiverSocketId = getReceiverSocketId(user.toString());
+        if (receiverSocketId) {
+          const socketData = {
+            ...newMessage._doc,
+            isGroup: true,
+          };
+          chatNamespace.to(receiverSocketId).emit("message", socketData);
+        }
+      }
     } else {
       const receiverSocketId = getReceiverSocketId(to);
       const toUser = await User.findById(to).select("fcm");
