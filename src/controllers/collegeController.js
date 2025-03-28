@@ -264,6 +264,78 @@ exports.getAllColleges = async (req, res) => {
         {
           $addFields: {
             noOfMembers: { $size: "$members" },
+            president: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: "$members",
+                        as: "member",
+                        cond: { $eq: ["$$member.role", "president"] },
+                      },
+                    },
+                    as: "pres",
+                    in: "$$pres.fullName",
+                  },
+                },
+                0,
+              ],
+            },
+            secretary: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: "$members",
+                        as: "member",
+                        cond: { $eq: ["$$member.role", "secretary"] },
+                      },
+                    },
+                    as: "sec",
+                    in: "$$sec.fullName",
+                  },
+                },
+                0,
+              ],
+            },
+            treasurer: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: "$members",
+                        as: "member",
+                        cond: { $eq: ["$$member.role", "treasurer"] },
+                      },
+                    },
+                    as: "treas",
+                    in: "$$treas.fullName",
+                  },
+                },
+                0,
+              ],
+            },
+            rep: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: "$members",
+                        as: "member",
+                        cond: { $eq: ["$$member.role", "rep"] },
+                      },
+                    },
+                    as: "rep",
+                    in: "$$rep.fullName",
+                  },
+                },
+                0,
+              ],
+            },
             noOfCourses: {
               $cond: {
                 if: { $isArray: "$course" },
@@ -407,12 +479,7 @@ exports.createCollegeBulk = async (req, res) => {
       return responseHandler(res, 400, `Invalid input: ${error.message}`);
     }
     const colleges = await College.create(req.body);
-    return responseHandler(
-      res,
-      201,
-      "Colleges created successfully",
-      colleges
-    );
+    return responseHandler(res, 201, "Colleges created successfully", colleges);
   } catch (error) {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
