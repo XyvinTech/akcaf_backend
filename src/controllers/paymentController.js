@@ -220,7 +220,7 @@ exports.getAllPayment = async (req, res) => {
     const mappedData = payment.map((item) => {
       return {
         ...item,
-        fullName: item.user.fullName,
+        fullName: item.user?.fullName,
       };
     });
     const totalCount = await Payment.countDocuments(filter);
