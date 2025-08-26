@@ -24,11 +24,14 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
+    const Attachments =
+      Array.isArray(attachments) && attachments.length > 0 ? attachments : [{}];
+      
     const newMessageData = {
       from,
       to,
       content,
-      attachments,
+      attachments: Attachments,
       status: "sent",
     };
 
