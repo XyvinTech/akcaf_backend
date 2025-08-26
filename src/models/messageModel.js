@@ -8,6 +8,7 @@ const messageModel = mongoose.Schema(
       ref: "Chat",
     },
     content: { type: String, required: true, trim: true },
+    attachment: { type: String, trim: true },
     feed: { type: mongoose.Schema.Types.ObjectId, ref: "Feeds" },
     status: {
       type: String,

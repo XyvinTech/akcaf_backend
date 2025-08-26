@@ -296,6 +296,10 @@
  *                 type: string
  *                 description: The content of the message.
  *                 example: "Hello, how are you?"
+ *               attachment:
+ *                 type: string
+ *                 description: Optional URL or path to an attachment (image, file, etc.).
+ *                 example: "https://example.com/image.jpg"
  *               isGroup:
  *                 type: boolean
  *                 description: Indicates whether the message is sent to a group or a direct chat.
