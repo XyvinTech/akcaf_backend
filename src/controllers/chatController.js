@@ -8,7 +8,7 @@ const sendInAppNotification = require("../utils/sendInAppNotification");
 const validations = require("../validations");
 
 exports.sendMessage = async (req, res) => {
-  const { content, isGroup, feed } = req.body;
+  const { content, isGroup, feed, attachments } = req.body;
   const to = req.params.id;
   const from = req.userId;
 
@@ -24,10 +24,14 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
+    const Attachments =
+      Array.isArray(attachments) && attachments.length > 0 ? attachments : [{}];
+      
     const newMessageData = {
       from,
       to,
       content,
+      attachments: Attachments,
       status: "sent",
     };
 

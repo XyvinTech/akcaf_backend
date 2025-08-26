@@ -8,6 +8,12 @@ const messageModel = mongoose.Schema(
       ref: "Chat",
     },
     content: { type: String, required: true, trim: true },
+    attachments: [
+      {
+        url: { type: String, trim: true },
+        type: { type: String, enum: ["image", "voice", "file", "video"] },
+      },
+    ],
     feed: { type: mongoose.Schema.Types.ObjectId, ref: "Feeds" },
     status: {
       type: String,

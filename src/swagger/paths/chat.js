@@ -296,6 +296,20 @@
  *                 type: string
  *                 description: The content of the message.
  *                 example: "Hello, how are you?"
+ *               attachments:
+ *                 type: array
+ *                 description: Optional list of attachments
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     url:
+ *                       type: string
+ *                       description: URL of the attachment
+ *                       example: "https://example.com/image.jpg"
+ *                     type:
+ *                       type: string
+ *                       enum: ["image", "voice", "file", "video"]
+ *                       description: Type of the attachment
  *               isGroup:
  *                 type: boolean
  *                 description: Indicates whether the message is sent to a group or a direct chat.
