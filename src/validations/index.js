@@ -97,7 +97,7 @@ exports.editPromotionSchema = Joi.object({
 });
 
 exports.createUserSchema = Joi.object({
-  emiratesID: Joi.string(),
+  emiratesID: Joi.string().allow(""),
   fullName: Joi.string().required(),
   college: Joi.string().required(),
   course: Joi.string(),
@@ -112,7 +112,7 @@ exports.createUserSchema = Joi.object({
 
 exports.bulkCreateUserSchema = Joi.array().items(
   Joi.object({
-    emiratesID: Joi.string(),
+    emiratesID: Joi.string().allow(""),
     fullName: Joi.string().required(),
     role: Joi.string().required(),
     email: Joi.string().required(),
