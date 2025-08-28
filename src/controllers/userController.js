@@ -97,7 +97,7 @@ exports.createUser = async (req, res) => {
       $or: [{ email: req.body.email }, { phone: req.body.phone }],
     });
 
-    if (checkExist.status !== "deleted") {
+    if (checkExist && checkExist.status !== "deleted") {
       return responseHandler(
         res,
         409,

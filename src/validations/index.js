@@ -136,7 +136,7 @@ exports.editUserSchema = Joi.object({
 
 exports.updateUserSchema = Joi.object({
   fullName: Joi.string(),
-  emiratesID: Joi.string(),
+  emiratesID: Joi.string().allow(""),
   image: Joi.string(),
   email: Joi.string(),
   address: Joi.string().allow(""),
