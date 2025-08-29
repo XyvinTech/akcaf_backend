@@ -261,13 +261,19 @@ exports.updateUser = async (req, res) => {
       return responseHandler(res, 404, "User not found");
     }
 
-    const checkEmerite = await User.find({
-      emiratesID: req.body.emiratesID,
-      _id: { $ne: id },
-    });
+    if (req.body.emiratesID) {
+      const checkEmerite = await User.find({
+        emiratesID: req.body.emiratesID,
+        _id: { $ne: id },
+      });
 
-    if (checkEmerite.length > 0) {
-      return responseHandler(res, 400, "User with Emirates ID already exists");
+      if (checkEmerite.length > 0) {
+        return responseHandler(
+          res,
+          400,
+          "User with Emirates ID already exists"
+        );
+      }
     }
 
     const editUser = await User.findByIdAndUpdate(id, req.body, {
