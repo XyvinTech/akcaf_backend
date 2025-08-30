@@ -229,7 +229,10 @@ exports.deleteUser = async (req, res) => {
 
     const deleteUser = await User.findByIdAndUpdate(
       id,
-      { status: "deleted" },
+      { 
+        status: "deleted",
+        role: "member" 
+      },
       {
         new: true,
       }
@@ -782,7 +785,10 @@ exports.adminUserBlock = async (req, res) => {
     const editUser = await User.findByIdAndUpdate(
       id,
       {
-        $set: { status: "blocked" },
+        $set: { 
+          status: "blocked",
+          role: "member" 
+        },
       },
       { new: true }
     );
