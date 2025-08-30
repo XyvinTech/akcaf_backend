@@ -380,6 +380,7 @@ exports.getAllColleges = async (req, res) => {
 
       const csvData = data.map((item) => {
         return {
+          CollegeID: item._id,
           CollegeName: item.collegeName,
           State: item.state,
           Country: item.country,
@@ -387,6 +388,7 @@ exports.getAllColleges = async (req, res) => {
       });
 
       const headers = [
+        { header: "College", key: "CollegeID" },
         { header: "College Name", key: "CollegeName" },
         { header: "State", key: "State" },
         { header: "Country", key: "Country" },
