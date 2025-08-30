@@ -248,8 +248,15 @@ exports.getAllColleges = async (req, res) => {
         {
           $lookup: {
             from: "users",
-            localField: "_id",
-            foreignField: "college",
+            let: { collegeId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$college", "$$collegeId"] },
+                  status: { $ne: "deleted" } 
+                }
+              }
+            ],
             as: "members",
           },
         },
