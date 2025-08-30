@@ -114,6 +114,7 @@ exports.bulkCreateUserSchema = Joi.array().items(
   Joi.object({
     emiratesID: Joi.string().allow("", null),
     fullName: Joi.string().required(),
+    college: Joi.string().allow( null),
     role: Joi.string().required(),
     email: Joi.string().required(),
     phone: Joi.string().required(),
