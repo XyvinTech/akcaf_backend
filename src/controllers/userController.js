@@ -3,6 +3,7 @@ const { getMessaging } = require("firebase-admin/messaging");
 const checkAccess = require("../helpers/checkAccess");
 const responseHandler = require("../helpers/responseHandler");
 const User = require("../models/userModel");
+const College = require("../models/collegeModel");
 const { generateOTP } = require("../utils/generateOTP");
 const { generateToken } = require("../utils/generateToken");
 const validations = require("../validations");
@@ -343,7 +344,13 @@ exports.getAllUsers = async (req, res) => {
     }
 
     if (college) {
-      filter["college.collegeName"] = college;
+      // filter["college.collegeName"] = college;
+      const collegeData = await College.findOne({ collegeName: college });
+      if (collegeData) {
+        filter.college = collegeData._id;
+      } else {
+        filter.college = null;
+      }
     }
 
     if (memberId) {
