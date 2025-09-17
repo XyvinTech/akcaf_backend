@@ -35,6 +35,7 @@ exports.editRoleSchema = Joi.object({
 
 exports.createCollegeSchema = Joi.object({
   collegeName: Joi.string().required(),
+  collegeId: Joi.string(),
   course: Joi.array(),
   startYear: Joi.number().required(),
   country: Joi.string().required(),
@@ -44,6 +45,7 @@ exports.createCollegeSchema = Joi.object({
 
 exports.editCollegeSchema = Joi.object({
   collegeName: Joi.string(),
+  collegeId: Joi.string(),
   course: Joi.array(),
   startYear: Joi.number(),
   batch: Joi.array(),
