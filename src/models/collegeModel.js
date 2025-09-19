@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const collegeSchema = mongoose.Schema(
   {
+    collegeId: { type: String, trim: true },
     collegeName: { type: String, trim: true },
     startYear: { type: Number },
     batch: [{ type: Number }],
