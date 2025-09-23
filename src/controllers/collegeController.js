@@ -507,3 +507,24 @@ exports.pstCheck = async (req, res) => {
     return responseHandler(res, 500, `Internal Server Error ${error.message}`);
   }
 };
+
+exports.getCollegesWithRole = async (req, res) => {
+  try {
+    const { role } = req.params;
+    
+    if (!role) {
+      return responseHandler(res, 400, "Role is required");
+    }
+
+    const users = await User.find({
+      role: role,
+      status: { $ne: "deleted" }
+    }).select("college");
+
+    const collegeIds = users.map(user => user.college);
+    
+    return responseHandler(res, 200, `Colleges with ${role} role found successfully..!`, collegeIds);
+  } catch (error) {
+    return responseHandler(res, 500, `Internal Server Error ${error.message}`);
+  }
+};
