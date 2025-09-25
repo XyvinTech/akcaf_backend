@@ -515,6 +515,14 @@ exports.getCollegesWithRole = async (req, res) => {
     if (!role) {
       return responseHandler(res, 400, "Role is required");
     }
+    if (role === "member") {
+      return responseHandler(
+        res,
+        200,
+        `Colleges with ${role} role found successfully..!`,
+        []
+      );
+    }
 
     const users = await User.find({
       role: role,
