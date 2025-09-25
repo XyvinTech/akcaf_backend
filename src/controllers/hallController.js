@@ -196,9 +196,9 @@ exports.getHallBookings = async (req, res) => {
         : "N/A";
       return {
         ...booking._doc,
-        user: booking.user.fullName || "N/A",
-        userName: booking.user.fullName || "N/A",
-        hall: booking.hall.name || "N/A",
+        user: booking?.user?.fullName || "N/A",
+        userName: booking?.user?.fullName || "N/A",
+        hall: booking?.hall?.name || "N/A",
         time: {
           start: formattedStart,
           end: formattedEnd,
