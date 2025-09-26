@@ -196,10 +196,10 @@ exports.createEventSchema = Joi.object({
   startTime: Joi.date().required(),
   endDate: Joi.date().required(),
   endTime: Joi.date().required(),
-  poster_visibility_start_date: Joi.date().messages({
+  posterVisibilityStartDate: Joi.date().messages({
     "date.base": "Poster visibility start date Please enter a valid date.",
   }),
-  poster_visibility_end_date: Joi.date().messages({
+  posterVisibilityEndDate: Joi.date().messages({
     "date.base": "Poster visibility end date Please enter a valid date.",
   }),
   platform: Joi.string(),
@@ -226,10 +226,10 @@ exports.editEventSchema = Joi.object({
   startTime: Joi.date(),
   endDate: Joi.date(),
   endTime: Joi.date(),
-  poster_visibility_start_date: Joi.date().messages({
+  posterVisibilityStartDate: Joi.date().messages({
     "date.base": "Poster visibility start date Please enter a valid date.",
   }),
-  poster_visibility_end_date: Joi.date().messages({
+  posterVisibilityEndDate: Joi.date().messages({
     "date.base": "Poster visibility end date Please enter a valid date.",
   }),
   platform: Joi.string(),
