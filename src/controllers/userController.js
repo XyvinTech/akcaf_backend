@@ -365,12 +365,48 @@ exports.getAllUsers = async (req, res) => {
 
     if (!fullUser) {
       const totalCount = await User.countDocuments(filter);
-      const data = await User.find(filter)
-        .populate("college course")
-        .skip(skipCount)
-        .limit(limit)
-        .sort({ createdAt: -1, _id: 1 })
-        .lean();
+      const data = await User.aggregate([
+        { $match: filter },
+        {
+          $lookup: {
+            from: "colleges",
+            localField: "college",
+            foreignField: "_id",
+            as: "college",
+          },
+        },
+        { $unwind: { path: "$college", preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: "courses",
+            localField: "course",
+            foreignField: "_id",
+            as: "course",
+          },
+        },
+        { $unwind: { path: "$course", preserveNullAndEmptyArrays: true } },
+        {
+          $addFields: {
+            statusWeight: {
+              $switch: {
+                branches: [
+                  { case: { $eq: ["$status", "active"] }, then: 0 },
+                  {
+                    case: { $in: ["$status", ["awaiting_payment", "awaiting"]] },
+                    then: 1,
+                  },
+                  { case: { $eq: ["$status", "deleted"] }, then: 2 },
+                ],
+                default: 3,
+              },
+            },
+            nameLower: { $toLower: { $ifNull: ["$fullName", ""] } },
+          },
+        },
+        { $sort: { statusWeight: 1, nameLower: 1 } },
+        { $skip: skipCount },
+        { $limit: Number(limit) },
+      ]).exec();
 
       const mappedData = data.map((user) => {
         return {
