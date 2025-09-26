@@ -107,6 +107,7 @@ exports.createUserSchema = Joi.object({
   role: Joi.string().required(),
   image: Joi.string(),
   email: Joi.string().required(),
+  gender: Joi.string(),
   phone: Joi.string().required(),
   bio: Joi.string().allow(""),
   status: Joi.string(),
@@ -132,6 +133,7 @@ exports.editUserSchema = Joi.object({
   role: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
+  gender: Joi.string(),
   phone: Joi.string(),
   bio: Joi.string().allow(""),
   status: Joi.string(),
@@ -147,6 +149,7 @@ exports.updateUserSchema = Joi.object({
   course: Joi.string(),
   batch: Joi.number(),
   bio: Joi.string().allow(""),
+  gender: Joi.string(),
   company: Joi.object({
     name: Joi.string().allow(""),
     designation: Joi.string().allow(""),
