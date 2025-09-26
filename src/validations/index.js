@@ -107,6 +107,7 @@ exports.createUserSchema = Joi.object({
   role: Joi.string().required(),
   image: Joi.string(),
   email: Joi.string().required(),
+  gender: Joi.string(),
   phone: Joi.string().required(),
   bio: Joi.string().allow(""),
   status: Joi.string(),
@@ -132,6 +133,7 @@ exports.editUserSchema = Joi.object({
   role: Joi.string(),
   image: Joi.string(),
   email: Joi.string(),
+  gender: Joi.string(),
   phone: Joi.string(),
   bio: Joi.string().allow(""),
   status: Joi.string(),
@@ -147,6 +149,7 @@ exports.updateUserSchema = Joi.object({
   course: Joi.string(),
   batch: Joi.number(),
   bio: Joi.string().allow(""),
+  gender: Joi.string(),
   company: Joi.object({
     name: Joi.string().allow(""),
     designation: Joi.string().allow(""),
@@ -196,6 +199,12 @@ exports.createEventSchema = Joi.object({
   startTime: Joi.date().required(),
   endDate: Joi.date().required(),
   endTime: Joi.date().required(),
+  posterVisibilityStartDate: Joi.date().messages({
+    "date.base": "Poster visibility start date Please enter a valid date.",
+  }),
+  posterVisibilityEndDate: Joi.date().messages({
+    "date.base": "Poster visibility end date Please enter a valid date.",
+  }),
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),
@@ -220,6 +229,12 @@ exports.editEventSchema = Joi.object({
   startTime: Joi.date(),
   endDate: Joi.date(),
   endTime: Joi.date(),
+  posterVisibilityStartDate: Joi.date().messages({
+    "date.base": "Poster visibility start date Please enter a valid date.",
+  }),
+  posterVisibilityEndDate: Joi.date().messages({
+    "date.base": "Poster visibility end date Please enter a valid date.",
+  }),
   platform: Joi.string(),
   link: Joi.string(),
   venue: Joi.string(),

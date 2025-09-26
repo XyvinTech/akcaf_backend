@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
       default: "inactive",
     },
     address: { type: String, trim: true },
+    gender: { type: String, trim: true },
     company: {
       name: { type: String, trim: true },
       designation: { type: String, trim: true },
