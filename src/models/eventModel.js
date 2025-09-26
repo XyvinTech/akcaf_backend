@@ -13,6 +13,8 @@ const eventSchema = new mongoose.Schema(
     startTime: { type: Date },
     endDate: { type: Date },
     endTime: { type: Date },
+    poster_visibility_start_date: { type: Date },
+    poster_visibility_end_date: { type: Date },
     platform: { type: String, trim: true },
     link: { type: String, trim: true },
     venue: { type: String, trim: true },
